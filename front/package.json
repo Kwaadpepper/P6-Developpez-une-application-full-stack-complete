@@ -4,9 +4,19 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "dev": "ng serve --configuration development",
+    "prod": "ng serve --configuration production",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "lint": "npm-run-all -s -c lint:ts lint:scss",
+    "lint:fix": "npm-run-all -s -c lint:ts:fix lint:scss:fix",
+    "lint:ts": "ng lint",
+    "lint:ts:ci": "ng lint --format json --silent --quiet",
+    "lint:ts:fix": "ng lint --fix",
+    "lint:scss": "node ./node_modules/.bin/stylelint --config './.stylelintrc.json' --max-warnings 0 \"src/**/*.scss\"",
+    "lint:scss:ci": "node ./node_modules/.bin/stylelint --config './.stylelintrc.json' --max-warnings 0 \"src/**/*.scss\" -f json",
+    "lint:scss:fix": "node ./node_modules/.bin/stylelint --config './.stylelintrc.json' --max-warnings 0 \"src/**/*.scss\" --fix"
   },
   "private": true,
   "dependencies": {
@@ -26,13 +36,25 @@
     "@angular-devkit/build-angular": "^19.0.7",
     "@angular/cli": "^19.0.7",
     "@angular/compiler-cli": "^19.0.0",
+    "@stylistic/eslint-plugin": "^2.13.0",
     "@types/jasmine": "~5.1.0",
+    "angular-eslint": "^19.0.0",
+    "csstype": "^3.1.3",
+    "eslint": "^9.18.0",
     "jasmine-core": "~5.4.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~5.6.2"
+    "npm-run-all": "^4.1.5",
+    "stylelint": "^16.13.0",
+    "stylelint-actions-formatters": "^16.3.1",
+    "stylelint-config-idiomatic-order": "^10.0.0",
+    "stylelint-config-sass-guidelines": "^12.1.0",
+    "stylelint-config-standard-scss": "^14.0.0",
+    "stylelint-scss": "^6.10.0",
+    "typescript": "~5.6.2",
+    "typescript-eslint": "^8.20.0"
   }
 }
