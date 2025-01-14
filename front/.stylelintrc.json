@@ -1,25 +1,14 @@
 {
   "extends": [
-    "stylelint-config-standard-scss",
-    "stylelint-config-sass-guidelines",
+    "stylelint-config-standard",
     "stylelint-config-idiomatic-order"
   ],
-  "plugins": [
-    "stylelint-scss"
-  ],
   "files": [
-    "**/*.css",
-    "**/*.scss"
+    "**/*.css"
   ],
   "ignoreFiles": [
     "**/vendor/*.css",
-    "**/vendor/**/*.css",
-    "**/vendor/*.scss",
-    "**/vendor/**/*.scss",
-    "**/vendor/*.sass",
-    "**/vendor/**/*.sass",
-    "**/vendor/*.less",
-    "**/vendor/**/*.less"
+    "**/vendor/**/*.css"
   ],
   "rules": {
     "declaration-property-value-no-unknown": true,
@@ -28,13 +17,11 @@
     "order/properties-alphabetical-order": null,
     "selector-max-compound-selectors": 5,
     "max-nesting-depth": 5,
-    "scss/double-slash-comment-empty-line-before": [
-      "always",
+    "at-rule-no-deprecated": [
+      true,
       {
-        "ignore": [
-          "between-comments",
-          "stylelint-commands",
-          "inside-block"
+        "ignoreAtRules": [
+          "apply"
         ]
       }
     ]

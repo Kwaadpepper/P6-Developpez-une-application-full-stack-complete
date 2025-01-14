@@ -6,7 +6,7 @@
     "editor.defaultFormatter": "vscode.html-language-features",
     "editor.formatOnSave": true
   },
-  "[scss]": {
+  "[css]": {
     "editor.codeActionsOnSave": {
       "source.fixAll.eslint": "always"
     },
