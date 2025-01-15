@@ -8,7 +8,7 @@ import { ButtonModule } from 'primeng/button'
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent {
-  start(): void {
+  onClickConnect(): void {
     alert('Commencez par lire le README et à vous de jouer !')
   }
 }

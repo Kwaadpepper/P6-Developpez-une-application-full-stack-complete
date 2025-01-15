@@ -1,5 +1,20 @@
-<div class="center">
-  <img src="/assets/logo_p6.png" alt="logo" />
-  <h1 class="text-xs">Welcome to MDD</h1>
-  <p-button severity="contrast" (click)="start()">Commencer</p-button>
+<div class="container-fluid min-h-full flex flex-col justify-center">
+  <div class="row mb-1">
+    <div class="col text-center">
+      <img class="img-fluid mx-auto" src="/assets/logo_p6.png" alt="Logo Monde de dèv"
+        title="Un nuage violet estampillé MDD" />
+      <h1 class="hidden" aria-hidden="true">Welcome to MDD</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col text-center flex flex-col justify-center md:block">
+      <p-button class="mx-4 my-4 inline-block min-w-32" variant="outlined" severity="contrast"
+        (click)="onClickConnect()">
+        <span class="inline-block min-w-32 font-bold" pButtonLabel>Se connecter</span>
+      </p-button>
+      <p-button class="mx-4 my-4" variant="outlined" severity="contrast" (click)="onClickConnect()">
+        <span class="inline-block min-w-32 font-bold" pButtonLabel>S'inscrire</span>
+      </p-button>
+    </div>
+  </div>
 </div>

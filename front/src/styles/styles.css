@@ -14,7 +14,22 @@
 }
 
 html,
-body { height: 100%; }
+body {
+  min-height: 100vh;
+  margin: 0;
 
-body { margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif; }
+  app-root {
+    display: block;
+    height: 100vh;
+    margin: 0;
+
+    > * {
+      display: block;
+      height: 100%;
+    }
+
+    > router-outlet {
+      display: none;
+    }
+  }
+}
