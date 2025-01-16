@@ -1,4 +1,7 @@
+@import url("primeicons/primeicons.css");
 @import url("./vars.css");
+@import url("./titles.css");
+@import url("./fonts.css");
 
 /* You can add global styles to this file, and also import other style files */
 @layer tailwind-base, primeng, tailwind-utilities;
@@ -15,6 +18,10 @@
   @tailwind utilities;
 }
 
+* {
+  font-family: var(--font-default);
+}
+
 html,
 body {
   height: 100dvh;
@@ -27,12 +34,10 @@ body {
     flex-direction: column;
     margin: 0;
 
-    > header {
-      height: var(--header-height);
-    }
-
     > main {
+      position: relative;
       flex-grow: 1;
+      padding-top: var(--page-top-padding);
 
       > * {
         display: block;

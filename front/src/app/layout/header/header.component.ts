@@ -11,16 +11,22 @@ import { filter } from 'rxjs'
 })
 export class HeaderComponent {
   displayHeader = false
+  isOnAuthPage = false
 
   constructor(private router: Router) {
     router.events.pipe(
       filter(e => e instanceof RouterEvent))
       .subscribe((e: RouterEvent) => {
         this.displayHeader = !this.isHomePage(e)
+        this.isOnAuthPage = this.isAuthPage(e)
       })
   }
 
   private isHomePage(e: RouterEvent): boolean {
     return e.url === '/'
+  }
+
+  private isAuthPage(e: RouterEvent): boolean {
+    return e.url === '/login' || e.url === '/register'
   }
 }

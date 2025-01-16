@@ -1,14 +1,12 @@
 import { Component } from '@angular/core'
+import { RouterLink } from '@angular/router'
 import { ButtonModule } from 'primeng/button'
 
 @Component({
   selector: 'app-home',
-  imports: [ButtonModule],
+  imports: [RouterLink, ButtonModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent {
-  onClickConnect(): void {
-    alert('Commencez par lire le README et à vous de jouer !')
-  }
 }

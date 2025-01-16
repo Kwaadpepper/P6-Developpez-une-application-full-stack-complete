@@ -1,3 +1,7 @@
 :root {
   --header-height: 3rem;
+  --page-top-padding: 2rem;
+  --font-default: 'Roboto', 'Helvetica', sans-serif;
+  --title-font: var(--font-default);
+  --title-color: #000;
 }
