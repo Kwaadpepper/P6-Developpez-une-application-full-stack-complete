@@ -14,6 +14,7 @@ module.exports = {
       },
     }),
     require('tailwindcss-primeui'),
+    require('@tailwindcss/typography'),
   ],
   corePlugins: {
     container: false,
