@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ButtonModule } from 'primeng/button'
 import { InputTextModule } from 'primeng/inputtext'
 
+import { Router } from '@angular/router'
 import { BackButtonComponent } from '../../../lib/components/back-button/back-button.component'
 
 @Component({
@@ -35,4 +36,12 @@ export class RegisterComponent {
       ],
     }),
   })
+
+  constructor(
+    private router: Router,
+  ) { }
+
+  public onRegister(): void {
+    this.router.navigateByUrl('/posts')
+  }
 }

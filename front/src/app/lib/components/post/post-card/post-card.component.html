@@ -1,0 +1,16 @@
+<div class="bg-gray-100 dark:bg-gray-800 m-4 p-4 rounded-lg h-52 md:h-56 flex flex-col">
+  <span class="h4 block font-bold">{{
+    (post.name.length>60)? (post.name | slice:0:61)+'...':(post.name) | titlecase
+    }}</span>
+  <div class="row mb-3">
+    <div class="col">{{ (post.updatedAt ?? post.createdAt) | nicedate }}</div>
+    <div class="col">{{
+      (post.authorName.length>60)? (post.authorName | slice:0:61)+'...':(post.authorName) | titlecase
+      }}</div>
+  </div>
+  <div class="table h-28">
+    <div class="prose dark:text-gray-100 leading-[1.06rem] table-cell align-middle">{{
+      (post.content.length>220)? (post.content | slice:0:221)+'...':(post.content)
+      }}</div>
+  </div>
+</div>

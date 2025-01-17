@@ -1,6 +1,16 @@
-<div *ngIf="displayHeader" class="w-100 border-b-2 border-b-gray-400 sm:block" [class.hidden]="isOnAuthPage">
+<div *ngIf="displayHeader" class="w-100 border-b-2 border-b-gray-400 sm:flex" [class.hidden]="isOnAuthPage">
   <a class="ms-3 me-auto inline-block cursor-pointer" routerLink="" routerLinkActive="router-link-active"
     title="Retourner sur la page d'accueil">
     <img class="img-fluid w-20" src="/assets/pictures/logo_p6.png" alt="Logo Monde de dèv" />
   </a>
+  <div class="flex-grow flex flex-row justify-end items-center">
+    <a class="mx-2" pButton variant="text" severity="contrast" routerLink="/posts" routerLinkActive="router-link-active"
+      title="Consulter les articles">
+      <span pButtonLabel>Articles</span>
+    </a>
+    <a class="mx-2" pButton variant="text" severity="contrast" routerLink="/themes"
+      routerLinkActive="router-link-active" title="Consulter les themes">
+      <span pButtonLabel>Themes</span>
+    </a>
+  </div>
 </div>

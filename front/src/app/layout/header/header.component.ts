@@ -1,11 +1,12 @@
 import { NgIf } from '@angular/common'
 import { Component } from '@angular/core'
-import { Router, RouterEvent } from '@angular/router'
+import { Router, RouterEvent, RouterModule } from '@angular/router'
+import { ButtonModule } from 'primeng/button'
 import { filter } from 'rxjs'
 
 @Component({
   selector: 'app-header',
-  imports: [NgIf],
+  imports: [NgIf, ButtonModule, RouterModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })

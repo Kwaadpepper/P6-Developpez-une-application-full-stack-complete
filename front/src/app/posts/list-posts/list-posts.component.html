@@ -1,0 +1,19 @@
+<div class="container-fluid">
+  <div class="row mb-3">
+    <div class="col px-7 flex justify-between">
+      <p-button variant="outlined" severity="contrast" routerLink="/posts/create">
+        <span pButtonLabel>Créer un article</span>
+      </p-button>
+      <p-button variant="text" severity="contrast">
+        <span pButtonLabel class="font-bold">Trier par</span>
+        <span pButtonLabel class="pi pi-arrow-down"></span>
+      </p-button>
+    </div>
+  </div>
+  <div class="row">
+    <div *ngIf="!postList.length" class="col">
+      Pas d'article pour l'instant
+    </div>
+    <div class="col-12 md:col-6 lg:col-4" *ngFor="let post of postList" app-post-card [post]="post"></div>
+  </div>
+</div>
