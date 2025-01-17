@@ -27,5 +27,28 @@
     "javascript",
     "typescript"
   ],
-  "html.format.unformattedContentDelimiter": "<!--noformat-->"
+  "html.format.unformattedContentDelimiter": "<!--noformat-->",
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#b02213",
+    "activityBar.background": "#b02213",
+    "activityBar.foreground": "#e7e7e7",
+    "activityBar.inactiveForeground": "#e7e7e799",
+    "activityBarBadge.background": "#13ad21",
+    "activityBarBadge.foreground": "#e7e7e7",
+    "commandCenter.border": "#e7e7e799",
+    "sash.hoverBorder": "#b02213",
+    "statusBar.background": "#82190e",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#b02213",
+    "statusBarItem.remoteBackground": "#82190e",
+    "statusBarItem.remoteForeground": "#e7e7e7",
+    "titleBar.activeBackground": "#82190e",
+    "titleBar.activeForeground": "#e7e7e7",
+    "titleBar.inactiveBackground": "#82190e99",
+    "titleBar.inactiveForeground": "#e7e7e799"
+  },
+  "peacock.color": "#82190e",
+  "conventionalCommits.scopes": [
+    "front"
+  ]
 }
