@@ -31,7 +31,9 @@ public class User implements Model {
   private final ZonedDateTime updatedAt;
 
   public User(
+      final String name,
       final String email) {
+    this.name = name;
     this.email = email;
     createdAt = ZonedDateTime.now();
     updatedAt = ZonedDateTime.now();

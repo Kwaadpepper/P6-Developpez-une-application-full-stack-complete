@@ -171,7 +171,7 @@ public class AuthenticationService {
       throw new ValidationException("There is already an account with this username");
     }
 
-    user = new User(email);
+    user = new User(username, email);
     userRepository.save(user);
 
     credential = new Credential(passwordEncoder.encode(password), user);

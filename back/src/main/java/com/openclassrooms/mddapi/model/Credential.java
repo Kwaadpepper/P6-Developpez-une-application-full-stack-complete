@@ -47,6 +47,7 @@ public class Credential implements UserDetails, Model {
       final User user) {
     this.password = password;
     this.user = user;
+    this.apiToken = UUID.randomUUID();
     createdAt = ZonedDateTime.now();
     updatedAt = ZonedDateTime.now();
   }
