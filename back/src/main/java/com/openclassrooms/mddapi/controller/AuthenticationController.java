@@ -1,7 +1,6 @@
 package com.openclassrooms.mddapi.controller;
 
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,10 +39,10 @@ public class AuthenticationController {
      * @return {@link UserDto}
      */
     @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> getAuthenticatedUserDetails() {
+    public UserDto getAuthenticatedUserDetails() {
         final var user = getAuthenticatedUser();
 
-        return ResponseEntity.ok().body(userPresenter.present(user));
+        return userPresenter.present(user);
     }
 
     /**
@@ -54,12 +53,10 @@ public class AuthenticationController {
      * @throws BadCredentialsException If user creadentials are invalid.
      */
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JwtDto> login(@Valid @RequestBody final LoginRequest request)
+    public JwtDto login(@Valid @RequestBody final LoginRequest request)
             throws BadCredentialsException {
 
-        final var jwtDto = authenticationService.authenticate(request.login(), request.password());
-
-        return ResponseEntity.ok(jwtDto);
+        return authenticationService.authenticate(request.login(), request.password());
     }
 
     /**
@@ -71,15 +68,13 @@ public class AuthenticationController {
      */
     @Transactional
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<JwtDto> register(@Valid @RequestBody final RegisterRequest request)
+    public JwtDto register(@Valid @RequestBody final RegisterRequest request)
             throws ValidationException {
 
-        final var jwtDto = authenticationService.register(
+        return authenticationService.register(
                 request.username(),
                 request.email(),
                 request.password());
-
-        return ResponseEntity.ok(jwtDto);
     }
 
     private User getAuthenticatedUser() {

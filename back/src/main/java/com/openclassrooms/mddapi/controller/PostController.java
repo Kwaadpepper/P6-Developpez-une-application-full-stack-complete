@@ -3,7 +3,6 @@ package com.openclassrooms.mddapi.controller;
 import java.util.UUID;
 
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,13 +43,13 @@ public class PostController {
      * @throws ResourceNotFoundException
      */
     @GetMapping(value = "/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PostDto> get(@PathVariable final UUID uuid)
+    public PostDto get(@PathVariable final UUID uuid)
             throws ResourceNotFoundException {
 
         final var rental = postService.getPost(uuid).orElseThrow(
                 () -> new ResourceNotFoundException("Post not found for this uuid :: " + uuid));
 
-        return ResponseEntity.ok().body(PostPresenter.present(rental));
+        return PostPresenter.present(rental);
     }
 
     /**
@@ -62,7 +61,7 @@ public class PostController {
      */
     @Transactional
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SimpleMessage> create(final Authentication authentication,
+    public SimpleMessage create(final Authentication authentication,
             @Valid @RequestBody final CreatePostRequest request) {
 
         final var credential = (Credential) authentication.getPrincipal();
@@ -74,7 +73,7 @@ public class PostController {
                 request.topic(),
                 authenticated.getUuid());
 
-        return ResponseEntity.ok().body(new SimpleMessage("Post created !"));
+        return new SimpleMessage("Post created !");
     }
 
 }
