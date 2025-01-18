@@ -15,6 +15,7 @@ public record PostListDto(
     String content,
     UUID topic_uuid,
     UUID author_uuid,
+    String author_name,
     ZonedDateTime created_at,
     ZonedDateTime updated_at) {
     }

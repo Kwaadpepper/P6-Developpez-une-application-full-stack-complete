@@ -57,6 +57,10 @@ public class User implements Model {
     return this.uuid;
   }
 
+  public String getName() {
+    return this.firstName + " " + this.lastName;
+  }
+
   @Override
   public String toString() {
     return this.getClass().getName() +

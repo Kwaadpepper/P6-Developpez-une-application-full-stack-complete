@@ -21,6 +21,7 @@ public class PostPresenter implements Presenter<PostDto, Post> {
         model.getContent(),
         model.getTopic().getUuid(),
         model.getAuthor().getUuid(),
+        model.getAuthor().getName(),
         model.getCreatedAt(),
         model.getUpdatedAt());
   }
@@ -37,6 +38,7 @@ public class PostPresenter implements Presenter<PostDto, Post> {
             model.getContent(),
             model.getTopic().getUuid(),
             model.getAuthor().getUuid(),
+            model.getAuthor().getName(),
             model.getCreatedAt(),
             model.getUpdatedAt()))
         .toList());
