@@ -57,6 +57,26 @@ public class Topic implements Model {
     return this.uuid;
   }
 
+  public String getSlug() {
+    return this.slug;
+  }
+
+  public String getName() {
+    return this.name;
+  }
+
+  public String getDescription() {
+    return this.description;
+  }
+
+  public ZonedDateTime getCreatedAt() {
+    return this.createdAt;
+  }
+
+  public ZonedDateTime getUpdatedAt() {
+    return this.updatedAt;
+  }
+
   @Override
   public String toString() {
     return this.getClass().getName() +
