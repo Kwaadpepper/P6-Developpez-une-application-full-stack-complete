@@ -22,7 +22,7 @@ import jakarta.validation.constraints.Min;
 public class FeedController {
     private final AuthenticationService authenticationService;
     private final FeedService feedService;
-    private final PostPresenter PostPresenter;
+    private final PostPresenter postPresenter;
 
     public FeedController(
             final AuthenticationService authenticationService,
@@ -30,7 +30,7 @@ public class FeedController {
             final PostPresenter PostPresenter) {
         this.authenticationService = authenticationService;
         this.feedService = feedService;
-        this.PostPresenter = PostPresenter;
+        this.postPresenter = PostPresenter;
     }
 
     /**
@@ -39,7 +39,7 @@ public class FeedController {
      * @param page      {@link Integer} The page number
      * @param ascending {@link Boolean} Whether to sort the feed in ascending
      *                  order using updated at column.
-     * @return
+     * @return {@link PaginatedDto} of {@link PostDto}
      */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public PaginatedDto<PostDto> getUserFeed(
@@ -53,7 +53,7 @@ public class FeedController {
 
         final var postList = feedService.getUserFeed(user, pageRequest);
 
-        return PostPresenter.presentModelList(postList, page);
+        return postPresenter.presentModelList(postList, page);
     }
 
 }
