@@ -3,10 +3,11 @@ package com.openclassrooms.mddapi.presenter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import com.openclassrooms.mddapi.dto.PaginatedDto;
 import com.openclassrooms.mddapi.dto.PostDto;
-import com.openclassrooms.mddapi.dto.PostListDto;
 import com.openclassrooms.mddapi.model.Post;
 
 @Component
@@ -14,34 +15,20 @@ public class PostPresenter implements Presenter<PostDto, Post> {
 
   @Override
   public PostDto present(final Post model) {
-    return new PostDto(
-        model.getUuid(),
-        model.getSlug(),
-        model.getTitle(),
-        model.getContent(),
-        model.getTopic().getUuid(),
-        model.getAuthor().getUuid(),
-        model.getAuthor().getName(),
-        model.getCreatedAt(),
-        model.getUpdatedAt());
+    return PostDto.of(model);
   }
 
-  public PostListDto presentModelList(final Iterable<Post> rentals) {
-    final List<Post> output = new ArrayList<>();
-    rentals.iterator().forEachRemaining(output::add);
+  public PaginatedDto<PostDto> presentModelList(final Page<Post> page, final Integer actualPage) {
+    final List<PostDto> list = new ArrayList<>();
+    page.iterator().forEachRemaining(item -> {
+      list.add(PostDto.of(item));
+    });
 
-    return new PostListDto(output.stream()
-        .map(model -> new PostListDto.PostDto(
-            model.getUuid(),
-            model.getSlug(),
-            model.getTitle(),
-            model.getContent(),
-            model.getTopic().getUuid(),
-            model.getAuthor().getUuid(),
-            model.getAuthor().getName(),
-            model.getCreatedAt(),
-            model.getUpdatedAt()))
-        .toList());
+    return PaginatedDto.of(
+        actualPage,
+        page.getTotalPages(),
+        page.getTotalElements(),
+        list);
   }
 
 }

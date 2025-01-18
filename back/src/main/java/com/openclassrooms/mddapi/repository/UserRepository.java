@@ -19,4 +19,14 @@ public interface UserRepository extends CrudRepository<User, UUID> {
      * @throws IllegalArgumentException if {@literal email} is {@literal null}.
      */
     Optional<User> findByEmail(String email);
+
+    /**
+     * Retrieves an entity by its name.
+     *
+     * @param name must not be {@literal null}.
+     * @return the entity with the given id or {@literal Optional#empty()} if none
+     *         found.
+     * @throws IllegalArgumentException if {@literal name} is {@literal null}.
+     */
+    Optional<User> findByName(String name);
 }

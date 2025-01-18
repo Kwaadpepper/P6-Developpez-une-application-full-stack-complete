@@ -18,11 +18,8 @@ public class User implements Model {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID uuid;
 
-  @Column(nullable = false, length = 255, name = "firstname")
-  private String firstName;
-
-  @Column(nullable = false, length = 255, name = "lastname")
-  private String lastName;
+  @Column(nullable = false, length = 255)
+  private String name;
 
   @Column(nullable = false, length = 255)
   private String email;
@@ -34,11 +31,7 @@ public class User implements Model {
   private final ZonedDateTime updatedAt;
 
   public User(
-      final String firstName,
-      final String lastName,
       final String email) {
-    this.firstName = firstName;
-    this.lastName = lastName;
     this.email = email;
     createdAt = ZonedDateTime.now();
     updatedAt = ZonedDateTime.now();
@@ -46,8 +39,6 @@ public class User implements Model {
 
   // Required By JPA
   protected User() {
-    firstName = null;
-    lastName = null;
     email = null;
     createdAt = null;
     updatedAt = null;
@@ -58,15 +49,26 @@ public class User implements Model {
   }
 
   public String getName() {
-    return this.firstName + " " + this.lastName;
+    return this.name;
+  }
+
+  public String getEmail() {
+    return this.email;
+  }
+
+  public ZonedDateTime getCreatedAt() {
+    return this.createdAt;
+  }
+
+  public ZonedDateTime getUpdatedAt() {
+    return this.updatedAt;
   }
 
   @Override
   public String toString() {
     return this.getClass().getName() +
         " [uuid=" + uuid +
-        ", firstName=" + firstName +
-        ", lastName=" + lastName +
+        ", name=" + name +
         ", email=" + email +
         ", createdAt=" + createdAt +
         ", updatedAt=" + updatedAt

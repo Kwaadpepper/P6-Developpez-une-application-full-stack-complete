@@ -4,11 +4,10 @@ DELETE
 DELETE
     FROM "users" WHERE "uuid" = '6b8c767f-aa9f-48d3-b6c4-03e1f6879061';
 INSERT
-    INTO "users" ("uuid", "firstname", "lastname", "email", "created_at", "updated_at")
+    INTO "users" ("uuid", "name", "email", "created_at", "updated_at")
     VALUES (
         '6b8c767f-aa9f-48d3-b6c4-03e1f6879061',
-        'John',
-        'Doe',
+        'John Doe',
         'user@example.net',
         '2024-12-03 17:17:44',
         '2024-12-26 18:26:16'
@@ -16,10 +15,9 @@ INSERT
 
 
 INSERT
-    INTO "credentials" ("uuid", "username", "password", "api_token", "user_uuid", "created_at", "updated_at")
+    INTO "credentials" ("uuid", "password", "api_token", "user_uuid", "created_at", "updated_at")
     VALUES (
         '6b8c767f-aa9f-48d3-b6c4-03e1f6879062',
-        'username',
         '$argon2id$v=19$m=16384,t=2,p=1$0WuqQhWcZPF/reE5xWZoaQ$tFZkGIuUdAEGvd22/qmek20sTOwNf+RKIHm/tTlGzW8',
         '6b8c767f-aa9f-48d3-b6c4-03e1f6879010',
         '6b8c767f-aa9f-48d3-b6c4-03e1f6879061',

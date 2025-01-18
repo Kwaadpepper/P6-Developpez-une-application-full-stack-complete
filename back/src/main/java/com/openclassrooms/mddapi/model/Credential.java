@@ -1,10 +1,16 @@
 package com.openclassrooms.mddapi.model;
 
 import java.time.ZonedDateTime;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,14 +20,11 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(schema = "mddapi", name = "credentials")
-public class Credential implements Model {
+public class Credential implements UserDetails, Model {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID uuid;
-
-  @Column(nullable = false, length = 50)
-  private final String username;
 
   @Column(nullable = false, length = 255)
   private String password;
@@ -29,7 +32,7 @@ public class Credential implements Model {
   @Column(nullable = false, name = "api_token")
   private UUID apiToken;
 
-  @ManyToOne(optional = false)
+  @ManyToOne(optional = false, fetch = FetchType.EAGER)
   @JoinColumn(name = "user_uuid")
   private final User user;
 
@@ -40,10 +43,8 @@ public class Credential implements Model {
   private final ZonedDateTime updatedAt;
 
   public Credential(
-      final String username,
       final String password,
       final User user) {
-    this.username = username;
     this.password = password;
     this.user = user;
     createdAt = ZonedDateTime.now();
@@ -52,11 +53,37 @@ public class Credential implements Model {
 
   // Required By JPA
   protected Credential() {
-    username = null;
     password = null;
     user = null;
     createdAt = null;
     updatedAt = null;
+  }
+
+  public UUID getUuid() {
+    return this.uuid;
+  }
+
+  public User getUser() {
+    return this.user;
+  }
+
+  public UUID getApiToken() {
+    return this.apiToken;
+  }
+
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return List.of();
+  }
+
+  @Override
+  public String getPassword() {
+    return this.password;
+  }
+
+  @Override
+  public String getUsername() {
+    return this.apiToken.toString();
   }
 
   @Override

@@ -12,18 +12,17 @@ DROP TABLE IF EXISTS "mddapi"."users";
 -- USERS
 CREATE TABLE "mddapi"."users"(
    "uuid" UUID PRIMARY KEY NOT NULL,
-   "firstname" character varying(255) NOT NULL,
-   "lastname" character varying(255) NOT NULL,
+   "name" character varying(255) NOT NULL,
    "email" character varying(255) NOT NULL,
    "created_at" timestamp with time zone NOT NULL,
    "updated_at" timestamp with time zone NOT NULL
 );
 
+CREATE UNIQUE INDEX users_name_unique ON "mddapi".users USING btree (name);
 CREATE UNIQUE INDEX users_email_unique ON "mddapi".users USING btree (email);
 
 COMMENT ON COLUMN "mddapi"."users"."uuid" IS 'Unique uuid';
-COMMENT ON COLUMN "mddapi"."users"."firstname" IS 'Firstname';
-COMMENT ON COLUMN "mddapi"."users"."lastname" IS 'Lastname';
+COMMENT ON COLUMN "mddapi"."users"."name" IS 'Unique username to auth';
 COMMENT ON COLUMN "mddapi"."users"."email" IS 'User unique email to auth and send transactional messages';
 COMMENT ON COLUMN "mddapi"."users"."created_at" IS 'Created at date';
 COMMENT ON COLUMN "mddapi"."users"."updated_at" IS 'Update at date';
@@ -32,7 +31,6 @@ COMMENT ON COLUMN "mddapi"."users"."updated_at" IS 'Update at date';
 -- CREDENTIALS
 CREATE TABLE "mddapi"."credentials"(
    "uuid" UUID PRIMARY KEY NOT NULL,
-   "username" character varying(50) NOT NULL,
    "password" character varying(255) NOT NULL,
    "api_token" UUID NOT NULL,
    "user_uuid" UUID NOT NULL,
@@ -40,12 +38,10 @@ CREATE TABLE "mddapi"."credentials"(
    "updated_at" timestamp with time zone NOT NULL
 );
 
-CREATE UNIQUE INDEX credentials_username_unique ON "mddapi".credentials USING btree (username);
 CREATE UNIQUE INDEX credentials_api_token_unique ON "mddapi".credentials USING btree (api_token);
 CREATE UNIQUE INDEX credentials_user_uuid_unique ON "mddapi".credentials USING btree (user_uuid);
 
 COMMENT ON COLUMN "mddapi"."credentials"."uuid" IS 'Unique uuid';
-COMMENT ON COLUMN "mddapi"."credentials"."username" IS 'Unique username to auth';
 COMMENT ON COLUMN "mddapi"."credentials"."password" IS 'Hashed password';
 COMMENT ON COLUMN "mddapi"."credentials"."api_token" IS 'Unique uuid to identify the user from further api calls';
 COMMENT ON COLUMN "mddapi"."credentials"."user_uuid" IS 'User foreign key';
