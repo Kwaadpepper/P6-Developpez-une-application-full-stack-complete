@@ -53,6 +53,13 @@ public class PostController {
         return ResponseEntity.ok().body(PostPresenter.present(rental));
     }
 
+    /**
+     * Create a new post
+     *
+     * @param authentication {@link Authentication}
+     * @param request        {@link CreatePostRequest}
+     * @return {@link SimpleMessage} In case of success.
+     */
     @Transactional
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SimpleMessage> create(final Authentication authentication,

@@ -34,7 +34,11 @@ public class AuthenticationController {
         this.userPresenter = userPresenter;
     }
 
-    /** Get authenticated user */
+    /**
+     * Get the authenticated user details
+     *
+     * @return {@link UserDto}
+     */
     @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDto> getAuthenticatedUserDetails() {
         final var user = getAuthenticatedUser();
@@ -42,7 +46,13 @@ public class AuthenticationController {
         return ResponseEntity.ok().body(userPresenter.present(user));
     }
 
-    /** Authenticate a user */
+    /**
+     * Login a user
+     *
+     * @param request {@link LoginRequest}
+     * @return {@link JwtDto}
+     * @throws BadCredentialsException If user creadentials are invalid.
+     */
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JwtDto> login(@Valid @RequestBody final LoginRequest request)
             throws BadCredentialsException {
@@ -52,7 +62,13 @@ public class AuthenticationController {
         return ResponseEntity.ok(jwtDto);
     }
 
-    /** Register a user */
+    /**
+     * Register a new user
+     *
+     * @param request {@link RegisterRequest}
+     * @return {@link JwtDto}
+     * @throws ValidationException If the user data is invalid.
+     */
     @Transactional
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<JwtDto> register(@Valid @RequestBody final RegisterRequest request)
