@@ -4,15 +4,24 @@ import java.util.UUID;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.openclassrooms.mddapi.dto.PostDto;
+import com.openclassrooms.mddapi.dto.SimpleMessage;
 import com.openclassrooms.mddapi.exception.exceptions.ResourceNotFoundException;
+import com.openclassrooms.mddapi.model.Credential;
 import com.openclassrooms.mddapi.presenter.PostPresenter;
+import com.openclassrooms.mddapi.request.post.CreatePostRequest;
 import com.openclassrooms.mddapi.service.models.PostService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -35,13 +44,30 @@ public class PostController {
      * @throws ResourceNotFoundException
      */
     @GetMapping(value = "/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PostDto> getRentalById(@PathVariable final UUID uuid)
+    public ResponseEntity<PostDto> get(@PathVariable final UUID uuid)
             throws ResourceNotFoundException {
 
         final var rental = postService.getPost(uuid).orElseThrow(
                 () -> new ResourceNotFoundException("Post not found for this uuid :: " + uuid));
 
         return ResponseEntity.ok().body(PostPresenter.present(rental));
+    }
+
+    @Transactional
+    @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SimpleMessage> create(final Authentication authentication,
+            @Valid @RequestBody final CreatePostRequest request) {
+
+        final var credential = (Credential) authentication.getPrincipal();
+        final var authenticated = credential.getUser();
+
+        postService.createPost(
+                request.title(),
+                request.content(),
+                request.topic(),
+                authenticated.getUuid());
+
+        return ResponseEntity.ok().body(new SimpleMessage("Post created !"));
     }
 
 }

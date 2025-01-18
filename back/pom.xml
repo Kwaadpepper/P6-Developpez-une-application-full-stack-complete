@@ -40,6 +40,7 @@
 		<bcpkix-jdk18on.version>1.80</bcpkix-jdk18on.version>
 		<jsoup.version>1.18.3</jsoup.version>
 		<slugify.version>3.0.7</slugify.version>
+		<slugify-dep-icu4j-icu.version>76.1</slugify-dep-icu4j-icu.version>
 	</properties>
 
 	<dependencies>
@@ -115,6 +116,13 @@
 			<groupId>com.github.slugify</groupId>
 			<version>${slugify.version}</version>
 		</dependency>
+		<!-- Slugify dependency -->
+		<dependency>
+			<artifactId>icu4j</artifactId>
+			<groupId>com.ibm.icu</groupId>
+			<version>${slugify-dep-icu4j-icu.version}</version>
+		</dependency>
+
 
 	</dependencies>
 

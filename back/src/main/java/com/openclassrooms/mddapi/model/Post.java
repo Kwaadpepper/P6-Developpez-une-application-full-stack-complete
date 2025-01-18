@@ -31,7 +31,7 @@ public class Post implements Model {
 
   @ManyToOne(optional = false)
   @JoinColumn(name = "topic_uuid")
-  private final Topic topic;
+  private Topic topic;
 
   @ManyToOne(optional = false)
   @JoinColumn(name = "author_uuid")
@@ -77,16 +77,32 @@ public class Post implements Model {
     return this.slug;
   }
 
+  public void setSlug(final String slug) {
+    this.slug = slug;
+  }
+
   public String getTitle() {
     return this.title;
+  }
+
+  public void setTitle(final String title) {
+    this.title = title;
   }
 
   public String getContent() {
     return this.content;
   }
 
+  public void setContent(final String content) {
+    this.content = content;
+  }
+
   public Topic getTopic() {
     return this.topic;
+  }
+
+  public void setTopic(final Topic topic) {
+    this.topic = topic;
   }
 
   public User getAuthor() {

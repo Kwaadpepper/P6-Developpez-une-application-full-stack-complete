@@ -23,4 +23,14 @@ public interface PostRepository extends PagingAndSortingRepository<Post, UUID>, 
      * @return a page of entities
      */
     Page<Post> findAllByAuthorUuid(UUID authorUuid, Pageable pageable);
+
+    /**
+     * Returns whether an entity with the given slug exists.
+     *
+     * @param slug must not be {@literal null}.
+     * @return {@literal true} if an entity with the given slug exists,
+     *         {@literal false} otherwise.
+     * @throws IllegalArgumentException if {@literal slug} is {@literal null}.
+     */
+    boolean existsBySlug(String slug);
 }

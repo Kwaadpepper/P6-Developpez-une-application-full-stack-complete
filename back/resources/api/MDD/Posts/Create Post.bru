@@ -1,0 +1,23 @@
+meta {
+  name: Create Post
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3001/api/posts
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: multipart/form-data
+}
+
+body:json {
+  {
+    "title": "New post about ducks",
+    "content": "# Medias torum amore sua musco nec imagine\n## Motis nullam Iris dixit crinale est\nLorem markdownum sociis seque Lapithaeae occupat Anienis, Perseus esse! Primo\nnon venit pietas pectus, caelum exemplumque orbem. Et et his dumque praelate.",
+    "topic": "6b8c767f-aa9f-48d3-b6c4-03e1f6879000"
+  }
+}
