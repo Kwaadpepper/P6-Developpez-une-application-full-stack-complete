@@ -1,6 +1,8 @@
 package com.openclassrooms.mddapi.controller;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,15 +36,22 @@ public class FeedController {
     /**
      * This may be used to fetch paginated user post feed
      *
-     * @param page The page number to fetch, starts at 0.
-     * @return A list of posts.
+     * @param page      {@link Integer} The page number
+     * @param ascending {@link Boolean} Whether to sort the feed in ascending
+     *                  order using updated at column.
+     * @return
      */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public PaginatedDto<PostDto> getUserFeed(
-            @RequestParam(required = false, defaultValue = "1") @Min(value = 1) final Integer page) {
+            @RequestParam(required = false, defaultValue = "1") @Min(value = 1) final Integer page,
+            @RequestParam(required = false, defaultValue = "false") final Boolean ascending) {
         final var user = authenticationService.getAuthenticatedUser()
                 .orElseThrow(IllegalStateException::new);
-        final var postList = feedService.getUserFeed(user, PageRequest.of(page - 1, 30));
+        var sortDirection = ascending ? Direction.ASC : Direction.DESC;
+        var sort = Sort.by(sortDirection, "updatedAt");
+        var pageRequest = PageRequest.of(page - 1, 30, sort);
+
+        final var postList = feedService.getUserFeed(user, pageRequest);
 
         return PostPresenter.presentModelList(postList, page);
     }
