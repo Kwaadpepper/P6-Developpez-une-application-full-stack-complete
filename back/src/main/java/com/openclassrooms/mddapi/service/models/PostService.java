@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.mddapi.exception.exceptions.ValidationException;
+import com.openclassrooms.mddapi.exception.exceptions.ValidationException.ValidationError;
 import com.openclassrooms.mddapi.model.Post;
 import com.openclassrooms.mddapi.repository.PostRepository;
 import com.openclassrooms.mddapi.repository.TopicRepository;
@@ -45,14 +46,14 @@ public class PostService {
       final UUID authorUuid) {
 
     var topic = topicRepository.findById(topicUuid)
-        .orElseThrow(() -> new ValidationException("Topic not found"));
+        .orElseThrow(() -> ValidationException.of(ValidationError.of("topic", "Topic not found")));
     var author = userRepository.findById(authorUuid)
-        .orElseThrow(() -> new ValidationException("User not found"));
+        .orElseThrow(() -> ValidationException.of(ValidationError.of("author", "User not found")));
     var sanitizedContent = htmlCleanerService.stripHtml(content);
     var slug = generateSlug(title);
 
     if (postRepository.existsBySlug(slug)) {
-      throw new ValidationException("Post with this title already exists");
+      throw ValidationException.of(ValidationError.of("title", "Post with this title already exists"));
     }
 
     var post = new Post(slug, title, sanitizedContent, topic, author);
@@ -67,9 +68,9 @@ public class PostService {
       final UUID topicUuid) {
 
     var post = postRepository.findById(postUuid)
-        .orElseThrow(() -> new ValidationException("Post not found"));
+        .orElseThrow(() -> ValidationException.of(ValidationError.of("post", "Post not found")));
     var topic = topicRepository.findById(topicUuid)
-        .orElseThrow(() -> new ValidationException("Topic not found"));
+        .orElseThrow(() -> ValidationException.of(ValidationError.of("topic", "Topic not found")));
     var sanitizedContent = htmlCleanerService.stripHtml(content);
     var slug = generateSlug(title);
 
@@ -89,7 +90,7 @@ public class PostService {
     try {
       return sluggerService.slugify(title);
     } catch (IllegalArgumentException e) {
-      throw new ValidationException("Cannot generate slug from title");
+      throw ValidationException.of(ValidationError.of("title", "Cannot generate slug from title"));
     }
   }
 

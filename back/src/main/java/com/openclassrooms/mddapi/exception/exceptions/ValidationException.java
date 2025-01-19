@@ -1,15 +1,31 @@
 package com.openclassrooms.mddapi.exception.exceptions;
 
-import com.openclassrooms.mddapi.configuration.AppConfiguration;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ValidationException extends RuntimeException {
-  private static final long serialVersionUID = AppConfiguration.SERIAL_VERSION_UID;
+  private final Set<ValidationError> errors;
 
-  public ValidationException(final String message) {
-    super(message);
+  public ValidationException(Set<ValidationError> errors) {
+    this.errors = errors;
   }
 
-  public ValidationException(final String message, final Throwable previous) {
-    super(message, previous);
+  public static ValidationException of(Set<ValidationError> invalidFields) {
+    return new ValidationException(invalidFields);
+  }
+
+  public static ValidationException of(ValidationError... errors) {
+    return of(Arrays.stream(errors).collect(Collectors.toSet()));
+  }
+
+  public Set<ValidationError> getErrors() {
+    return errors;
+  }
+
+  public record ValidationError(String field, String message) {
+    public static ValidationError of(String field, String message) {
+      return new ValidationError(field, message);
+    }
   }
 }

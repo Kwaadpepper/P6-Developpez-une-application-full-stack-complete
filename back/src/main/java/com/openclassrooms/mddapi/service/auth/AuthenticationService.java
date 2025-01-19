@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import com.openclassrooms.mddapi.dto.JwtDto;
 import com.openclassrooms.mddapi.exception.exceptions.ServerErrorException;
 import com.openclassrooms.mddapi.exception.exceptions.ValidationException;
+import com.openclassrooms.mddapi.exception.exceptions.ValidationException.ValidationError;
 import com.openclassrooms.mddapi.lib.auth.ApiAuthenticationToken;
 import com.openclassrooms.mddapi.model.Credential;
 import com.openclassrooms.mddapi.model.User;
@@ -148,12 +149,12 @@ public class AuthenticationService {
 
     if (userRepository.findByEmail(email).isPresent()) {
       logger.debug("The email is already used so we cannot create an account with it.");
-      throw new ValidationException("There is already an account with this email");
+      throw ValidationException.of(ValidationError.of("email", "There is already an account with this email"));
     }
 
     if (userRepository.findByName(username).isPresent()) {
       logger.debug("The username is already used so we cannot create an account with it.");
-      throw new ValidationException("There is already an account with this username");
+      throw ValidationException.of(ValidationError.of("username", "There is already an account with this username"));
     }
 
     user = new User(username, email);

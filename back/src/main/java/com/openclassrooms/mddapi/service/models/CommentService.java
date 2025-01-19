@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.mddapi.exception.exceptions.ValidationException;
+import com.openclassrooms.mddapi.exception.exceptions.ValidationException.ValidationError;
 import com.openclassrooms.mddapi.model.Comment;
 import com.openclassrooms.mddapi.query_dto.CommentWithAuthor;
 import com.openclassrooms.mddapi.repository.PostRepository;
@@ -45,7 +46,7 @@ public class CommentService {
         }
 
         if (!postRepository.existsById(postUuid)) {
-            throw new ValidationException("Post not found");
+            throw ValidationException.of(ValidationError.of("post", "Post not found"));
         }
 
         return commentReadRepository.findAllByPostUuid(postUuid, page);
@@ -60,9 +61,9 @@ public class CommentService {
      */
     public void createComment(UUID authorUuid, UUID postUuid, String content) {
         var author = userRepository.findById(authorUuid)
-                .orElseThrow(() -> new ValidationException("User not found"));
+                .orElseThrow(() -> ValidationException.of(ValidationError.of("author", "User not found")));
         var post = postRepository.findById(postUuid)
-                .orElseThrow(() -> new ValidationException("User not found"));
+                .orElseThrow(() -> ValidationException.of(ValidationError.of("post", "Post not found")));
 
         var comment = new Comment(content, post, author);
         commentRepository.save(comment);

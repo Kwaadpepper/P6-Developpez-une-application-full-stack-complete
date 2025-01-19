@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.mddapi.exception.exceptions.ValidationException;
+import com.openclassrooms.mddapi.exception.exceptions.ValidationException.ValidationError;
 import com.openclassrooms.mddapi.model.Subscription;
 import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.repository.SubscriptionRepository;
@@ -39,9 +40,9 @@ public class SubscriptionService {
         }
 
         var user = userRepository.findById(userUuid)
-                .orElseThrow(() -> new ValidationException("User not found"));
+                .orElseThrow(() -> ValidationException.of(ValidationError.of("user", "User not found")));
         var topic = topicRepository.findById(topicUuid)
-                .orElseThrow(() -> new ValidationException("Topic not found"));
+                .orElseThrow(() -> ValidationException.of(ValidationError.of("topic", "Topic not found")));
 
         var subscription = new Subscription(topic, user);
         subscriptionRepository.save(subscription);

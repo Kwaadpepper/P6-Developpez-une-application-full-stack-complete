@@ -1,5 +1,8 @@
 package com.openclassrooms.mddapi.request.auth;
 
+import java.util.Objects;
+
+import com.openclassrooms.mddapi.request.Request;
 import com.openclassrooms.mddapi.valueobject.Email;
 
 import jakarta.validation.constraints.NotEmpty;
@@ -43,7 +46,9 @@ public record RegisterRequest(
 ) {
 
     public Email getEmail() {
-        return Email.of(email);
+        return Objects.requireNonNull(Request.validate("email", email,
+        email -> email != null ? Email.of(email.trim()) : null));
+
     }
 
     public String getUsername() {

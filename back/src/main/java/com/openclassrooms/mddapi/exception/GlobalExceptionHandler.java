@@ -71,9 +71,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler(ValidationException.class)
-  public ResponseEntity<ApiErrorDetails> handleException(final ValidationException ex,
+  public ResponseEntity<ValidationErrorDetails> handleException(final ValidationException ex,
       final WebRequest request) {
-    return new ResponseEntity<>(toErrorDetails(ex, request), HttpStatus.BAD_REQUEST);
+
+    final Map<String, String> errors = new HashMap<>();
+    ex.getErrors().forEach(error -> {
+      final var fieldName = error.field();
+      final var errorMessage = error.message();
+      errors.put(fieldName, errorMessage);
+    });
+
+    return new ResponseEntity<>(
+        toValidationErrorDetails("Some fields could not be validated", errors, request),
+        HttpStatus.BAD_REQUEST);
   }
 
   @Override

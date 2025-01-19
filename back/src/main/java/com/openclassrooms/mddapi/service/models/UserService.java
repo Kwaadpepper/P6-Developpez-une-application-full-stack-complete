@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.mddapi.exception.exceptions.ValidationException;
+import com.openclassrooms.mddapi.exception.exceptions.ValidationException.ValidationError;
 import com.openclassrooms.mddapi.repository.UserRepository;
 import com.openclassrooms.mddapi.valueobject.Email;
 
@@ -18,13 +19,13 @@ public class UserService {
 
     public void updateUser(UUID userUuid, String name, Email email) {
         var user = userRepository.findById(userUuid)
-                .orElseThrow(() -> new ValidationException("User not found"));
+                .orElseThrow(() -> ValidationException.of(ValidationError.of("author", "User not found")));
         var emailExists = userRepository.findByEmail(email).isPresent();
 
         user.setName(name);
 
         if (!user.getEmail().equals(email) && emailExists) {
-            throw new ValidationException("Email is already taken");
+            throw ValidationException.of(ValidationError.of("email", "Email is already taken"));
         }
         if (!user.getEmail().equals(email)) {
             user.setEmail(email);
