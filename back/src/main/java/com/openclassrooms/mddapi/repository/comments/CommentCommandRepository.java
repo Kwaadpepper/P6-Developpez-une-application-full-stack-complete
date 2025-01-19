@@ -1,4 +1,4 @@
-package com.openclassrooms.mddapi.repository;
+package com.openclassrooms.mddapi.repository.comments;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -9,7 +9,8 @@ import org.springframework.stereotype.Repository;
 import com.openclassrooms.mddapi.model.Comment;
 
 @Repository
-public interface CommentRepository extends CrudRepository<Comment, UUID> {
+public interface CommentCommandRepository extends CrudRepository<Comment, UUID> {
+
     /**
      * Retrieves an entity by its postUuid.
      *
@@ -19,4 +20,5 @@ public interface CommentRepository extends CrudRepository<Comment, UUID> {
      * @throws IllegalArgumentException if {@literal postUuid} is {@literal null}.
      */
     Optional<Comment> findByPostUuid(UUID postUuid);
+
 }

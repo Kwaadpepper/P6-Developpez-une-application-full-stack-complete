@@ -5,12 +5,9 @@ import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -24,13 +21,11 @@ public class Comment implements Model {
   @Column(nullable = false, length = 500)
   private String content;
 
-  @ManyToOne(optional = false, fetch = FetchType.LAZY)
-  @JoinColumn(name = "post_uuid")
-  private final Post post;
+  @Column(nullable = false)
+  private final UUID postUuid;
 
-  @ManyToOne(optional = false, fetch = FetchType.LAZY)
-  @JoinColumn(name = "author_uuid")
-  private final User author;
+  @Column(nullable = false)
+  private final UUID authorUuid;
 
   @Column(nullable = false)
   private final ZonedDateTime createdAt;
@@ -43,8 +38,8 @@ public class Comment implements Model {
       final Post post,
       final User author) {
     this.content = content;
-    this.post = post;
-    this.author = author;
+    this.postUuid = post.getUuid();
+    this.authorUuid = author.getUuid();
     createdAt = ZonedDateTime.now();
     updatedAt = ZonedDateTime.now();
   }
@@ -52,8 +47,8 @@ public class Comment implements Model {
   // Required By JPA
   protected Comment() {
     content = null;
-    post = null;
-    author = null;
+    postUuid = null;
+    authorUuid = null;
     createdAt = null;
     updatedAt = null;
   }
@@ -64,6 +59,14 @@ public class Comment implements Model {
 
   public String getContent() {
     return this.content;
+  }
+
+  public UUID getPostUuid() {
+    return this.postUuid;
+  }
+
+  public UUID getAuthorUuid() {
+    return this.authorUuid;
   }
 
   public ZonedDateTime getCreatedAt() {
@@ -79,6 +82,8 @@ public class Comment implements Model {
     return this.getClass().getName() +
         " [uuid=" + uuid +
         ", content=" + content +
+        ", postUuid=" + postUuid +
+        ", authorUuid=" + authorUuid +
         ", createdAt=" + createdAt +
         ", updatedAt=" + updatedAt
         + "]";
