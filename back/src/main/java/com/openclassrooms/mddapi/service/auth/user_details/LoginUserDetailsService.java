@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.openclassrooms.mddapi.repository.CredentialRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
+import com.openclassrooms.mddapi.valueobject.Email;
 
 public class LoginUserDetailsService implements UserDetailsService {
   private static final Logger logger = LogManager.getLogger(LoginUserDetailsService.class);
@@ -28,7 +29,7 @@ public class LoginUserDetailsService implements UserDetailsService {
       throws UsernameNotFoundException {
     final var notFoundMessage = "Wrong username";
     try {
-      return userDetailsByEmail(userEmailOrName)
+      return tryUserDetailsByEmail(userEmailOrName)
           .orElseGet(() -> userDetailsByName(userEmailOrName)
               .orElseThrow(IllegalArgumentException::new));
     } catch (final IllegalArgumentException e) {
@@ -37,8 +38,16 @@ public class LoginUserDetailsService implements UserDetailsService {
     }
   }
 
-  private Optional<UserDetails> userDetailsByEmail(final String email) {
-    return userRepository.findByEmail(email).map(user -> {
+  private Optional<UserDetails> tryUserDetailsByEmail(final String email) {
+    Email userEmail;
+
+    try {
+      userEmail = Email.of(email);
+    } catch (final IllegalStateException e) {
+      return Optional.empty();
+    }
+
+    return userRepository.findByEmail(userEmail).map(user -> {
       return credentialRepository.findByUserUuid(user.getUuid()).orElseThrow(() -> {
         throw new IllegalStateException("Every user has to have credentials, DB is in invalid state.");
       });

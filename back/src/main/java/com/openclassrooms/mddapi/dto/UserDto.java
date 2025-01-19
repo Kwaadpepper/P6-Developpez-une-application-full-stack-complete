@@ -16,7 +16,7 @@ public record UserDto(
         return new UserDto(
                 user.getUuid(),
                 user.getName(),
-                user.getEmail(),
+                user.getEmail().value(),
                 user.getCreatedAt(),
                 user.getUpdatedAt());
     }

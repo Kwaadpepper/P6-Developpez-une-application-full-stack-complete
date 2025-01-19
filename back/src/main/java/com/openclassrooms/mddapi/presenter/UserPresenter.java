@@ -13,7 +13,7 @@ public class UserPresenter implements Presenter<UserDto, User> {
     return new UserDto(
         model.getUuid(),
         model.getName(),
-        model.getEmail(),
+        model.getEmail().value(),
         model.getCreatedAt(),
         model.getUpdatedAt());
   }

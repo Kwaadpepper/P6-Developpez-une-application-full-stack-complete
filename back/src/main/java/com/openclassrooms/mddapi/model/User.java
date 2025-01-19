@@ -3,6 +3,9 @@ package com.openclassrooms.mddapi.model;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+import com.openclassrooms.mddapi.valueobject.Email;
+
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,8 +24,8 @@ public class User implements Model {
   @Column(nullable = false, length = 255)
   private String name;
 
-  @Column(nullable = false, length = 255)
-  private String email;
+  @AttributeOverride(name = "value", column = @Column(name = "email", nullable = false, length = 255))
+  private Email email;
 
   @Column(nullable = false)
   private final ZonedDateTime createdAt;
@@ -32,7 +35,7 @@ public class User implements Model {
 
   public User(
       final String name,
-      final String email) {
+      final Email email) {
     this.name = name;
     this.email = email;
     createdAt = ZonedDateTime.now();
@@ -58,11 +61,11 @@ public class User implements Model {
     this.name = name;
   }
 
-  public String getEmail() {
+  public Email getEmail() {
     return this.email;
   }
 
-  public void setEmail(final String email) {
+  public void setEmail(final Email email) {
     this.email = email;
   }
 

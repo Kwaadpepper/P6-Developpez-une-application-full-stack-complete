@@ -58,8 +58,8 @@ public class ProfileController {
 
         userService.updateUser(
                 authUser.getUuid(),
-                request.name(),
-                request.email());
+                request.getName(),
+                request.getEmail());
 
         userPresenter.present(authUser);
 

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.openclassrooms.mddapi.exception.exceptions.ValidationException;
 import com.openclassrooms.mddapi.repository.UserRepository;
+import com.openclassrooms.mddapi.valueobject.Email;
 
 @Service
 public class UserService {
@@ -15,7 +16,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void updateUser(UUID userUuid, String name, String email) {
+    public void updateUser(UUID userUuid, String name, Email email) {
         var user = userRepository.findById(userUuid)
                 .orElseThrow(() -> new ValidationException("User not found"));
         var emailExists = userRepository.findByEmail(email).isPresent();

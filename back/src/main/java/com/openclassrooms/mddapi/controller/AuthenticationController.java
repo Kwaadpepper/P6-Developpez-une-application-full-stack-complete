@@ -53,9 +53,9 @@ public class AuthenticationController {
             throws ValidationException {
 
         return authenticationService.register(
-                request.username(),
-                request.email(),
-                request.password());
+                request.getUsername(),
+                request.getEmail(),
+                request.getPassword());
     }
 
 }

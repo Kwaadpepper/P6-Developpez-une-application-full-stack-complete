@@ -24,6 +24,7 @@ import com.openclassrooms.mddapi.model.Credential;
 import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.repository.CredentialRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
+import com.openclassrooms.mddapi.valueobject.Email;
 
 import jakarta.transaction.Transactional;
 
@@ -139,7 +140,7 @@ public class AuthenticationService {
   @Transactional
   public JwtDto register(
       final String username,
-      final String email,
+      final Email email,
       final String password)
       throws ValidationException {
     final User user;
