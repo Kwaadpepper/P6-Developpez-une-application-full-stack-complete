@@ -8,21 +8,26 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.openclassrooms.mddapi.dto.PaginatedDto;
+import com.openclassrooms.mddapi.dto.SimpleMessage;
 import com.openclassrooms.mddapi.dto.TopicDto;
 import com.openclassrooms.mddapi.dto.TopicNameDto;
 import com.openclassrooms.mddapi.model.Topic;
 import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.presenter.TopicPresenter;
+import com.openclassrooms.mddapi.request.topic.SubscribeTopicRequest;
 import com.openclassrooms.mddapi.service.auth.AuthenticationService;
 import com.openclassrooms.mddapi.service.models.SubscriptionService;
 import com.openclassrooms.mddapi.service.models.TopicService;
 
 import jakarta.annotation.Nullable;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
 @RestController
@@ -95,6 +100,21 @@ public class TopicController {
         });
 
         return topicPresenter.presentModelList(topicList);
+    }
+
+    /**
+     * This may be used to subscribe the current user to a topic
+     *
+     * @param request {@link SubscribeTopicRequest}
+     * @return {@link SimpleMessage} In case of success.
+     */
+    @PostMapping(value = "/subscribe", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public SimpleMessage subscribeOnTopic(@RequestBody @Valid SubscribeTopicRequest request) {
+        final var user = getAuthenticatedUser();
+
+        subscriptionService.subscribeUserOnTopic(user.getUuid(), request.topic());
+
+        return new SimpleMessage("Subscribed to topic!");
     }
 
     private User getAuthenticatedUser() {

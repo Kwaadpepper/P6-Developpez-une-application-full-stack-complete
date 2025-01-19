@@ -19,4 +19,16 @@ public interface SubscriptionRepository extends CrudRepository<Subscription, UUI
      * @throws IllegalArgumentException if {@literal userUuid} is {@literal null}.
      */
     Iterable<Subscription> findAllByUserUuid(UUID userUuid);
+
+    /**
+     * Returns whether an entity with the given uuids exists.
+     *
+     * @param userUuid  must not be {@literal null}.
+     * @param topicUuid must not be {@literal null}.
+     * @return {@literal true} if an entity with the given uuids exists,
+     *         {@literal false} otherwise.
+     * @throws IllegalArgumentException if {@literal userUuid} is {@literal null} or
+     *                                  {@literal topicUuid} is {@literal null}.
+     */
+    boolean existsByUserUuidAndTopicUuid(UUID userUuid, UUID topicUuid);
 }
