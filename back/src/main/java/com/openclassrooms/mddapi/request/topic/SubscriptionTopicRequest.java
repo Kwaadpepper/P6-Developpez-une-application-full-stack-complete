@@ -5,7 +5,7 @@ import java.util.UUID;
 import jakarta.validation.constraints.NotNull;
 
 //@formatter:off
-public record SubscribeTopicRequest(
+public record SubscriptionTopicRequest(
     @NotNull
     UUID topic
 ) {

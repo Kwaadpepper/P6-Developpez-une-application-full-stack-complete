@@ -46,4 +46,14 @@ public class SubscriptionService {
         var subscription = new Subscription(topic, user);
         subscriptionRepository.save(subscription);
     }
+
+    public void unSubscribeUserOnTopic(final UUID userUuid, final UUID topicUuid) {
+        var subscription = subscriptionRepository.findByUserUuidAndTopicUuid(userUuid, topicUuid).orElse(null);
+
+        if (subscription == null) {
+            return;
+        }
+
+        subscriptionRepository.delete(subscription);
+    }
 }

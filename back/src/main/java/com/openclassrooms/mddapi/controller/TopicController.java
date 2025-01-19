@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +22,7 @@ import com.openclassrooms.mddapi.dto.TopicNameDto;
 import com.openclassrooms.mddapi.model.Topic;
 import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.presenter.TopicPresenter;
-import com.openclassrooms.mddapi.request.topic.SubscribeTopicRequest;
+import com.openclassrooms.mddapi.request.topic.SubscriptionTopicRequest;
 import com.openclassrooms.mddapi.service.auth.AuthenticationService;
 import com.openclassrooms.mddapi.service.models.SubscriptionService;
 import com.openclassrooms.mddapi.service.models.TopicService;
@@ -105,16 +106,31 @@ public class TopicController {
     /**
      * This may be used to subscribe the current user to a topic
      *
-     * @param request {@link SubscribeTopicRequest}
+     * @param request {@link SubscriptionTopicRequest}
      * @return {@link SimpleMessage} In case of success.
      */
-    @PostMapping(value = "/subscribe", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public SimpleMessage subscribeOnTopic(@RequestBody @Valid SubscribeTopicRequest request) {
+    @PostMapping(value = "/subscription", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public SimpleMessage subscribeOnTopic(@RequestBody @Valid SubscriptionTopicRequest request) {
         final var user = getAuthenticatedUser();
 
         subscriptionService.subscribeUserOnTopic(user.getUuid(), request.topic());
 
         return new SimpleMessage("Subscribed to topic!");
+    }
+
+    /**
+     * This may be used to unsubscribe the current user from a topic
+     *
+     * @param request {@link SubscriptionTopicRequest}
+     * @return {@link SimpleMessage} In case of success.
+     */
+    @DeleteMapping(value = "/subscription", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public SimpleMessage unsubscribeOnTopic(@RequestBody @Valid SubscriptionTopicRequest request) {
+        final var user = getAuthenticatedUser();
+
+        subscriptionService.unSubscribeUserOnTopic(user.getUuid(), request.topic());
+
+        return new SimpleMessage("Unsubscribed from topic!");
     }
 
     private User getAuthenticatedUser() {

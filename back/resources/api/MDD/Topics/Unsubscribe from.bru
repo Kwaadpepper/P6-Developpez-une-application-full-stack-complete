@@ -1,10 +1,10 @@
 meta {
-  name: Subscribe to
+  name: Unsubscribe from
   type: http
-  seq: 4
+  seq: 5
 }
 
-post {
+delete {
   url: http://localhost:3001/api/topics/subscription
   body: json
   auth: inherit

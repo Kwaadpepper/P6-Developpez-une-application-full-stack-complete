@@ -1,5 +1,6 @@
 package com.openclassrooms.mddapi.repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.repository.CrudRepository;
@@ -31,4 +32,16 @@ public interface SubscriptionRepository extends CrudRepository<Subscription, UUI
      *                                  {@literal topicUuid} is {@literal null}.
      */
     boolean existsByUserUuidAndTopicUuid(UUID userUuid, UUID topicUuid);
+
+    /**
+     * Retrieves an entity by its {@literal userUuid} and {@literal topicUuid}.
+     *
+     * @param userUuid  must not be {@literal null}.
+     * @param topicUuid must not be {@literal null}.
+     * @return the entity with the given id or {@literal Optional#empty()} if none
+     *         found.
+     * @throws IllegalArgumentException if {@literal userUuid} is {@literal null} or
+     *                                  {@literal topicUuid} is {@literal null}.
+     */
+    Optional<Subscription> findByUserUuidAndTopicUuid(UUID userUuid, UUID topicUuid);
 }
