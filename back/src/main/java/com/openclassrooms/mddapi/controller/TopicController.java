@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,10 +19,9 @@ import com.openclassrooms.mddapi.dto.SimpleMessage;
 import com.openclassrooms.mddapi.dto.TopicDto;
 import com.openclassrooms.mddapi.dto.TopicNameDto;
 import com.openclassrooms.mddapi.model.Topic;
-import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.presenter.TopicPresenter;
 import com.openclassrooms.mddapi.request.topic.SubscriptionTopicRequest;
-import com.openclassrooms.mddapi.service.auth.AuthenticationService;
+import com.openclassrooms.mddapi.service.auth.SessionService;
 import com.openclassrooms.mddapi.service.models.SubscriptionService;
 import com.openclassrooms.mddapi.service.models.TopicService;
 
@@ -34,17 +32,17 @@ import jakarta.validation.constraints.Min;
 @RestController
 @RequestMapping("/api/topics")
 public class TopicController {
-    private final AuthenticationService authenticationService;
+    private final SessionService sessionService;
     private final TopicService topicService;
     private final SubscriptionService subscriptionService;
     private final TopicPresenter topicPresenter;
 
     TopicController(
-            final AuthenticationService authenticationService,
+            final SessionService sessionService,
             final TopicService topicService,
             final SubscriptionService subscriptionService,
             final TopicPresenter topicPresenter) {
-        this.authenticationService = authenticationService;
+        this.sessionService = sessionService;
         this.topicService = topicService;
         this.subscriptionService = subscriptionService;
         this.topicPresenter = topicPresenter;
@@ -92,8 +90,8 @@ public class TopicController {
      */
     @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<TopicDto> getCurrentUserSubscribedTopic() {
-        final var user = getAuthenticatedUser();
-        final var subscriptions = subscriptionService.getUserSubscriptions(user);
+        final var authUser = sessionService.getAuthenticatedUser();
+        final var subscriptions = subscriptionService.getUserSubscriptions(authUser);
         final List<Topic> topicList = new ArrayList<>();
         subscriptions.forEach((subscription) -> {
             final var topic = subscription.getTopic();
@@ -111,9 +109,11 @@ public class TopicController {
      */
     @PostMapping(value = "/subscription", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public SimpleMessage subscribeOnTopic(@RequestBody @Valid SubscriptionTopicRequest request) {
-        final var user = getAuthenticatedUser();
+        final var authUser = sessionService.getAuthenticatedUser();
 
-        subscriptionService.subscribeUserOnTopic(user.getUuid(), request.topic());
+        subscriptionService.subscribeUserOnTopic(
+                authUser.getUuid(),
+                request.topic());
 
         return new SimpleMessage("Subscribed to topic!");
     }
@@ -126,15 +126,12 @@ public class TopicController {
      */
     @DeleteMapping(value = "/subscription", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public SimpleMessage unsubscribeOnTopic(@RequestBody @Valid SubscriptionTopicRequest request) {
-        final var user = getAuthenticatedUser();
+        final var authUser = sessionService.getAuthenticatedUser();
 
-        subscriptionService.unSubscribeUserOnTopic(user.getUuid(), request.topic());
+        subscriptionService.unSubscribeUserOnTopic(
+                authUser.getUuid(),
+                request.topic());
 
         return new SimpleMessage("Unsubscribed from topic!");
-    }
-
-    private User getAuthenticatedUser() {
-        final var authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authenticationService.toUser(authentication);
     }
 }

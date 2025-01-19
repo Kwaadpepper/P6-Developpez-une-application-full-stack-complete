@@ -33,6 +33,7 @@ import jakarta.transaction.Transactional;
 @Service
 public class AuthenticationService {
   private static final Logger logger = LogManager.getLogger(AuthenticationService.class);
+  private final SessionService sessionService;
   private final UserRepository userRepository;
   private final CredentialRepository credentialRepository;
   private final PasswordEncoder passwordEncoder;
@@ -40,34 +41,17 @@ public class AuthenticationService {
   private final AuthenticationManager authenticationManager;
 
   public AuthenticationService(
+      final SessionService sessionService,
       final UserRepository userRepository,
       final CredentialRepository credentialRepository,
       final JwtService jwtService,
       final AuthenticationManager authenticationManager) {
+    this.sessionService = sessionService;
     this.userRepository = userRepository;
     this.credentialRepository = credentialRepository;
     passwordEncoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
     this.jwtService = jwtService;
     this.authenticationManager = authenticationManager;
-  }
-
-  /**
-   * Convert an {@link Authentication} to a {@link User}
-   *
-   * @param authentication The authentication to convert
-   * @return {@link User}
-   * @throws ServerErrorException If the principal is not a {@link User}
-   */
-  public User toUser(final Authentication authentication) throws ServerErrorException {
-    final var principal = authentication.getPrincipal();
-
-    if (!(principal instanceof Credential)) {
-      logger.debug("Given authentication principal is not a Credential instance.");
-      throw new ServerErrorException("Expected principal to be a '%s' instance given is '%s'"
-          .formatted(Credential.class, principal.getClass()));
-    }
-
-    return ((Credential) principal).getUser();
   }
 
   /**
@@ -99,7 +83,7 @@ public class AuthenticationService {
 
     return authentication.map(auth -> {
       if (auth.isAuthenticated()) {
-        return toUser(auth);
+        return sessionService.toUser(auth);
       }
       return null;
     });

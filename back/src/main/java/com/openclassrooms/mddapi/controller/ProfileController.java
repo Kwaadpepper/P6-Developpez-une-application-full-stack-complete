@@ -1,7 +1,6 @@
 package com.openclassrooms.mddapi.controller;
 
 import org.springframework.http.MediaType;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.openclassrooms.mddapi.dto.SimpleMessage;
 import com.openclassrooms.mddapi.dto.UserDto;
-import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.presenter.UserPresenter;
 import com.openclassrooms.mddapi.request.auth.UpdateProfileRequest;
 import com.openclassrooms.mddapi.service.auth.AuthenticationService;
+import com.openclassrooms.mddapi.service.auth.SessionService;
 import com.openclassrooms.mddapi.service.models.UserService;
 
 import jakarta.validation.Valid;
@@ -22,14 +21,17 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/profile")
 public class ProfileController {
     private final AuthenticationService authenticationService;
+    private final SessionService sessionService;
     private final UserService userService;
     private final UserPresenter userPresenter;
 
     public ProfileController(
             final AuthenticationService authenticationService,
+            final SessionService sessionService,
             final UserService userService,
             final UserPresenter userPresenter) {
         this.authenticationService = authenticationService;
+        this.sessionService = sessionService;
         this.userService = userService;
         this.userPresenter = userPresenter;
     }
@@ -41,9 +43,9 @@ public class ProfileController {
      */
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public UserDto getAuthenticatedUserDetails() {
-        final var user = getAuthenticatedUser();
+        final var authUser = sessionService.getAuthenticatedUser();
 
-        return userPresenter.present(user);
+        return userPresenter.present(authUser);
     }
 
     /**
@@ -54,21 +56,16 @@ public class ProfileController {
      */
     @PutMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public SimpleMessage setAuthenticatedUserDetails(@RequestBody @Valid final UpdateProfileRequest request) {
-        final var user = getAuthenticatedUser();
+        final var authUser = sessionService.getAuthenticatedUser();
 
         userService.updateUser(
-                user.getUuid(),
+                authUser.getUuid(),
                 request.name(),
                 request.email());
 
-        userPresenter.present(user);
+        userPresenter.present(authUser);
 
         return new SimpleMessage("Profile updated!");
-    }
-
-    private User getAuthenticatedUser() {
-        final var authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authenticationService.toUser(authentication);
     }
 
 }
