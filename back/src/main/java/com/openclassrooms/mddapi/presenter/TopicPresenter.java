@@ -20,7 +20,11 @@ public class TopicPresenter implements Presenter<TopicDto, Topic> {
     return TopicDto.of(model);
   }
 
-  public PaginatedDto<TopicDto> presentModelList(final Page<Topic> page, final Integer actualPage) {
+  public List<TopicDto> presentModelList(final List<Topic> list) {
+    return list.stream().map(TopicDto::of).toList();
+  }
+
+  public PaginatedDto<TopicDto> presentModelPage(final Page<Topic> page, final Integer actualPage) {
     final List<TopicDto> list = new ArrayList<>();
     page.iterator().forEachRemaining(item -> {
       list.add(TopicDto.of(item));

@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,11 +21,11 @@ public class Subscription implements Model {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID uuid;
 
-  @ManyToOne(optional = false)
+  @ManyToOne(optional = false, fetch = FetchType.EAGER)
   @JoinColumn(name = "topic_uuid")
   private final Topic topic;
 
-  @ManyToOne(optional = false)
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
   @JoinColumn(name = "user_uuid")
   private final User user;
 
@@ -49,6 +50,10 @@ public class Subscription implements Model {
     user = null;
     createdAt = null;
     updatedAt = null;
+  }
+
+  public Topic getTopic() {
+    return topic;
   }
 
   @Override

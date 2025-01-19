@@ -53,7 +53,7 @@ public class FeedController {
 
         final var postList = feedService.getUserFeed(user, pageRequest);
 
-        return postPresenter.presentModelList(postList, page);
+        return postPresenter.presentModelPage(postList, page);
     }
 
 }

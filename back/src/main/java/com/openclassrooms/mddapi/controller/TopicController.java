@@ -1,9 +1,12 @@
 package com.openclassrooms.mddapi.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,7 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.openclassrooms.mddapi.dto.PaginatedDto;
 import com.openclassrooms.mddapi.dto.TopicDto;
 import com.openclassrooms.mddapi.dto.TopicNameDto;
+import com.openclassrooms.mddapi.model.Topic;
+import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.presenter.TopicPresenter;
+import com.openclassrooms.mddapi.service.auth.AuthenticationService;
+import com.openclassrooms.mddapi.service.models.SubscriptionService;
 import com.openclassrooms.mddapi.service.models.TopicService;
 
 import jakarta.annotation.Nullable;
@@ -21,13 +28,19 @@ import jakarta.validation.constraints.Min;
 @RestController
 @RequestMapping("/api/topics")
 public class TopicController {
+    private final AuthenticationService authenticationService;
     private final TopicService topicService;
+    private final SubscriptionService subscriptionService;
     private final TopicPresenter topicPresenter;
 
     TopicController(
+            final AuthenticationService authenticationService,
             final TopicService topicService,
+            final SubscriptionService subscriptionService,
             final TopicPresenter topicPresenter) {
+        this.authenticationService = authenticationService;
         this.topicService = topicService;
+        this.subscriptionService = subscriptionService;
         this.topicPresenter = topicPresenter;
     }
 
@@ -63,6 +76,29 @@ public class TopicController {
 
         final var topicList = topicService.getPaginatedTopics(pageRequest);
 
-        return topicPresenter.presentModelList(topicList, page);
+        return topicPresenter.presentModelPage(topicList, page);
+    }
+
+    /**
+     * This may be used to fetch the topics that the current user is subscribed to
+     *
+     * @return {@link List} of {@link TopicDto}
+     */
+    @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<TopicDto> getCurrentUserSubscribedTopic() {
+        final var user = getAuthenticatedUser();
+        final var subscriptions = subscriptionService.getUserSubscriptions(user);
+        final List<Topic> topicList = new ArrayList<>();
+        subscriptions.forEach((subscription) -> {
+            final var topic = subscription.getTopic();
+            topicList.add(topic);
+        });
+
+        return topicPresenter.presentModelList(topicList);
+    }
+
+    private User getAuthenticatedUser() {
+        final var authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authenticationService.toUser(authentication);
     }
 }

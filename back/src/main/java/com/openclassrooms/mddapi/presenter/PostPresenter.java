@@ -18,7 +18,7 @@ public class PostPresenter implements Presenter<PostDto, Post> {
     return PostDto.of(model);
   }
 
-  public PaginatedDto<PostDto> presentModelList(final Page<Post> page, final Integer actualPage) {
+  public PaginatedDto<PostDto> presentModelPage(final Page<Post> page, final Integer actualPage) {
     final List<PostDto> list = new ArrayList<>();
     page.iterator().forEachRemaining(item -> {
       list.add(PostDto.of(item));
