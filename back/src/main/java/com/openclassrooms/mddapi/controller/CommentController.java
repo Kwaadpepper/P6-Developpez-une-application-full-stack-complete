@@ -66,7 +66,7 @@ public class CommentController {
      * @return {@link SimpleMessage} In case of success.
      */
     @Transactional
-    @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/comments", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public SimpleMessage createComment(@Valid @RequestBody final CreateCommentRequest request) {
 
         var authUser = sessionService.getAuthenticatedUser();
