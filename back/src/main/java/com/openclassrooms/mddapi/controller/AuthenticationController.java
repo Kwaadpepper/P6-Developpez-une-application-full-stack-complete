@@ -2,19 +2,14 @@ package com.openclassrooms.mddapi.controller;
 
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.openclassrooms.mddapi.dto.JwtDto;
-import com.openclassrooms.mddapi.dto.UserDto;
 import com.openclassrooms.mddapi.exception.exceptions.ValidationException;
-import com.openclassrooms.mddapi.model.User;
-import com.openclassrooms.mddapi.presenter.UserPresenter;
 import com.openclassrooms.mddapi.request.auth.LoginRequest;
 import com.openclassrooms.mddapi.request.auth.RegisterRequest;
 import com.openclassrooms.mddapi.service.auth.AuthenticationService;
@@ -25,24 +20,10 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/auth")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
-    private final UserPresenter userPresenter;
 
-    public AuthenticationController(final AuthenticationService authenticationService,
-            final UserPresenter userPresenter) {
+    public AuthenticationController(
+            final AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
-        this.userPresenter = userPresenter;
-    }
-
-    /**
-     * Get the authenticated user details
-     *
-     * @return {@link UserDto}
-     */
-    @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
-    public UserDto getAuthenticatedUserDetails() {
-        final var user = getAuthenticatedUser();
-
-        return userPresenter.present(user);
     }
 
     /**
@@ -75,11 +56,6 @@ public class AuthenticationController {
                 request.username(),
                 request.email(),
                 request.password());
-    }
-
-    private User getAuthenticatedUser() {
-        final var authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authenticationService.toUser(authentication);
     }
 
 }
