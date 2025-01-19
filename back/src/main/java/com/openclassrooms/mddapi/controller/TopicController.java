@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -107,6 +108,7 @@ public class TopicController {
      * @param request {@link SubscriptionTopicRequest}
      * @return {@link SimpleMessage} In case of success.
      */
+    @Transactional
     @PostMapping(value = "/subscription", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public SimpleMessage subscribeOnTopic(@RequestBody @Valid SubscriptionTopicRequest request) {
         final var authUser = sessionService.getAuthenticatedUser();
@@ -124,6 +126,7 @@ public class TopicController {
      * @param request {@link SubscriptionTopicRequest}
      * @return {@link SimpleMessage} In case of success.
      */
+    @Transactional
     @DeleteMapping(value = "/subscription", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public SimpleMessage unsubscribeOnTopic(@RequestBody @Valid SubscriptionTopicRequest request) {
         final var authUser = sessionService.getAuthenticatedUser();
