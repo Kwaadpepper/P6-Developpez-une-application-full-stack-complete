@@ -1,6 +1,8 @@
 package com.openclassrooms.mddapi.controller;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.openclassrooms.mddapi.dto.JwtDto;
+import com.openclassrooms.mddapi.dto.SimpleMessage;
 import com.openclassrooms.mddapi.exception.exceptions.ValidationException;
 import com.openclassrooms.mddapi.request.auth.LoginRequest;
 import com.openclassrooms.mddapi.request.auth.RegisterRequest;
@@ -34,10 +36,15 @@ public class AuthenticationController {
      * @throws BadCredentialsException If user creadentials are invalid.
      */
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public JwtDto login(@Valid @RequestBody final LoginRequest request)
+    public ResponseEntity<SimpleMessage> login(@Valid @RequestBody final LoginRequest request)
             throws BadCredentialsException {
 
-        return authenticationService.authenticate(request.login(), request.password());
+        final var jwtCookie = authenticationService.authenticate(request.login(), request.password());
+        final var message = new SimpleMessage("Logged in!");
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .body(message);
     }
 
     /**
@@ -49,13 +56,18 @@ public class AuthenticationController {
      */
     @Transactional
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public JwtDto register(@Valid @RequestBody final RegisterRequest request)
+    public ResponseEntity<SimpleMessage> register(@Valid @RequestBody final RegisterRequest request)
             throws ValidationException {
 
-        return authenticationService.register(
+        final var jwtCookie = authenticationService.register(
                 request.getUsername(),
                 request.getEmail(),
                 request.getPassword());
+        final var message = new SimpleMessage("Registered !");
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .body(message);
     }
 
 }

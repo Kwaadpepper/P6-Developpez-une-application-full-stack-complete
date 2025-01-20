@@ -4,6 +4,11 @@
       "name": "jwt.signing.secret_key",
       "type": "java.lang.String",
       "description": "The key used to sign jwt tokens"
+    },
+    {
+      "name": "jwt.cookie_name",
+      "type": "java.lang.String",
+      "description": "The name used for the jwt cookie"
     }
   ]
 }

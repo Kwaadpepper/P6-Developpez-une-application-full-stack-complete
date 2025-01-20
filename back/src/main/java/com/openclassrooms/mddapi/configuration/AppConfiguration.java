@@ -10,4 +10,7 @@ public class AppConfiguration {
 
   @Value("${jwt.signing.secret_key}")
   public String jwtSigningSecretKey;
+
+  @Value("${jwt.cookie_name}")
+  public String jwtCookieName;
 }

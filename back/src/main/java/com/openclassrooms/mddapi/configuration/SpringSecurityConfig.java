@@ -1,5 +1,6 @@
 package com.openclassrooms.mddapi.configuration;
 
+import java.util.List;
 import java.util.function.Function;
 
 import org.springframework.context.annotation.Bean;
@@ -59,12 +60,18 @@ public class SpringSecurityConfig {
       final JwtAuthenticationFilter jwtAuthenticationFilter,
       final AppConfiguration appConfiguration) throws Exception {
 
+    final var allowNonAuthRequestToUrls = new String[] {
+        "/api/auth/login",
+        "/api/auth/register"
+    };
+    jwtAuthenticationFilter.setIgnoreUrls(List.of(allowNonAuthRequestToUrls));
+
     return http.csrf(AbstractHttpConfigurer::disable)
         .exceptionHandling(handling -> handling
             .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
         .authorizeHttpRequests(request -> {
           // Login and Register are not protected.
-          request.requestMatchers("/api/auth/login", "/api/auth/register").permitAll();
+          request.requestMatchers(allowNonAuthRequestToUrls).permitAll();
 
           // Any other routes are.
           request.anyRequest().fullyAuthenticated();
