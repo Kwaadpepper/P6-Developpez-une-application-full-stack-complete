@@ -23,7 +23,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.openclassrooms.mddapi.component.JwtAuthenticationFilter;
-import com.openclassrooms.mddapi.lib.auth.ApiAuthenticationProvider;
+import com.openclassrooms.mddapi.provider.auth.ApiAuthenticationProvider;
 import com.openclassrooms.mddapi.repository.CredentialRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
 import com.openclassrooms.mddapi.service.auth.user_details.ApiUserDetailsService;

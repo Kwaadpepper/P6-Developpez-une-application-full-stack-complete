@@ -25,6 +25,7 @@ import com.openclassrooms.mddapi.dto.ApiErrorDetails;
 import com.openclassrooms.mddapi.dto.ValidationErrorDetails;
 import com.openclassrooms.mddapi.exception.exceptions.JwtAuthenticationFailureException;
 import com.openclassrooms.mddapi.exception.exceptions.JwtExpiredException;
+import com.openclassrooms.mddapi.exception.exceptions.RefreshExpiredException;
 import com.openclassrooms.mddapi.exception.exceptions.ResourceNotFoundException;
 import com.openclassrooms.mddapi.exception.exceptions.ValidationException;
 
@@ -46,6 +47,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler(JwtExpiredException.class)
   public ResponseEntity<ApiErrorDetails> handleException(final JwtExpiredException ex,
+      final WebRequest request) {
+    return new ResponseEntity<>(toErrorDetails(ex, request), HttpStatus.UNAUTHORIZED);
+  }
+
+  @ExceptionHandler(RefreshExpiredException.class)
+  public ResponseEntity<ApiErrorDetails> handleException(final RefreshExpiredException ex,
       final WebRequest request) {
     return new ResponseEntity<>(toErrorDetails(ex, request), HttpStatus.UNAUTHORIZED);
   }

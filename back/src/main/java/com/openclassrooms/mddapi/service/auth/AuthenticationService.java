@@ -1,5 +1,6 @@
 package com.openclassrooms.mddapi.service.auth;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,9 +21,10 @@ import org.springframework.stereotype.Service;
 import com.openclassrooms.mddapi.exception.exceptions.ServerErrorException;
 import com.openclassrooms.mddapi.exception.exceptions.ValidationException;
 import com.openclassrooms.mddapi.exception.exceptions.ValidationException.ValidationError;
-import com.openclassrooms.mddapi.lib.auth.ApiAuthenticationToken;
 import com.openclassrooms.mddapi.model.Credential;
+import com.openclassrooms.mddapi.model.RefreshToken;
 import com.openclassrooms.mddapi.model.User;
+import com.openclassrooms.mddapi.provider.auth.ApiAuthenticationToken;
 import com.openclassrooms.mddapi.repository.CredentialRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
 import com.openclassrooms.mddapi.valueobject.Email;
@@ -36,28 +38,31 @@ import jakarta.transaction.Transactional;
 @Service
 public class AuthenticationService {
   private static final Logger logger = LogManager.getLogger(AuthenticationService.class);
+  private final AuthenticationManager authenticationManager;
+  private final CookieService cookieService;
+  private final CredentialRepository credentialRepository;
+  private final JwtService jwtService;
+  private final PasswordEncoder passwordEncoder;
+  private final RefreshTokenService refreshTokenService;
   private final SessionService sessionService;
   private final UserRepository userRepository;
-  private final CredentialRepository credentialRepository;
-  private final PasswordEncoder passwordEncoder;
-  private final CookieService cookieService;
-  private final JwtService jwtService;
-  private final AuthenticationManager authenticationManager;
 
   public AuthenticationService(
       final SessionService sessionService,
-      final UserRepository userRepository,
-      final CredentialRepository credentialRepository,
+      final AuthenticationManager authenticationManager,
       final CookieService cookieService,
+      final CredentialRepository credentialRepository,
+      final RefreshTokenService refreshTokenService,
       final JwtService jwtService,
-      final AuthenticationManager authenticationManager) {
+      final UserRepository userRepository) {
+    this.authenticationManager = authenticationManager;
+    this.cookieService = cookieService;
+    this.credentialRepository = credentialRepository;
+    this.jwtService = jwtService;
+    this.passwordEncoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
+    this.refreshTokenService = refreshTokenService;
     this.sessionService = sessionService;
     this.userRepository = userRepository;
-    this.credentialRepository = credentialRepository;
-    passwordEncoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
-    this.cookieService = cookieService;
-    this.jwtService = jwtService;
-    this.authenticationManager = authenticationManager;
   }
 
   /**
@@ -96,30 +101,6 @@ public class AuthenticationService {
   }
 
   /**
-   * Authenticate a user using login and password
-   *
-   * @param login    Can be email or username
-   * @param password The user password
-   * @return {@link ResponseCookie}
-   * @throws BadCredentialsException
-   */
-  public ResponseCookie authenticate(final String login, final String password)
-      throws BadCredentialsException {
-    try {
-      final var authentication = authenticationManager
-          .authenticate(UsernamePasswordAuthenticationToken.unauthenticated(login, password));
-      final var credential = toCredential(authentication);
-      final var apiToken = credential.getApiToken();
-      final var jwtToken = jwtService.generateToken(apiToken);
-
-      return cookieService.generateJwtCookie(jwtToken);
-    } catch (LockedException | DisabledException e) {
-      logger.debug("The use account is '%s'".formatted(e.getClass().getSimpleName()));
-      throw new BadCredentialsException("Account cannot be used for the moment", e);
-    }
-  }
-
-  /**
    * Authenticate a user using ApiToken
    *
    * @param apiToken The user apiToken
@@ -138,16 +119,46 @@ public class AuthenticationService {
   }
 
   /**
+   * Authenticate a user using login and password
+   *
+   * @param login    Can be email or username
+   * @param password The user password
+   * @return {@link List} of {@link ResponseCookie}
+   * @throws BadCredentialsException
+   */
+  public List<ResponseCookie> authenticate(final String login, final String password)
+      throws BadCredentialsException {
+    try {
+      final var authentication = authenticationManager
+          .authenticate(UsernamePasswordAuthenticationToken.unauthenticated(login, password));
+      final var credential = toCredential(authentication);
+      final var user = credential.getUser();
+      final var apiToken = credential.getApiToken();
+      final var jwtToken = jwtService.generateToken(apiToken);
+      final RefreshToken refreshToken;
+
+      refreshToken = refreshTokenService.getRefreshToken(user);
+
+      return List.of(
+          cookieService.generateRefreshJwtCookie(refreshToken),
+          cookieService.generateJwtCookie(jwtToken));
+    } catch (LockedException | DisabledException e) {
+      logger.debug("The use account is '%s'".formatted(e.getClass().getSimpleName()));
+      throw new BadCredentialsException("Account cannot be used for the moment", e);
+    }
+  }
+
+  /**
    * Persist a new user an return a JWT Token
    *
    * @param username User name that shall be unique
    * @param email    Email Shall be unique
    * @param password Password
-   * @return
+   * @return {@link List} of {@link ResponseCookie}
    * @throws ValidationException If email or username is already used.
    */
   @Transactional
-  public ResponseCookie register(
+  public List<ResponseCookie> register(
       final String username,
       final Email email,
       final String password)
@@ -156,6 +167,7 @@ public class AuthenticationService {
     final Credential credential;
     final UUID apiToken;
     final JwtToken jwtToken;
+    final RefreshToken refreshToken;
 
     if (userRepository.findByEmail(email).isPresent()) {
       logger.debug("The email is already used so we cannot create an account with it.");
@@ -170,13 +182,17 @@ public class AuthenticationService {
     user = new User(username, email);
     userRepository.save(user);
 
+    refreshToken = refreshTokenService.getRefreshToken(user);
+
     credential = new Credential(passwordEncoder.encode(password), user);
     credentialRepository.save(credential);
 
     apiToken = credential.getApiToken();
     jwtToken = jwtService.generateToken(apiToken);
 
-    return cookieService.generateJwtCookie(jwtToken);
+    return List.of(
+        cookieService.generateRefreshJwtCookie(refreshToken),
+        cookieService.generateJwtCookie(jwtToken));
   }
 
 }

@@ -1,4 +1,4 @@
-package com.openclassrooms.mddapi.provider;
+package com.openclassrooms.mddapi.provider.schema_filter;
 
 import org.hibernate.boot.model.relational.Namespace;
 import org.hibernate.boot.model.relational.Sequence;
@@ -9,12 +9,12 @@ class MddSchemaFilter implements SchemaFilter {
     public static final MddSchemaFilter INSTANCE = new MddSchemaFilter();
 
     @Override
-    public boolean includeNamespace(Namespace namespace) {
+    public boolean includeNamespace(@SuppressWarnings("null") Namespace namespace) {
         return true;
     }
 
     @Override
-    public boolean includeTable(Table table) {
+    public boolean includeTable(@SuppressWarnings("null") Table table) {
         if (table.getName().toLowerCase().contains("comment_with_author")) {
             return false;
         }
@@ -22,7 +22,7 @@ class MddSchemaFilter implements SchemaFilter {
     }
 
     @Override
-    public boolean includeSequence(Sequence sequence) {
+    public boolean includeSequence(@SuppressWarnings("null") Sequence sequence) {
         return true;
     }
 }

@@ -21,10 +21,11 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {
-  private final String jwtSigningSecretKey;
+  private final AppConfiguration appConfiguration;
 
-  public JwtService(AppConfiguration appConfiguration) {
-    this.jwtSigningSecretKey = appConfiguration.jwtSigningSecretKey;
+  public JwtService(
+      final AppConfiguration appConfiguration) {
+    this.appConfiguration = appConfiguration;
   }
 
   /** Extract the apiToken from a JwtToken that was set in the subject claim. */
@@ -71,13 +72,15 @@ public class JwtService {
 
   /** Generate and sign the actual JWT token. */
   private String generateToken(final Map<String, Object> extraClaims, final UUID apiToken) {
+    final var jwtTokenExpirationMs = appConfiguration.jwtTokenExpirationMs;
+
     return Jwts.builder()
         .header()
         .type("JWT")
         .add(extraClaims)
         .and()
         .subject(apiToken.toString())
-        .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+        .expiration(new Date(System.currentTimeMillis() + jwtTokenExpirationMs))
         .signWith(getSigningKey())
         .issuedAt(new Date(System.currentTimeMillis()))
         .compact();
@@ -85,7 +88,9 @@ public class JwtService {
 
   /** Get signing key from configuration. */
   private SecretKey getSigningKey() {
+    final var jwtSigningSecretKey = appConfiguration.jwtSigningSecretKey;
     final var keyBytes = jwtSigningSecretKey.getBytes(StandardCharsets.UTF_8);
+
     return Keys.hmacShaKeyFor(keyBytes);
   }
 }

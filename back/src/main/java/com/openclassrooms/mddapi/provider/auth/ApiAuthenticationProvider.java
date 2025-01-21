@@ -1,4 +1,4 @@
-package com.openclassrooms.mddapi.lib.auth;
+package com.openclassrooms.mddapi.provider.auth;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

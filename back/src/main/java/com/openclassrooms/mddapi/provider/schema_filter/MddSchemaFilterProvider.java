@@ -1,4 +1,4 @@
-package com.openclassrooms.mddapi.provider;
+package com.openclassrooms.mddapi.provider.schema_filter;
 
 import org.hibernate.tool.schema.spi.SchemaFilter;
 import org.hibernate.tool.schema.spi.SchemaFilterProvider;

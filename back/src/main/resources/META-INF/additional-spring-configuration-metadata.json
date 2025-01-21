@@ -6,9 +6,19 @@
       "description": "The key used to sign jwt tokens"
     },
     {
-      "name": "jwt.cookie_name",
+      "name": "jwt.cookie.name",
       "type": "java.lang.String",
       "description": "The name used for the jwt cookie"
+    },
+    {
+      "name": "jwt.token.expiration",
+      "type": "java.lang.Long",
+      "description": "Expiration delay for jwt token"
+    },
+    {
+      "name": "jwt.refresh.expiration",
+      "type": "java.lang.Long",
+      "description": "Expiration delay for refresh token"
     }
   ]
 }

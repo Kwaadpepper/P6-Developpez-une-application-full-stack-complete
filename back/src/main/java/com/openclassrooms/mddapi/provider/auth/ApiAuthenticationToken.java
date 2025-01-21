@@ -1,4 +1,4 @@
-package com.openclassrooms.mddapi.lib.auth;
+package com.openclassrooms.mddapi.provider.auth;
 
 import java.util.Collection;
 import java.util.UUID;

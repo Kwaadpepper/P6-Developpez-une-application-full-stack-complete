@@ -11,6 +11,12 @@ public class AppConfiguration {
   @Value("${jwt.signing.secret_key}")
   public String jwtSigningSecretKey;
 
-  @Value("${jwt.cookie_name}")
+  @Value("${jwt.cookie.name}")
   public String jwtCookieName;
+
+  @Value("${jwt.token.expiration}")
+  public Long jwtTokenExpirationMs;
+
+  @Value("${jwt.refresh.expiration}")
+  public Long jwtRefreshExpirationMs;
 }
