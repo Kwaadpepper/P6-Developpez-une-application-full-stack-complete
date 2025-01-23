@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.openclassrooms.mddapi.configuration.AppConfiguration;
 import com.openclassrooms.mddapi.exception.exceptions.RefreshExpiredException;
@@ -25,10 +26,22 @@ public class RefreshTokenService {
         this.refreshTokenRepository = refreshTokenRepository;
     }
 
-    public Optional<RefreshToken> findByToken(UUID token) {
-        return refreshTokenRepository.findByToken(token);
+    /**
+     * Find a refresh token by token value
+     *
+     * @param tokenValue {@link UUID}
+     * @return {@link Optional} of {@link RefreshToken}
+     */
+    public Optional<RefreshToken> findByToken(UUID tokenValue) {
+        return refreshTokenRepository.findByToken(tokenValue);
     }
 
+    /**
+     * Create a new refresh token
+     *
+     * @param user {@link User}
+     * @return {@link RefreshToken}
+     */
     public RefreshToken getRefreshToken(User user) {
         final RefreshToken refreshToken;
         final var userUuid = user.getUuid();
@@ -47,6 +60,13 @@ public class RefreshTokenService {
         return refreshTokenRepository.save(refreshToken);
     }
 
+    /**
+     * Verify refresh token expiration
+     *
+     * @param token {@link RefreshToken}
+     * @return {@link RefreshToken}
+     * @throws RefreshExpiredException If token is expired
+     */
     public RefreshToken verifyExpiration(RefreshToken token) throws RefreshExpiredException {
         if (token.getExpiryDate().compareTo(ZonedDateTime.now()) < 0) {
             refreshTokenRepository.delete(token);
@@ -56,7 +76,22 @@ public class RefreshTokenService {
         return token;
     }
 
+    /**
+     * Delete refresh token by user
+     *
+     * @param user {@link User}
+     * @return int Number of deleted tokens
+     */
+    @Transactional
     public int deleteByUser(User user) {
         return refreshTokenRepository.deleteByUserUuid(user.getUuid());
+    }
+
+    /**
+     * Remove outdated refresh tokens
+     */
+    @Transactional
+    public void removeOutdatedRefreshTokens() {
+        refreshTokenRepository.deleteByExpiryDateBefore(ZonedDateTime.now());
     }
 }

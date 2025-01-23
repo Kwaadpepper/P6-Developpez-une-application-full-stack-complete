@@ -1,5 +1,6 @@
 package com.openclassrooms.mddapi.repository;
 
+import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -41,4 +42,13 @@ public interface RefreshTokenRepository extends CrudRepository<RefreshToken, UUI
      *                                  {@literal null}
      */
     int deleteByUserUuid(UUID userUuid);
+
+    /**
+     * Deletes all entities that have an expiry date before the given date.
+     *
+     * @param now must not be {@literal null}.
+     * @throws IllegalArgumentException in case the given {@literal now} is
+     *                                  {@literal null}
+     */
+    void deleteByExpiryDateBefore(ZonedDateTime now);
 }
