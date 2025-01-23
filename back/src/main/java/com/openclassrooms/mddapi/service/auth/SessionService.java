@@ -104,7 +104,16 @@ public class SessionService {
                 cookieService.generateJwtCookie(jwtToken));
     }
 
-    public List<ResponseCookie> getSessionCookieRemoval() {
+    /**
+     * Remove the session for the given user
+     *
+     * @param user The user to remove the session for
+     * @return {@link List} of {@link ResponseCookie}
+     */
+    @Transactional
+    public List<ResponseCookie> removeSessionForUser(User user) {
+        refreshTokenService.deleteByUser(user);
+
         return List.of(
                 cookieService.generateCookieRemoval(),
                 cookieService.generateRefreshJwtCookieRemoval());

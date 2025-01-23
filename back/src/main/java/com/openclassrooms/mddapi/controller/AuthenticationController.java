@@ -101,11 +101,11 @@ public class AuthenticationController {
      */
     @PostMapping("/logout")
     public ResponseEntity<?> logoutUser() {
-        sessionService.getAuthenticatedUser().or(() -> {
+        final var user = sessionService.getAuthenticatedUser().or(() -> {
             throw new JwtAuthenticationFailureException("No user is authenticated.");
-        });
+        }).get();
 
-        final var jwtCookieList = sessionService.getSessionCookieRemoval();
+        final var jwtCookieList = sessionService.removeSessionForUser(user);
         final var message = new SimpleMessage("Logged out!");
         final var response = ResponseEntity.ok();
 
