@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.openclassrooms.mddapi.dto.SimpleMessage;
 import com.openclassrooms.mddapi.dto.UserDto;
+import com.openclassrooms.mddapi.exception.exceptions.JwtAuthenticationFailureException;
 import com.openclassrooms.mddapi.presenter.UserPresenter;
 import com.openclassrooms.mddapi.request.auth.UpdateProfileRequest;
 import com.openclassrooms.mddapi.service.auth.SessionService;
@@ -40,7 +41,9 @@ public class ProfileController {
      */
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public UserDto getAuthenticatedUserDetails() {
-        final var authUser = sessionService.getAuthenticatedUser();
+        final var authUser = sessionService.getAuthenticatedUser().or(() -> {
+            throw new JwtAuthenticationFailureException("No user is authenticated.");
+        }).get();
 
         return userPresenter.present(authUser);
     }
@@ -54,7 +57,9 @@ public class ProfileController {
     @Transactional
     @PutMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public SimpleMessage setAuthenticatedUserDetails(@RequestBody @Valid final UpdateProfileRequest request) {
-        final var authUser = sessionService.getAuthenticatedUser();
+        final var authUser = sessionService.getAuthenticatedUser().or(() -> {
+            throw new JwtAuthenticationFailureException("No user is authenticated.");
+        }).get();
 
         userService.updateUser(
                 authUser.getUuid(),

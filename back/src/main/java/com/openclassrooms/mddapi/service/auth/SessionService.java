@@ -1,10 +1,12 @@
 package com.openclassrooms.mddapi.service.auth;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -38,9 +40,21 @@ public class SessionService {
         this.jwtService = jwtService;
     }
 
-    public User getAuthenticatedUser() {
-        final var authentication = SecurityContextHolder.getContext().getAuthentication();
-        return toUser(authentication);
+    public Optional<User> getAuthenticatedUser() {
+        final var securityContext = SecurityContextHolder.getContext();
+        final var authentication = securityContext.getAuthentication();
+
+        if (authentication == null) {
+            logger.debug("No authentication found in security context.");
+            throw new ServerErrorException("No authentication found in security context.");
+        }
+
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            logger.debug("No user is authenticated.");
+            return Optional.empty();
+        }
+
+        return Optional.of(toUser(authentication));
     }
 
     /**
@@ -88,5 +102,11 @@ public class SessionService {
         return List.of(
                 cookieService.generateRefreshJwtCookie(newRefreshToken),
                 cookieService.generateJwtCookie(jwtToken));
+    }
+
+    public List<ResponseCookie> getSessionCookieRemoval() {
+        return List.of(
+                cookieService.generateCookieRemoval(),
+                cookieService.generateRefreshJwtCookieRemoval());
     }
 }

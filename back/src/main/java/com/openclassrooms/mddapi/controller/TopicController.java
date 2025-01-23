@@ -19,6 +19,7 @@ import com.openclassrooms.mddapi.dto.PaginatedDto;
 import com.openclassrooms.mddapi.dto.SimpleMessage;
 import com.openclassrooms.mddapi.dto.TopicDto;
 import com.openclassrooms.mddapi.dto.TopicNameDto;
+import com.openclassrooms.mddapi.exception.exceptions.JwtAuthenticationFailureException;
 import com.openclassrooms.mddapi.model.Topic;
 import com.openclassrooms.mddapi.presenter.TopicPresenter;
 import com.openclassrooms.mddapi.request.topic.SubscriptionTopicRequest;
@@ -91,7 +92,10 @@ public class TopicController {
      */
     @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<TopicDto> getCurrentUserSubscribedTopic() {
-        final var authUser = sessionService.getAuthenticatedUser();
+        final var authUser = sessionService.getAuthenticatedUser().or(() -> {
+            throw new JwtAuthenticationFailureException("No user is authenticated.");
+        }).get();
+
         final var subscriptions = subscriptionService.getUserSubscriptions(authUser);
         final List<Topic> topicList = new ArrayList<>();
         subscriptions.forEach((subscription) -> {
@@ -111,7 +115,9 @@ public class TopicController {
     @Transactional
     @PostMapping(value = "/subscription", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public SimpleMessage subscribeOnTopic(@RequestBody @Valid SubscriptionTopicRequest request) {
-        final var authUser = sessionService.getAuthenticatedUser();
+        final var authUser = sessionService.getAuthenticatedUser().or(() -> {
+            throw new JwtAuthenticationFailureException("No user is authenticated.");
+        }).get();
 
         subscriptionService.subscribeUserOnTopic(
                 authUser.getUuid(),
@@ -129,7 +135,9 @@ public class TopicController {
     @Transactional
     @DeleteMapping(value = "/subscription", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public SimpleMessage unsubscribeOnTopic(@RequestBody @Valid SubscriptionTopicRequest request) {
-        final var authUser = sessionService.getAuthenticatedUser();
+        final var authUser = sessionService.getAuthenticatedUser().or(() -> {
+            throw new JwtAuthenticationFailureException("No user is authenticated.");
+        }).get();
 
         subscriptionService.unSubscribeUserOnTopic(
                 authUser.getUuid(),

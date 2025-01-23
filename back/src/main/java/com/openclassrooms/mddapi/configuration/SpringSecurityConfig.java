@@ -62,7 +62,8 @@ public class SpringSecurityConfig {
 
     final var allowNonAuthRequestToUrls = new String[] {
         "/api/auth/login",
-        "/api/auth/register"
+        "/api/auth/register",
+        "/api/auth/refresh-token"
     };
     jwtAuthenticationFilter.setIgnoreUrls(List.of(allowNonAuthRequestToUrls));
 

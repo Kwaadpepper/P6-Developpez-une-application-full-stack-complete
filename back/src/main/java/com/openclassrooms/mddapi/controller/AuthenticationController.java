@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.openclassrooms.mddapi.dto.SimpleMessage;
+import com.openclassrooms.mddapi.exception.exceptions.JwtAuthenticationFailureException;
 import com.openclassrooms.mddapi.exception.exceptions.ValidationException;
 import com.openclassrooms.mddapi.request.auth.LoginRequest;
 import com.openclassrooms.mddapi.request.auth.RegisterRequest;
@@ -86,6 +87,26 @@ public class AuthenticationController {
 
         final var jwtCookieList = sessionService.refreshSessionFromRequest(request);
         final var message = new SimpleMessage("Token is refreshed!");
+        final var response = ResponseEntity.ok();
+
+        jwtCookieList.forEach(cookie -> response.header(HttpHeaders.SET_COOKIE, cookie.toString()));
+
+        return response.body(message);
+    }
+
+    /**
+     * Logout the current user
+     *
+     * @return {@link SimpleMessage}
+     */
+    @PostMapping("/logout")
+    public ResponseEntity<?> logoutUser() {
+        sessionService.getAuthenticatedUser().or(() -> {
+            throw new JwtAuthenticationFailureException("No user is authenticated.");
+        });
+
+        final var jwtCookieList = sessionService.getSessionCookieRemoval();
+        final var message = new SimpleMessage("Logged out!");
         final var response = ResponseEntity.ok();
 
         jwtCookieList.forEach(cookie -> response.header(HttpHeaders.SET_COOKIE, cookie.toString()));

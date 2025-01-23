@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.http.ResponseCookie;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.WebUtils;
 
@@ -18,6 +19,12 @@ import jakarta.servlet.http.HttpServletRequest;
 public class CookieService {
     private final AppConfiguration appConfiguration;
 
+    private final String jwtCookieNameSuffix = "-jwt";
+    private final String jwtRefreshCookieNameSuffix = "-refresh";
+
+    private final String jwtCookieHttpPath = "/api";
+    private final String jwtRefreshCookieHttpPath = "/api/auth/refresh-token";
+
     CookieService(
             final AppConfiguration appConfiguration) {
         this.appConfiguration = appConfiguration;
@@ -31,7 +38,20 @@ public class CookieService {
      */
     public ResponseCookie generateJwtCookie(final JwtToken jwtToken) {
         final var jwtCookieName = appConfiguration.jwtCookieName;
-        return generateCookie(jwtCookieName + "-jwt", jwtToken.value(), "/api");
+        return generateCookie(jwtCookieName + jwtCookieNameSuffix, jwtToken.value(), jwtCookieHttpPath);
+    }
+
+    /**
+     * Generate Cookie Removal
+     *
+     * @return {@link ResponseCookie}
+     */
+    public ResponseCookie generateCookieRemoval() {
+        final var jwtCookieName = appConfiguration.jwtCookieName;
+        return generateCookie(
+                jwtCookieName + jwtCookieNameSuffix,
+                null,
+                jwtCookieHttpPath);
     }
 
     /**
@@ -44,9 +64,22 @@ public class CookieService {
         final var jwtRefreshCookieName = appConfiguration.jwtCookieName;
         final var refreshTokenUuid = refreshToken.getRefreshToken();
         return generateCookie(
-                jwtRefreshCookieName + "-refresh",
+                jwtRefreshCookieName + jwtRefreshCookieNameSuffix,
                 refreshTokenUuid.toString(),
-                "/api/auth/refresh-token");
+                jwtRefreshCookieHttpPath);
+    }
+
+    /**
+     * Generate Refresh Jwt Cookie Removal
+     *
+     * @return {@link ResponseCookie}
+     */
+    public ResponseCookie generateRefreshJwtCookieRemoval() {
+        final var jwtRefreshCookieName = appConfiguration.jwtCookieName;
+        return generateCookie(
+                jwtRefreshCookieName + jwtRefreshCookieNameSuffix,
+                null,
+                jwtRefreshCookieHttpPath);
     }
 
     /**
@@ -59,6 +92,7 @@ public class CookieService {
         return getCookieValueByName(
                 request, appConfiguration.jwtCookieName + "-jwt")
                 .map(Cookie::getValue)
+                .filter(cookieValue -> cookieValue != null && !cookieValue.isBlank())
                 .map(JwtToken::of);
     }
 
@@ -72,12 +106,14 @@ public class CookieService {
         return getCookieValueByName(
                 request, appConfiguration.jwtCookieName + "-refresh")
                 .map(Cookie::getValue)
+                .filter(cookieValue -> cookieValue != null && !cookieValue.isBlank())
                 .map(UUID::fromString);
     }
 
-    private ResponseCookie generateCookie(String name, String value, String path) {
+    private ResponseCookie generateCookie(String name, @Nullable String value, String path) {
         ResponseCookie cookie = ResponseCookie
-                .from(name, value)
+                .from(name)
+                .value(value)
                 .path(path)
                 .maxAge(24 * 60 * 60)
                 .httpOnly(true)

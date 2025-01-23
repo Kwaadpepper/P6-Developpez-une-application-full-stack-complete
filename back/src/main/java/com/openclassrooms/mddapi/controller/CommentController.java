@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.openclassrooms.mddapi.dto.CommentDto;
 import com.openclassrooms.mddapi.dto.PaginatedDto;
 import com.openclassrooms.mddapi.dto.SimpleMessage;
+import com.openclassrooms.mddapi.exception.exceptions.JwtAuthenticationFailureException;
 import com.openclassrooms.mddapi.presenter.CommentPresenter;
 import com.openclassrooms.mddapi.request.comment.CreateCommentRequest;
 import com.openclassrooms.mddapi.service.auth.SessionService;
@@ -69,7 +70,9 @@ public class CommentController {
     @PostMapping(value = "/comments", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public SimpleMessage createComment(@Valid @RequestBody final CreateCommentRequest request) {
 
-        var authUser = sessionService.getAuthenticatedUser();
+        var authUser = sessionService.getAuthenticatedUser().or(() -> {
+            throw new JwtAuthenticationFailureException("No user is authenticated.");
+        }).get();
 
         commentService.createComment(
                 authUser.getUuid(),
