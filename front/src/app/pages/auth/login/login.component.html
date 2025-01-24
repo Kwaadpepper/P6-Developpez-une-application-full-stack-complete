@@ -14,17 +14,33 @@
     <div class="col">
       <form [formGroup]="loginForm" class="mx-auto sm:max-w-80">
 
+        <p-message styleClass="mb-3" *ngIf="viewModel.getFormErrorMessage()" severity="error">{{
+          viewModel.getFormErrorMessage()
+          }}</p-message>
+
         <div class="flex flex-col mb-3">
           <label for="login">Email ou nom d'utilisateur</label>
-          <input pInputText id="login" formControlName="login" />
+          <input pInputText id="login" formControlName="login" aria-describedby="login-help" />
+          <small id="login-help"
+            *ngIf="!loginForm.controls.login.valid && (loginForm.controls.login.dirty || loginForm.controls.login.touched)"
+            class="alert">
+            <span class="block" *ngIf="loginForm.controls.login.hasError('required')"> Obligatoire.</span>
+          </small>
         </div>
 
         <div class="flex flex-col mb-3">
           <label for="password">Mot de passe</label>
-          <input pInputText id="password" formControlName="password" />
+          <input pInputText id="password" formControlName="password" aria-describedby="password-help" type="password" />
+          <small id="login-help"
+            *ngIf="!loginForm.controls.login.valid && (loginForm.controls.login.dirty || loginForm.controls.login.touched)"
+            class="alert">
+            <span class="block" *ngIf="loginForm.controls.login.hasError('required')"> Obligatoire.</span>
+          </small>
         </div>
 
-        <p-button class="my-6 block text-center" variant="outlined" severity="contrast" (onClick)="onLogin()">
+
+        <p-button class="my-6 block text-center" variant="outlined" severity="contrast" [disabled]="!loginForm.valid"
+          (onClick)="onSubmit()">
           <span pButtonLabel>Se connecter</span>
         </p-button>
       </form>

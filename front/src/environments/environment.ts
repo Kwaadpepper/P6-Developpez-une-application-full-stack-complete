@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  mddEndpointUrl: 'http://localhost:3001',
 }
 
 /*
