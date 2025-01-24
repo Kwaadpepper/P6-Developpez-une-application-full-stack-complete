@@ -6,6 +6,8 @@ import { provideRouter, TitleStrategy } from '@angular/router'
 import Aura from '@primeng/themes/aura'
 import { providePrimeNG } from 'primeng/config'
 
+import { provideHttpClient } from '@angular/common/http'
+import { provideMarkdown } from 'ngx-markdown'
 import { routes } from './app.routes'
 import { DynamicTitleStrategy } from './lib/strategies/DynamicTitleStrategy'
 
@@ -28,6 +30,8 @@ export const appConfig: ApplicationConfig = {
         },
       },
     }),
+    provideHttpClient(),
+    provideMarkdown(),
     { provide: TitleStrategy, useClass: DynamicTitleStrategy },
     { provide: LOCALE_ID, useValue: 'fr-FR' },
   ],
