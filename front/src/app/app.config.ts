@@ -8,6 +8,7 @@ import { providePrimeNG } from 'primeng/config'
 
 import { provideHttpClient } from '@angular/common/http'
 import { provideMarkdown } from 'ngx-markdown'
+import { MessageService } from 'primeng/api'
 import { routes } from './app.routes'
 import { DynamicTitleStrategy } from './lib/strategies/DynamicTitleStrategy'
 
@@ -33,6 +34,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideMarkdown(),
     { provide: TitleStrategy, useClass: DynamicTitleStrategy },
+    { provide: MessageService, useClass: MessageService },
     { provide: LOCALE_ID, useValue: 'fr-FR' },
   ],
 }
