@@ -8,6 +8,9 @@ import org.springframework.context.annotation.Configuration;
 public class AppConfiguration {
   public static final long SERIAL_VERSION_UID = 1L;
 
+  @Value("${server.cors.allowed-origins}")
+  public String allowedOrigins;
+
   @Value("${jwt.signing.secret_key}")
   public String jwtSigningSecretKey;
 

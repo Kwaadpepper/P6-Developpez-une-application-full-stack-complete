@@ -82,7 +82,7 @@ public class AuthenticationController {
      * @param request {@link HttpServletRequest}
      * @return {@link SimpleMessage}
      */
-    @PostMapping("/refresh-token")
+    @PostMapping(value = "/refresh-token", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> refreshtoken(HttpServletRequest request) {
 
         final var jwtCookieList = sessionService.refreshSessionFromRequest(request);
@@ -99,7 +99,7 @@ public class AuthenticationController {
      *
      * @return {@link SimpleMessage}
      */
-    @PostMapping("/logout")
+    @PostMapping(value = "/logout", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> logoutUser() {
         final var user = sessionService.getAuthenticatedUser().or(() -> {
             throw new JwtAuthenticationFailureException("No user is authenticated.");

@@ -19,6 +19,11 @@
       "name": "jwt.refresh.expiration",
       "type": "java.lang.Long",
       "description": "Expiration delay for refresh token"
+    },
+    {
+      "name": "server.cors.allowed-origins",
+      "type": "java.lang.String",
+      "description": "Allowed origins for CORS"
     }
   ]
 }
