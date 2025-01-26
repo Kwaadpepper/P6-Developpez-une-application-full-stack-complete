@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core'
 import { AuthService, errors, ToastService } from '../../../core/services'
 
-@Injectable({ providedIn: 'platform' })
+@Injectable()
 export default class LoginViewModel {
   constructor(
     private authService: AuthService,
