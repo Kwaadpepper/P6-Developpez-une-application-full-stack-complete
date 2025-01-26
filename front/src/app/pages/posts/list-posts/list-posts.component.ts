@@ -4,10 +4,10 @@ import { RouterModule } from '@angular/router'
 import { ButtonModule } from 'primeng/button'
 import { Observable, of, Subscription, take } from 'rxjs'
 
-import Feed from '../../core/models/Feed.type'
-import Post from '../../core/models/Post.type'
-import { FeedService } from '../../core/services/feed.service'
-import { PostCardComponent } from '../../lib/components/post/post-card/post-card.component'
+import Feed from '../../../core/models/Feed.type'
+import Post from '../../../core/models/Post.type'
+import { FeedService } from '../../../core/services'
+import { PostCardComponent } from '../../../lib/components'
 
 @Component({
   selector: 'app-list-posts',

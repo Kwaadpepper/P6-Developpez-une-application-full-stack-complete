@@ -6,8 +6,8 @@ import { LoginComponent } from './pages/auth/login/login.component'
 import { RegisterComponent } from './pages/auth/register/register.component'
 import { HomeComponent } from './pages/home/home.component'
 import { NotFoundComponent } from './pages/not-found/not-found.component'
-import { CreatePostComponent } from './posts/create-post/create-post.component'
-import { ListPostsComponent } from './posts/list-posts/list-posts.component'
+import { CreatePostComponent } from './pages/posts/create-post/create-post.component'
+import { ListPostsComponent } from './pages/posts/list-posts/list-posts.component'
 
 export const redirectUrls = {
   posts: '/posts',
