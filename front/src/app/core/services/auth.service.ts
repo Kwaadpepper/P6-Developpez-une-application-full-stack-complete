@@ -14,9 +14,9 @@ import { SessionService } from './session.service'
   providedIn: 'root',
 })
 export class AuthService {
-  private mddEndpointUrl = environment.mddEndpointUrl
-  private loginUrl = `${this.mddEndpointUrl}/api/auth/login`
-  private logoutUrl = `${this.mddEndpointUrl}/api/auth/logout`
+  private readonly mddEndpointUrl = environment.mddEndpointUrl
+  private readonly loginUrl = `${this.mddEndpointUrl}/api/auth/login`
+  private readonly logoutUrl = `${this.mddEndpointUrl}/api/auth/logout`
 
   constructor(
     private http: HttpClient,

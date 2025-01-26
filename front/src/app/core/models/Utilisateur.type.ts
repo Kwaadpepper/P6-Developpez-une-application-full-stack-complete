@@ -1,7 +1,6 @@
-import UUID from '../types/uuid.type'
+import Entity from './Entity.type'
 
-export default interface User {
-  uuid: UUID
+export default interface User extends Entity {
   name: string
   email: string
   created_at: Date

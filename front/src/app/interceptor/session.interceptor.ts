@@ -15,7 +15,7 @@ import { ToastService } from '../core/services/toast.service'
 @Injectable({ providedIn: 'root' })
 export class SessionInterceptor implements HttpInterceptor {
   private notifyForLogout = new Subject<boolean>()
-  private readonly debounceTimeMs = 300
+  private readonly debounceTimeMs = 1000
   private readonly redirectUrl = redirectUrls.login
 
   constructor(

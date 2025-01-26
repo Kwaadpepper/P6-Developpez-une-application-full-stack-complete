@@ -1,53 +1,21 @@
-import { HttpClient } from '@angular/common/http'
-import { Injectable, OnDestroy } from '@angular/core'
-import { cloneDeep } from 'lodash-es'
-import { BehaviorSubject, catchError, Observable, retry, tap, throwError } from 'rxjs'
+import { Injectable } from '@angular/core'
 
 import Post from '../models/Post.type'
+import PostRepository from '../repositories/PostRepository.repository'
+import PageOf from '../types/pageOf.type'
 
 @Injectable({
   providedIn: 'root',
+  deps: [PostRepository],
 })
-export class FeedService implements OnDestroy {
-  // * Unique source of data for now
-  private postsUrl = 'http://mddapi.test:3001/api/posts'
-  // * Olympic countries fetcher
-  private postList$ = new BehaviorSubject<Post[]>([])
-
+export class FeedService {
   constructor(
-    private http: HttpClient,
+    private postRepository: PostRepository,
   ) { }
 
-  ngOnDestroy(): void {
-    this.postList$.next([])
-  }
+  getUserFeedPage(pageNumber: number): Promise<PageOf<Post>> {
+    const page = Math.max(0, pageNumber)
 
-  /** Attempt to load olympic countries from server */
-  loadInitialData(): Observable<Post[]> {
-    return this.http
-      .get<Post[]>(this.postsUrl)
-      .pipe(
-        tap((value) => {
-          const posts = (value as never as { posts: never }).posts as Post[]
-          this.postList$.next(cloneDeep(posts.map((post) => {
-            post.created_at = new Date(post.created_at)
-            post.updated_at = post.updated_at ? new Date(post.updated_at) : undefined
-            return post
-          })))
-        }),
-
-        retry(3),
-        catchError(() => {
-          const message = 'Error while fetching feed from server'
-          this.postList$.next([])
-          this.postList$.error(message)
-          return throwError(() => new Error(message))
-        }),
-      )
-  }
-
-  /** Get the feed list */
-  getFeedList(): Observable<Post[]> {
-    return this.postList$.asObservable()
+    return this.postRepository.getCurrentUserFeed(page)
   }
 }

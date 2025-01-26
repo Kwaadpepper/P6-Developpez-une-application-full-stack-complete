@@ -9,7 +9,6 @@ export function verifyResponseType<T extends z.ZodTypeAny>(zodObj: T): UnaryFunc
     }),
     catchError((error) => {
       if (error instanceof ZodError) {
-        console.error('Failure to validate reponse from SERVER:', error)
         return throwError(() => new BadResponseFromServerError(error))
       }
       return throwError(() => error)

@@ -1,6 +1,5 @@
-import UUID from '../types/uuid.type'
+import Entity from './Entity.type'
 
-export default interface Topic {
-  uuid: UUID
+export default interface Topic extends Entity {
   name: string
 }
