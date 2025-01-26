@@ -3,6 +3,7 @@ import { Routes } from '@angular/router'
 import { LoginComponent } from './pages/auth/login/login.component'
 import { RegisterComponent } from './pages/auth/register/register.component'
 import { HomeComponent } from './pages/home/home.component'
+import { NotFoundComponent } from './pages/not-found/not-found.component'
 import { CreatePostComponent } from './posts/create-post/create-post.component'
 import { ListPostsComponent } from './posts/list-posts/list-posts.component'
 
@@ -34,4 +35,6 @@ export const routes: Routes = [
     title: 'Créer un article',
     component: CreatePostComponent,
   },
+  { path: '404', component: NotFoundComponent },
+  { path: '**', redirectTo: '404' },
 ]
