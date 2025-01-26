@@ -1,18 +1,26 @@
 import { NgIf } from '@angular/common'
-import { Component } from '@angular/core'
+import { Component, computed } from '@angular/core'
 import { Router, RouterEvent, RouterModule } from '@angular/router'
 import { ButtonModule } from 'primeng/button'
 import { filter } from 'rxjs'
 
+import { redirectUrls } from '../../app.routes'
+import { LogoutButtonComponent } from '../../lib/components/logout-button/logout-button.component'
+
 @Component({
   selector: 'app-header',
-  imports: [NgIf, ButtonModule, RouterModule],
+  imports: [
+    NgIf, ButtonModule,
+    RouterModule, LogoutButtonComponent,
+  ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
 export class HeaderComponent {
   displayHeader = false
   isOnAuthPage = false
+
+  public logoutUrl$ = computed(() => redirectUrls.login)
 
   constructor(private router: Router) {
     router.events.pipe(

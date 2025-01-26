@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   mddEndpointUrl: 'http://localhost:3001',
+  jwtCookieName: 'mdd-cookie',
 }
 
 /*

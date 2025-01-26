@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment'
 import { verifyResponseType } from '../../lib/tools/verifyReponseType'
 import LoginFailure from './api/errors/LoginFailure'
 import simpleMessage, { SimpleMessage } from './api/schemas/SimpleMessage.schema'
+import { SessionService } from './session.service'
 
 @Injectable({
   providedIn: 'root',
@@ -12,9 +13,11 @@ import simpleMessage, { SimpleMessage } from './api/schemas/SimpleMessage.schema
 export class AuthService {
   private mddEndpointUrl = environment.mddEndpointUrl
   private loginUrl = `${this.mddEndpointUrl}/api/auth/login`
+  private logoutUrl = `${this.mddEndpointUrl}/api/auth/logout`
 
   constructor(
     private http: HttpClient,
+    private sessionService: SessionService,
   ) { }
 
   public login(login: string, password: string): Observable<SimpleMessage> {
@@ -27,15 +30,35 @@ export class AuthService {
     ).pipe(
       catchError((error) => {
         if (error instanceof HttpErrorResponse && error.status === 401) {
+          this.sessionService.setLoggedOut()
           return throwError(() => new LoginFailure())
         }
         return throwError(() => error)
       }),
       verifyResponseType(simpleMessage),
       map((response) => {
-        const toto = simpleMessage.parse(response)
+        this.sessionService.setLoggedIn()
+        return response
+      }),
+      first(),
+    )
+  }
 
-        return toto
+  public logout(): Observable<SimpleMessage> {
+    return this.http.post<SimpleMessage>(
+      this.logoutUrl,
+      { },
+    ).pipe(
+      catchError((error) => {
+        if (error instanceof HttpErrorResponse && error.status === 401) {
+          return throwError(() => new LoginFailure())
+        }
+        return throwError(() => error)
+      }),
+      verifyResponseType(simpleMessage),
+      map((response) => {
+        this.sessionService.setLoggedOut()
+        return response
       }),
       first(),
     )

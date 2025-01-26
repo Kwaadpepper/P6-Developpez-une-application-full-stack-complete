@@ -14,8 +14,8 @@
     <div class="col">
       <form [formGroup]="loginForm" class="mx-auto sm:max-w-80">
 
-        <p-message styleClass="mb-3" *ngIf="viewModel.getFormErrorMessage()" severity="error">{{
-          viewModel.getFormErrorMessage()
+        <p-message styleClass="mb-3" *ngIf="viewModel.formErrorMessage()" severity="error">{{
+          viewModel.formErrorMessage()
           }}</p-message>
 
         <div class="flex flex-col mb-3">

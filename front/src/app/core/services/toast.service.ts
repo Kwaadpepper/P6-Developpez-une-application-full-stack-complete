@@ -17,6 +17,14 @@ export class ToastService {
     })
   }
 
+  public info(message: string, summary?: string): void {
+    this.messageService.add({
+      severity: 'info',
+      summary: summary,
+      detail: message,
+    })
+  }
+
   public error(message: string, summary?: string): void {
     this.messageService.add({
       severity: 'error',

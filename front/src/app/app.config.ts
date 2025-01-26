@@ -6,10 +6,11 @@ import { provideRouter, TitleStrategy } from '@angular/router'
 import Aura from '@primeng/themes/aura'
 import { providePrimeNG } from 'primeng/config'
 
-import { provideHttpClient } from '@angular/common/http'
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { provideMarkdown } from 'ngx-markdown'
 import { MessageService } from 'primeng/api'
 import { routes } from './app.routes'
+import { SessionInterceptor } from './interceptor/session.interceptor'
 import { DynamicTitleStrategy } from './lib/strategies/DynamicTitleStrategy'
 
 registerLocaleData(localeFr)
@@ -31,10 +32,13 @@ export const appConfig: ApplicationConfig = {
         },
       },
     }),
-    provideHttpClient(),
+    provideHttpClient(
+      withInterceptorsFromDi(),
+    ),
     provideMarkdown(),
     { provide: TitleStrategy, useClass: DynamicTitleStrategy },
     { provide: MessageService, useClass: MessageService },
+    { provide: HTTP_INTERCEPTORS, useClass: SessionInterceptor, multi: true },
     { provide: LOCALE_ID, useValue: 'fr-FR' },
   ],
 }
