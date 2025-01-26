@@ -1,9 +1,9 @@
 import { z } from 'zod'
 
-const simpleMessage = z.object({
+const simpleMessageSchema = z.object({
   message: z.string(),
 })
 
-export type SimpleMessage = z.infer<typeof simpleMessage>
+export type SimpleMessageZod = z.infer<typeof simpleMessageSchema>
 
-export default simpleMessage
+export default simpleMessageSchema

@@ -1,6 +1,6 @@
 import BadResponseFromServerError from './api/errors/BadResponseFromServerError'
 import LoginFailure from './api/errors/LoginFailure'
-import simpleMessage from './api/schemas/SimpleMessage.schema'
+import simpleMessageSchema from './api/schemas/SimpleMessage.schema'
 import { AuthService } from './auth.service'
 import { FeedService } from './feed.service'
 import { SessionService } from './session.service'
@@ -12,7 +12,7 @@ const errors = {
 }
 
 const schema = {
-  simpleMessage,
+  simpleMessage: simpleMessageSchema,
 }
 
 export {

@@ -3,9 +3,11 @@ import { Injectable } from '@angular/core'
 import { catchError, first, map, Observable, throwError } from 'rxjs'
 
 import { environment } from '../../../environments/environment'
+import User from '../models/Utilisateur.type'
 import { verifyResponseType } from '../tools/verifyReponseType'
 import LoginFailure from './api/errors/LoginFailure'
-import simpleMessage, { SimpleMessage } from './api/schemas/SimpleMessage.schema'
+import simpleMessageSchema, { SimpleMessageZod } from './api/schemas/SimpleMessage.schema'
+import userSchema, { UserZod } from './api/schemas/User.schema'
 import { SessionService } from './session.service'
 
 @Injectable({
@@ -21,8 +23,8 @@ export class AuthService {
     private sessionService: SessionService,
   ) { }
 
-  public login(login: string, password: string): Observable<SimpleMessage> {
-    return this.http.post<SimpleMessage>(
+  public login(login: string, password: string): Observable<User> {
+    return this.http.post<UserZod>(
       this.loginUrl,
       { login, password },
       {
@@ -36,17 +38,17 @@ export class AuthService {
         }
         return throwError(() => error)
       }),
-      verifyResponseType(simpleMessage),
-      map((response) => {
-        this.sessionService.setLoggedIn()
-        return response
+      verifyResponseType(userSchema),
+      map((user) => {
+        this.sessionService.setLoggedIn(user)
+        return user
       }),
       first(),
     )
   }
 
-  public logout(): Observable<SimpleMessage> {
-    return this.http.post<SimpleMessage>(
+  public logout(): Observable<SimpleMessageZod> {
+    return this.http.post<SimpleMessageZod>(
       this.logoutUrl,
       { },
     ).pipe(
@@ -56,7 +58,7 @@ export class AuthService {
         }
         return throwError(() => error)
       }),
-      verifyResponseType(simpleMessage),
+      verifyResponseType(simpleMessageSchema),
       map((response) => {
         this.sessionService.setLoggedOut()
         return response

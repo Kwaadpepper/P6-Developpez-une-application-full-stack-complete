@@ -21,13 +21,13 @@ export class SessionService {
     }
   }
 
-  public setLoggedIn(): void {
-    // this.user.set(user)
+  public setLoggedIn(user: User): void {
+    this.user.set(user)
     this.persistLoggedIsStatus()
   }
 
   public setLoggedOut(): void {
-    // this.user.set(null)
+    this.user.set(null)
     this.removeLoggedInStatus()
   }
 
