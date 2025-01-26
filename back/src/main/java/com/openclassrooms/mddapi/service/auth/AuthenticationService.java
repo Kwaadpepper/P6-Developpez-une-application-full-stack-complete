@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -27,6 +26,7 @@ import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.provider.auth.ApiAuthenticationToken;
 import com.openclassrooms.mddapi.repository.CredentialRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
+import com.openclassrooms.mddapi.valueobject.AuthenticatedResponse;
 import com.openclassrooms.mddapi.valueobject.Email;
 import com.openclassrooms.mddapi.valueobject.JwtToken;
 
@@ -123,10 +123,11 @@ public class AuthenticationService {
    *
    * @param login    Can be email or username
    * @param password The user password
-   * @return {@link List} of {@link ResponseCookie}
+   * @return {@link AuthenticatedResponse} containing the user and response
+   *         cookies with jwt and refresh tokens.
    * @throws BadCredentialsException
    */
-  public List<ResponseCookie> authenticate(final String login, final String password)
+  public AuthenticatedResponse authenticate(final String login, final String password)
       throws BadCredentialsException {
     try {
       final var authentication = authenticationManager
@@ -139,9 +140,10 @@ public class AuthenticationService {
 
       refreshToken = refreshTokenService.getRefreshToken(user);
 
-      return List.of(
-          cookieService.generateRefreshJwtCookie(refreshToken),
-          cookieService.generateJwtCookie(jwtToken));
+      return AuthenticatedResponse.of(
+          List.of(cookieService.generateRefreshJwtCookie(refreshToken),
+              cookieService.generateJwtCookie(jwtToken)),
+          user);
     } catch (LockedException | DisabledException e) {
       logger.debug("The use account is '%s'".formatted(e.getClass().getSimpleName()));
       throw new BadCredentialsException("Account cannot be used for the moment", e);
@@ -154,11 +156,12 @@ public class AuthenticationService {
    * @param username User name that shall be unique
    * @param email    Email Shall be unique
    * @param password Password
-   * @return {@link List} of {@link ResponseCookie}
+   * @return {@link AuthenticatedResponse} containing the user and response
+   *         cookies with jwt and refresh tokens.
    * @throws ValidationException If email or username is already used.
    */
   @Transactional
-  public List<ResponseCookie> register(
+  public AuthenticatedResponse register(
       final String username,
       final Email email,
       final String password)
@@ -190,9 +193,10 @@ public class AuthenticationService {
     apiToken = credential.getApiToken();
     jwtToken = jwtService.generateToken(apiToken);
 
-    return List.of(
-        cookieService.generateRefreshJwtCookie(refreshToken),
-        cookieService.generateJwtCookie(jwtToken));
+    return AuthenticatedResponse.of(
+        List.of(cookieService.generateRefreshJwtCookie(refreshToken),
+            cookieService.generateJwtCookie(jwtToken)),
+        user);
   }
 
 }
