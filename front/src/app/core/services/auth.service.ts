@@ -1,8 +1,9 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { catchError, first, map, Observable, throwError } from 'rxjs'
+
 import { environment } from '../../../environments/environment'
-import { verifyResponseType } from '../../lib/tools/verifyReponseType'
+import { verifyResponseType } from '../tools/verifyReponseType'
 import LoginFailure from './api/errors/LoginFailure'
 import simpleMessage, { SimpleMessage } from './api/schemas/SimpleMessage.schema'
 import { SessionService } from './session.service'
