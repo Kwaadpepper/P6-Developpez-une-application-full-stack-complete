@@ -10,8 +10,8 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@a
 import { provideMarkdown } from 'ngx-markdown'
 import { MessageService } from 'primeng/api'
 import { routes } from './app.routes'
+import { DynamicTitleStrategy } from './core/strategies/DynamicTitleStrategy'
 import { SessionInterceptor } from './interceptor/session.interceptor'
-import { DynamicTitleStrategy } from './lib/strategies/DynamicTitleStrategy'
 
 registerLocaleData(localeFr)
 
