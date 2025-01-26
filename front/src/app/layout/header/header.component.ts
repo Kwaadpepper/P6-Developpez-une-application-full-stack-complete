@@ -5,7 +5,7 @@ import { ButtonModule } from 'primeng/button'
 import { filter } from 'rxjs'
 
 import { redirectUrls } from '../../app.routes'
-import { LogoutButtonComponent } from '../../lib/components/logout-button/logout-button.component'
+import { LogoutButtonComponent } from '../../components/logout-button/logout-button.component'
 
 @Component({
   selector: 'app-header',

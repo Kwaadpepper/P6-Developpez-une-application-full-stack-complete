@@ -4,7 +4,7 @@ import { ButtonModule } from 'primeng/button'
 import { InputTextModule } from 'primeng/inputtext'
 
 import { Router } from '@angular/router'
-import { BackButtonComponent } from '../../../lib/components/back-button/back-button.component'
+import { BackButtonComponent } from '../../../shared/back-button/back-button.component'
 
 @Component({
   selector: 'app-register',

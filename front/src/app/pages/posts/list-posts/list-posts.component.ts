@@ -7,7 +7,7 @@ import { Observable, of, Subscription, take } from 'rxjs'
 import Feed from '../../../core/models/Feed.type'
 import Post from '../../../core/models/Post.type'
 import { FeedService } from '../../../core/services'
-import { PostCardComponent } from '../../../lib/components'
+import { PostCardComponent } from '../../../shared'
 
 @Component({
   selector: 'app-list-posts',

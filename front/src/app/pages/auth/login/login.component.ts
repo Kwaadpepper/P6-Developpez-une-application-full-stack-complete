@@ -8,7 +8,7 @@ import { MessageModule } from 'primeng/message'
 import { Router } from '@angular/router'
 import { redirectUrls } from '../../../app.routes'
 import { ToastService } from '../../../core/services'
-import { BackButtonComponent } from '../../../lib/components'
+import { BackButtonComponent } from '../../../shared'
 import LoginViewModel from './login.viewmodel'
 
 @Component({
