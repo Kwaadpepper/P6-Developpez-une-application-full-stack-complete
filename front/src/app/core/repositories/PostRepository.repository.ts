@@ -23,9 +23,10 @@ export default class PostRepository {
   ) {
   }
 
-  public getCurrentUserFeed(page: number): Promise<PageOf<Post>> {
+  public getCurrentUserFeed(page: number, ascending = false): Promise<PageOf<Post>> {
     const feedUrl = new URL(this.feedUrl)
     feedUrl.searchParams.append('page', String(page))
+    feedUrl.searchParams.append('ascending', ascending ? 'true' : 'false')
 
     return new Promise<PageOf<Post>>((resolve, reject) => {
       this.http.get<PageOf<Post>>(feedUrl.toString(), {

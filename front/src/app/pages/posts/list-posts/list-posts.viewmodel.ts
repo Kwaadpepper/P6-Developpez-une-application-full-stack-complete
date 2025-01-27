@@ -9,6 +9,7 @@ export default class ListPostsViewModel {
 
   public readonly currentPage$ = computed(() => this.currentPage)
   public readonly postList$ = computed(() => this.postList())
+  public readonly sortAscending$ = signal(false)
 
   constructor(
     private feedService: FeedService,
@@ -17,9 +18,16 @@ export default class ListPostsViewModel {
 
   public async feedUserWithMorePosts(): Promise<void> {
     this.currentPage += 1
-    const newPage = await this.feedService.getUserFeedPage(this.currentPage)
+    const newPage = await this.feedService.getUserFeedPage(this.currentPage, this.sortAscending$())
     const currentPostList = this.postList()
 
     this.postList.set(currentPostList.concat(newPage.list))
+  }
+
+  public togglePostsSorting(): void {
+    this.sortAscending$.set(!this.sortAscending$())
+    this.currentPage = 0
+    this.postList.set([])
+    this.feedUserWithMorePosts()
   }
 }

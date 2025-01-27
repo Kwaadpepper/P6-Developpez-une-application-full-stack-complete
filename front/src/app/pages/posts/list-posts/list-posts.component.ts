@@ -44,4 +44,8 @@ export class ListPostsComponent implements OnInit {
         this.loading$.set(false)
       })
   }
+
+  onClickFeedSorting(): void {
+    this.viewModel.togglePostsSorting()
+  }
 }

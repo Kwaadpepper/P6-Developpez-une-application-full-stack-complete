@@ -13,9 +13,9 @@ export class FeedService {
     private postRepository: PostRepository,
   ) { }
 
-  getUserFeedPage(pageNumber: number): Promise<PageOf<Post>> {
+  getUserFeedPage(pageNumber: number, ascending = false): Promise<PageOf<Post>> {
     const page = Math.max(0, pageNumber)
 
-    return this.postRepository.getCurrentUserFeed(page)
+    return this.postRepository.getCurrentUserFeed(page, ascending)
   }
 }
