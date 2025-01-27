@@ -9,9 +9,9 @@ export default class LoginViewModel {
   ) {
   }
 
-  public formErrorMessage = signal('')
-  public login = signal('login')
-  public password = signal('password')
+  public readonly formErrorMessage = signal('')
+  public readonly login = signal('login')
+  public readonly password = signal('password')
 
   public proceedToLogin(
     login: string, password: string,

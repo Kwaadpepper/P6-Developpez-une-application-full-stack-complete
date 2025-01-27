@@ -23,7 +23,7 @@ import LoginViewModel from './login.viewmodel'
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  public loginForm = new FormGroup({
+  public form = new FormGroup({
     login: new FormControl('', {
       validators: [
         Validators.required,
@@ -44,7 +44,7 @@ export class LoginComponent {
     public router: Router,
   ) {
     this.viewModel = viewModel
-    this.loginForm.valueChanges.subscribe((value) => {
+    this.form.valueChanges.subscribe((value) => {
       this.viewModel.login.set(value.login ?? '')
       this.viewModel.password.set(value.password ?? '')
     })
@@ -52,7 +52,7 @@ export class LoginComponent {
 
   public onSubmit(): void {
     const { login, password } = this.viewModel
-    if (this.loginForm.invalid) {
+    if (this.form.invalid) {
       this.toastService.error('Tous les champs sont obligatoires')
       return
     }

@@ -4,6 +4,7 @@ import { catchError, first, map, Observable, throwError } from 'rxjs'
 
 import { environment } from '../../../environments/environment'
 import User from '../models/Utilisateur.type'
+import { checkServerReponse } from '../tools/checkServerReponse'
 import { verifyResponseType } from '../tools/verifyReponseType'
 import LoginFailure from './api/errors/LoginFailure'
 import simpleMessageSchema, { SimpleMessageZod } from './api/schemas/SimpleMessage.schema'
@@ -16,6 +17,7 @@ import { SessionService } from './session.service'
 export class AuthService {
   private readonly mddEndpointUrl = environment.mddEndpointUrl
   private readonly loginUrl = `${this.mddEndpointUrl}/api/auth/login`
+  private readonly registerUrl = `${this.mddEndpointUrl}/api/auth/register`
   private readonly logoutUrl = `${this.mddEndpointUrl}/api/auth/logout`
 
   constructor(
@@ -23,6 +25,13 @@ export class AuthService {
     private sessionService: SessionService,
   ) { }
 
+  /**
+   * Login user with login and password and so return the user.
+   * Cookies are used to store the session.
+   * @param login as non empty string.
+   * @param password as non empty string.
+   * @returns the user logged in.
+   */
   public login(login: string, password: string): Observable<User> {
     return this.http.post<UserZod>(
       this.loginUrl,
@@ -47,6 +56,37 @@ export class AuthService {
     )
   }
 
+  /**
+   * Register user with email, username and password and so return the user.
+   * Cookies are used to store the session, User is logged in after registration.
+   * @param email as non empty string.
+   * @param username as non empty string.
+   * @param password as non empty string.
+   * @returns the user registered.
+   */
+  public register(email: string, username: string, password: string): Observable<User> {
+    return this.http.post<UserZod>(
+      this.registerUrl,
+      { email, username, password },
+      {
+        withCredentials: true,
+      },
+    ).pipe(
+      checkServerReponse(),
+      verifyResponseType(userSchema),
+      map((user) => {
+        this.sessionService.setLoggedIn(user)
+        return user
+      }),
+      first(),
+    )
+  }
+
+  /**
+   * Logout the user and so return a simple message.
+   * Removes the session from the cookies.
+   * @returns a simple message.
+   */
   public logout(): Observable<SimpleMessageZod> {
     return this.http.post<SimpleMessageZod>(
       this.logoutUrl,
