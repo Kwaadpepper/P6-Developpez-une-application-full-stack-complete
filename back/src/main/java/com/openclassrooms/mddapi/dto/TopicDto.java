@@ -16,7 +16,7 @@ public record TopicDto(
     public static TopicDto of(Topic topic) {
         return new TopicDto(
                 topic.getUuid(),
-                topic.getSlug(),
+                topic.getSlug().value(),
                 topic.getName(),
                 topic.getDescription(),
                 topic.getCreatedAt(),

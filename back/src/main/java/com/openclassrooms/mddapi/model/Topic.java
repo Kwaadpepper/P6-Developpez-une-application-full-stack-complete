@@ -3,6 +3,9 @@ package com.openclassrooms.mddapi.model;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+import com.openclassrooms.mddapi.valueobject.Slug;
+
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,8 +21,8 @@ public class Topic implements Model {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID uuid;
 
-  @Column(nullable = false, length = 255)
-  private String slug;
+  @AttributeOverride(name = "value", column = @Column(name = "slug", nullable = false, length = 255))
+  private Slug slug;
 
   @Column(nullable = false, length = 255)
   private String name;
@@ -34,7 +37,7 @@ public class Topic implements Model {
   private final ZonedDateTime updatedAt;
 
   public Topic(
-      final String slug,
+      final Slug slug,
       final String name,
       final String description) {
     this.slug = slug;
@@ -57,7 +60,7 @@ public class Topic implements Model {
     return this.uuid;
   }
 
-  public String getSlug() {
+  public Slug getSlug() {
     return this.slug;
   }
 

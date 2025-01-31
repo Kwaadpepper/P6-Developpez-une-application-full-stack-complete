@@ -1,7 +1,5 @@
 package com.openclassrooms.mddapi.controller;
 
-import java.util.UUID;
-
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +16,7 @@ import com.openclassrooms.mddapi.model.Credential;
 import com.openclassrooms.mddapi.presenter.PostPresenter;
 import com.openclassrooms.mddapi.request.post.CreatePostRequest;
 import com.openclassrooms.mddapi.service.models.PostService;
+import com.openclassrooms.mddapi.valueobject.Slug;
 
 import jakarta.validation.Valid;
 
@@ -37,16 +36,16 @@ public class PostController {
     /**
      * Fetch a post by its uuid
      *
-     * @param uuid {@link UUID} The post unique id.
+     * @param slug {@link Slug} The post unique id.
      * @return {@link PostDto}
      * @throws ResourceNotFoundException
      */
-    @GetMapping(value = "/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public PostDto get(@PathVariable final UUID uuid)
+    @GetMapping(value = "/{slug}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public PostDto get(@PathVariable final Slug slug)
             throws ResourceNotFoundException {
 
-        final var post = postService.getPost(uuid).orElseThrow(
-                () -> new ResourceNotFoundException("Post not found for this uuid :: " + uuid));
+        final var post = postService.getPostBySlug(slug).orElseThrow(
+                () -> new ResourceNotFoundException("Post not found for this slug :: " + slug));
 
         return PostPresenter.present(post);
     }

@@ -13,6 +13,7 @@ import com.openclassrooms.mddapi.repository.TopicRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
 import com.openclassrooms.mddapi.service.HtmlCleanerService;
 import com.openclassrooms.mddapi.service.SluggerService;
+import com.openclassrooms.mddapi.valueobject.Slug;
 
 @Service
 public class PostService {
@@ -37,6 +38,10 @@ public class PostService {
 
   public Optional<Post> getPost(final UUID uuid) {
     return postRepository.findById(uuid);
+  }
+
+  public Optional<Post> getPostBySlug(final Slug slug) {
+    return postRepository.findBySlug(slug);
   }
 
   public Post createPost(
@@ -86,7 +91,7 @@ public class PostService {
     postRepository.deleteById(uuid);
   }
 
-  private String generateSlug(final String title) {
+  private Slug generateSlug(final String title) {
     try {
       return sluggerService.slugify(title);
     } catch (IllegalArgumentException e) {

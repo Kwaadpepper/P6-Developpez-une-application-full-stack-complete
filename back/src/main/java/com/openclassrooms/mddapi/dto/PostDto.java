@@ -19,7 +19,7 @@ public record PostDto(
     public static PostDto of(Post post) {
         return new PostDto(
                 post.getUuid(),
-                post.getSlug(),
+                post.getSlug().value(),
                 post.getTitle(),
                 post.getContent(),
                 post.getTopic().getUuid(),
