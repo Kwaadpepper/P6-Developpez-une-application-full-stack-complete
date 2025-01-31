@@ -35,9 +35,12 @@
         </div>
 
 
-        <p-button class="my-6 block text-center" variant="outlined" severity="contrast" [disabled]="!form.valid"
-          type="submit">
+        <p-button class="my-6 block text-center" variant="outlined" severity="contrast"
+          [disabled]="!form.valid || viewModel.loading()" type="submit">
           <span pButtonLabel>Se connecter</span>
+          <span *ngIf="viewModel.loading()" pButtonLabel>
+            <i class="pi pi-spin pi-cog"></i>
+          </span>
         </p-button>
       </form>
     </div>
