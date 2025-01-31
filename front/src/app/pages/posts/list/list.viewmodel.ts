@@ -12,17 +12,22 @@ export default class ListViewModel {
   public readonly postList$ = computed(() => this.postList())
   public readonly sortAscending$ = signal(false)
 
+  public readonly loading = signal(false)
+
   constructor(
     private feedService: FeedService,
   ) {
   }
 
-  public async feedUserWithMorePosts(): Promise<void> {
+  public feedUserWithMorePosts(): void {
+    this.loading.set(true)
     this.currentPage += 1
-    const newPage = await this.feedService.getUserFeedPage(this.currentPage, this.sortAscending$())
-    const currentPostList = this.postList()
-
-    this.postList.set(currentPostList.concat(newPage.list))
+    this.feedService.getUserFeedPage(this.currentPage, this.sortAscending$())
+      .then((newPage) => {
+        this.postList.update(posts => [...posts, ...newPage.list])
+      }).finally(() => {
+        this.loading.set(false)
+      })
   }
 
   public togglePostsSorting(): void {
