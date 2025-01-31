@@ -24,7 +24,7 @@
           <small id="username-help" class="text-error"
             *ngIf="form.controls.username.dirty || form.controls.username.touched">
             <span class="block" *ngIf="form.controls.username.hasError('required')"> Obligatoire.</span>
-            <span class="block" *ngIf="viewModel.errors.username()">{{ viewModel.errors.email() }}</span>
+            <span class="block" *ngIf="viewModel.errors.username()">{{ viewModel.errors.username() }}</span>
           </small>
         </div>
 
