@@ -17,7 +17,6 @@ export class UnauthGuard implements CanActivate {
   }
 
   canActivate(): MaybeAsync<GuardResult> {
-    console.log('UnauthGuard#canActivate called', this.sessionService.isLoggedIn$())
     if (this.sessionService.isLoggedIn$()) {
       const loginRoute = this.router.parseUrl(this.redirectUrl)
 

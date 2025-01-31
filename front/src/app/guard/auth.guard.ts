@@ -17,7 +17,6 @@ export class AuthGuard implements CanActivate {
   }
 
   canActivate(): MaybeAsync<GuardResult> {
-    console.log('AuthGuard#canActivate called', this.sessionService.isLoggedIn$())
     if (!this.sessionService.isLoggedIn$()) {
       const loginRoute = this.router.parseUrl(this.redirectUrl)
 
