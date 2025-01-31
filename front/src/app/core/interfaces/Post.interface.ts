@@ -1,5 +1,5 @@
 import UUID from '../types/uuid.type'
-import Entity from './Entity.type'
+import Entity from './Entity.interface'
 
 export default interface Post extends Entity {
   slug: string

@@ -1,5 +1,5 @@
 import { computed, Injectable, signal } from '@angular/core'
-import Post from '../../../core/models/Post.type'
+import Post from '../../../core/interfaces/Post.interface'
 import { FeedService } from '../../../core/services'
 
 @Injectable()

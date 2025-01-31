@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core'
 import { catchError, first, map, Observable, throwError } from 'rxjs'
 
 import { environment } from '../../../environments/environment'
-import User from '../models/Utilisateur.type'
+import User from '../interfaces/Utilisateur.interface'
 import { checkServerReponse } from '../tools/checkServerReponse'
 import { verifyResponseType } from '../tools/verifyReponseType'
 import LoginFailure from './api/errors/LoginFailure'

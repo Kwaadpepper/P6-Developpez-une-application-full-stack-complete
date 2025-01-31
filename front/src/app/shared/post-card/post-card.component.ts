@@ -2,7 +2,7 @@ import { SlicePipe, TitleCasePipe } from '@angular/common'
 import { Component, Input, OnInit } from '@angular/core'
 import { MarkdownService } from 'ngx-markdown'
 
-import Post from '../../core/models/Post.type'
+import Post from '../../core/interfaces/Post.interface'
 import { NiceDate } from '../../pipes/NiceDate'
 
 @Component({
