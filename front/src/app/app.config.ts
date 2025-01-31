@@ -3,7 +3,7 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@a
 import localeFr from '@angular/common/locales/fr'
 import { ApplicationConfig, LOCALE_ID, ErrorHandler as NgErrorHandler, provideZoneChangeDetection } from '@angular/core'
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
-import { provideRouter, TitleStrategy } from '@angular/router'
+import { provideRouter, RouteReuseStrategy, TitleStrategy } from '@angular/router'
 import Aura from '@primeng/themes/aura'
 import { provideMarkdown } from 'ngx-markdown'
 import { MessageService } from 'primeng/api'
@@ -11,8 +11,8 @@ import { providePrimeNG } from 'primeng/config'
 
 import { routes } from './app.routes'
 import { ErrorHandler } from './core/ErrorHandler'
-import { DynamicTitleStrategy } from './core/strategies/DynamicTitleStrategy'
 import { SessionInterceptor } from './interceptor/session.interceptor'
+import { DynamicTitleStrategy, MddRouteReuseStrategy } from './strategies'
 
 registerLocaleData(localeFr)
 
@@ -40,6 +40,7 @@ export const appConfig: ApplicationConfig = {
     { provide: TitleStrategy, useClass: DynamicTitleStrategy },
     { provide: MessageService, useClass: MessageService },
     { provide: NgErrorHandler, useClass: ErrorHandler },
+    { provide: RouteReuseStrategy, useClass: MddRouteReuseStrategy },
     { provide: HTTP_INTERCEPTORS, useClass: SessionInterceptor, multi: true },
     { provide: LOCALE_ID, useValue: 'fr-FR' },
   ],

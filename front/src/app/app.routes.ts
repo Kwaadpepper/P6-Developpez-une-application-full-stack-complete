@@ -42,6 +42,9 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     title: 'Articles',
     component: PostListComponent,
+    data: {
+      reuse: true,
+    },
   },
   {
     path: 'posts/:post',
