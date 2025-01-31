@@ -7,7 +7,7 @@ import {
 } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
-import { debounceTime, Observable, Subject } from 'rxjs'
+import { debounceTime, Observable, Subject, tap } from 'rxjs'
 
 import { SessionService, ToastService } from '@core/services'
 import { redirectUrls } from '@routes'
@@ -34,18 +34,16 @@ export class SessionInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const wasLoginRequest = request.url.endsWith('login') === true
-    const response = next.handle(request)
-
-    response.subscribe({
-      error: (error: HttpErrorResponse) => {
-        if (error.status === 401) {
-          this.notifyForLogout.next(!wasLoginRequest)
-          this.sessionService.setLoggedOut()
-          this.rooter.navigateByUrl(this.redirectUrl)
-        }
-      },
-    })
-
-    return response
+    return next.handle(request).pipe(
+      tap({
+        error: (error: HttpErrorResponse) => {
+          if (error.status === 401 && !wasLoginRequest) {
+            this.notifyForLogout.next(!wasLoginRequest)
+            this.sessionService.setLoggedOut()
+            this.rooter.navigateByUrl(this.redirectUrl)
+          }
+        },
+      }),
+    )
   }
 }
