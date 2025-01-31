@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core'
-
-import Post from '../../interfaces/Post.interface'
-import PostRepository from '../../repositories/PostRepository.repository'
-import PageOf from '../../types/pageOf.type'
+import { Post } from '@core/interfaces'
+import PostRepository from '@core/repositories/PostRepository.repository'
+import { PageOf } from '@core/types'
 
 @Injectable({
   providedIn: 'root',

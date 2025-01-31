@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-
 import { first } from 'rxjs'
-import { environment } from '../../../environments/environment'
-import Post from '../interfaces/Post.interface'
-import { pageOf } from '../services/api/schemas/PageOf.schema'
-import postSchema from '../services/api/schemas/Post.schema'
-import { verifyResponseType } from '../tools/verifyReponseType'
-import PageOf from '../types/pageOf.type'
+
+import { pageOf } from '@core/api/schemas/PageOf.schema'
+import postSchema from '@core/api/schemas/Post.schema'
+import { Post } from '@core/interfaces'
+import { verifyResponseType } from '@core/tools/verifyReponseType'
+import { PageOf } from '@core/types'
+import { environment } from '@env/environment'
 import retryMultipleTimes from './repoRetry'
 
 @Injectable({

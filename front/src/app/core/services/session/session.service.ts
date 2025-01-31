@@ -1,6 +1,6 @@
 import { computed, Injectable, signal } from '@angular/core'
 
-import User from '../../interfaces/Utilisateur.interface'
+import { User } from '@core/interfaces'
 
 @Injectable({
   providedIn: 'root',
