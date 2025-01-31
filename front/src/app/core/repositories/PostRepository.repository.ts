@@ -4,7 +4,7 @@ import { checkServerReponse } from '@core/tools/checkServerReponse'
 import { first } from 'rxjs'
 
 import CreatePost from '@core/api/requests/createPost.request'
-import { pageOf, postSchema, simpleMessageSchema, SimpleMessageZod } from '@core/api/schemas'
+import { pageOf, postSchema, PostZod } from '@core/api/schemas'
 import { Post } from '@core/interfaces'
 import { verifyResponseType } from '@core/tools/verifyReponseType'
 import { PageOf } from '@core/types'
@@ -59,9 +59,9 @@ export default class PostRepository {
    * @param create  The post to create.
    * @returns The created post.
    */
-  public createPost(create: CreatePost): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      this.http.post<SimpleMessageZod>(
+  public createPost(create: CreatePost): Promise<Post> {
+    return new Promise<Post>((resolve, reject) => {
+      this.http.post<PostZod>(
         this.postsUrl,
         create,
         {
@@ -69,12 +69,34 @@ export default class PostRepository {
         },
       ).pipe(
         checkServerReponse(),
-        verifyResponseType(simpleMessageSchema),
+        verifyResponseType(postSchema),
         retryMultipleTimes(),
         first(),
       ).subscribe({
-        next: () => {
-          resolve(true)
+        next: (post) => {
+          resolve(post)
+        },
+        error: (error) => {
+          reject(error)
+        },
+      })
+    })
+  }
+
+  public findPostBySlug(slug: string): Promise<Post> {
+    return new Promise<Post>((resolve, reject) => {
+      this.http.get<PostZod>(
+        `${this.postsUrl}/${slug}`,
+        {
+          withCredentials: true,
+        },
+      ).pipe(
+        verifyResponseType(postSchema),
+        retryMultipleTimes(),
+        first(),
+      ).subscribe({
+        next: (post) => {
+          resolve(post)
         },
         error: (error) => {
           reject(error)

@@ -8,7 +8,7 @@ import { MessageModule } from 'primeng/message'
 import { ScrollerScrollEvent } from 'primeng/scroller'
 import { SelectFilterEvent, SelectModule } from 'primeng/select'
 import { TextareaModule } from 'primeng/textarea'
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs'
+import { debounceTime, distinctUntilChanged, filter, Subject } from 'rxjs'
 
 import { Router } from '@angular/router'
 import { ToastService } from '@core/services'
@@ -88,6 +88,7 @@ export class CreateComponent implements OnInit {
   ngOnInit(): void {
     // * Debounce search topic names
     this.searchTopicName$.pipe(
+      filter(filter => filter.length >= 2),
       debounceTime(500),
       distinctUntilChanged(),
     ).subscribe((filter) => {
@@ -127,9 +128,9 @@ export class CreateComponent implements OnInit {
       return
     }
 
-    this.viewModel.persistPost().then(() => {
+    this.viewModel.persistPost().then((newPostSlug) => {
       this.toastService.success('Article créé avec succès')
-      this.router.navigateByUrl(`/posts`)
+      this.router.navigateByUrl(`/posts/${newPostSlug}`)
     })
   }
 

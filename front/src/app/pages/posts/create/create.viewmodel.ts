@@ -56,7 +56,7 @@ export default class CreateViewModel {
     this.topicName.set(topicName)
   }
 
-  public persistPost(): Promise<boolean> {
+  public persistPost(): Promise<string | false> {
     this.loading.set(true)
     this.resetErrors()
 
@@ -64,10 +64,10 @@ export default class CreateViewModel {
       this.title(),
       this.content(),
       this.topicName(),
-    ).then(() => {
+    ).then((newPostSlug) => {
       this.loading.set(false)
       this.formErrorMessage.set('')
-      return true
+      return newPostSlug
     }).catch((error) => {
       this.loading.set(false)
       if (error instanceof errors.ValidationError) {

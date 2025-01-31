@@ -7,6 +7,7 @@ export default interface Post extends Entity {
   /** Markdown content */
   content: string
   topic_uuid: UUID
+  topic_name: string
   author_uuid: UUID
   author_name: string
   created_at: Date

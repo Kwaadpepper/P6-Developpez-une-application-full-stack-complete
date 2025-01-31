@@ -8,9 +8,16 @@
       (post.author_name.length>60)? (post.author_name| slice:0:61)+'...':(post.author_name) | titlecase
       }}</div>
   </div>
-  <div class="table h-28">
-    <div class="prose dark:text-gray-100 leading-[1.06rem] table-cell align-middle">{{
-      (strippedPostContent.length>220)? (strippedPostContent | slice:0:221)+'...':(strippedPostContent)
-      }}</div>
+  <div class="row mb-3 h-28">
+    <div class="col">
+      <div class="prose dark:text-gray-100 leading-[1.06rem] table-cell align-middle">{{
+        (strippedPostContent.length>220)? (strippedPostContent | slice:0:221)+'...':(strippedPostContent)
+        }}</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col text-center">
+      <a [routerLink]="['/posts', post.slug]" class="btn btn-primary">Lire la suite</a>
+    </div>
   </div>
 </div>

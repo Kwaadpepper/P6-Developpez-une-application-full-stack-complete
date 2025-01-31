@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="row mb-3">
+    <div class="col">
+      <app-back-button backUrl="/" />
+
+      <h1 class="ms-24">{{ viewModel.post$().title | titlecase }}</h1>
+    </div>
+  </div>
+  <div class="row mb-5">
+    <div class="col">
+      <span>{{ (viewModel.post$().updated_at ?? viewModel.post$().created_at) | nicedate }}</span>
+    </div>
+    <div class="col">
+      <span>{{
+        (viewModel.post$().author_name.length > 60) ?
+        (viewModel.post$().author_name | slice:0:61) + '...' :
+        (viewModel.post$().author_name) | titlecase
+        }}</span>
+    </div>
+    <div class="col">
+      <span>{{ viewModel.post$().topic_name | titlecase }}</span>
+    </div>
+  </div>
+  <div class="row mb-10">
+    <div class="col">
+      <markdown [textContent]="viewModel.post$().content"></markdown>
+    </div>
+  </div>
+  <hr class="mb-5">
+  <div class="row mb-5">
+    <div class="col">
+      <h2>Commentaires</h2>
+    </div>
+  </div>
+</div>

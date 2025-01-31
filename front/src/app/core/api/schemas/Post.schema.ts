@@ -6,6 +6,7 @@ const postSchema = z.object({
   title: z.string().min(1),
   content: z.string().min(1),
   topic_uuid: z.string().uuid(),
+  topic_name: z.string().min(1),
   author_uuid: z.string().uuid(),
   author_name: z.string().min(1),
   created_at: z.date({ coerce: true }),

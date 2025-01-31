@@ -2,6 +2,7 @@ import { SlicePipe, TitleCasePipe } from '@angular/common'
 import { Component, Input, OnInit } from '@angular/core'
 import { MarkdownService } from 'ngx-markdown'
 
+import { RouterLink } from '@angular/router'
 import { Post } from '@core/interfaces'
 import { NiceDate } from '@pipes/NiceDate'
 
@@ -10,7 +11,7 @@ import { NiceDate } from '@pipes/NiceDate'
   selector: 'div[app-post-card]',
   imports: [
     TitleCasePipe, SlicePipe,
-    NiceDate,
+    NiceDate, RouterLink,
   ],
   templateUrl: './post-card.component.html',
   styleUrl: './post-card.component.css',
