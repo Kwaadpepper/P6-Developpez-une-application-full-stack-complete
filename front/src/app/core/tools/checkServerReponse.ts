@@ -1,8 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http'
 import { catchError, Observable, pipe, throwError, UnaryFunction } from 'rxjs'
 
-import ValidationError from '@core/api/errors/ValidationError'
 import validationErrorSchema from '@core/api/schemas/ValidationError.schema'
+import ValidationError from '@core/errors/ValidationError'
 
 export function checkServerReponse<T>(): UnaryFunction<Observable<T>, Observable<T>> {
   return pipe(

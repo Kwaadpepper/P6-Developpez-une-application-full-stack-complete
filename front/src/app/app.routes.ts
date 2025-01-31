@@ -47,6 +47,12 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'posts/create',
+    canActivate: [AuthGuard],
+    title: 'Créer un article',
+    component: PostCreateComponent,
+  },
+  {
     path: 'posts/:post',
     canActivate: [AuthGuard],
     title: 'Voir un article',
@@ -54,12 +60,6 @@ export const routes: Routes = [
     resolve: {
       post: PostResolver,
     },
-  },
-  {
-    path: 'posts/create',
-    canActivate: [AuthGuard],
-    title: 'Créer un article',
-    component: PostCreateComponent,
   },
   { path: '404', component: NotFoundComponent },
   { path: '**', redirectTo: '404' },

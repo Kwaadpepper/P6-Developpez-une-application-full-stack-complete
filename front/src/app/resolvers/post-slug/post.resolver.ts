@@ -3,9 +3,10 @@ import {
   ActivatedRouteSnapshot,
   Resolve,
 } from '@angular/router'
+import { NotFoundError } from '@core/errors'
 import { Post } from '@core/interfaces'
 import { PostService } from '@core/services'
-import { Observable, of } from 'rxjs'
+import { Observable } from 'rxjs'
 
 @Injectable({
   providedIn: 'root',
@@ -17,15 +18,15 @@ export class PostResolver implements Resolve<Post> {
     const postSlug = String(route.params['post'] ?? '')
 
     if (postSlug.length === 0) {
-      return of()
+      throw new NotFoundError('Post not found')
     }
 
     return new Observable<Post>((subscriber) => {
       this.postService.findPostBySlug(postSlug).then((post) => {
         subscriber.next(post)
         subscriber.complete()
-      }).catch((error) => {
-        subscriber.error(error)
+      }).catch(() => {
+        throw new NotFoundError('Post not found')
       })
     })
   }
