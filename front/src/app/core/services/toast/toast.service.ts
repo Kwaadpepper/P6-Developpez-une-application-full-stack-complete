@@ -3,6 +3,7 @@ import { MessageService } from 'primeng/api'
 
 @Injectable({
   providedIn: 'root',
+  deps: [MessageService],
 })
 export class ToastService {
   constructor(

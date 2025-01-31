@@ -2,9 +2,9 @@ import { NgIf } from '@angular/common'
 import { Component, computed, Input } from '@angular/core'
 import { Router } from '@angular/router'
 import { Button, ButtonModule } from 'primeng/button'
-import { AuthService } from '../../core/services/auth.service'
-import { SessionService } from '../../core/services/session.service'
-import { ToastService } from '../../core/services/toast.service'
+import { AuthService } from '../../core/services/auth/auth.service'
+import { SessionService } from '../../core/services/session/session.service'
+import { ToastService } from '../../core/services/toast/toast.service'
 
 @Component({
   selector: 'app-logout-button',

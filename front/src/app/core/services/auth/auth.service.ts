@@ -2,17 +2,18 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { catchError, first, map, Observable, throwError } from 'rxjs'
 
-import { environment } from '../../../environments/environment'
-import User from '../interfaces/Utilisateur.interface'
-import { checkServerReponse } from '../tools/checkServerReponse'
-import { verifyResponseType } from '../tools/verifyReponseType'
-import LoginFailure from './api/errors/LoginFailure'
-import simpleMessageSchema, { SimpleMessageZod } from './api/schemas/SimpleMessage.schema'
-import userSchema, { UserZod } from './api/schemas/User.schema'
-import { SessionService } from './session.service'
+import { environment } from '../../../../environments/environment'
+import User from '../../interfaces/Utilisateur.interface'
+import { checkServerReponse } from '../../tools/checkServerReponse'
+import { verifyResponseType } from '../../tools/verifyReponseType'
+import LoginFailure from '../api/errors/LoginFailure'
+import simpleMessageSchema, { SimpleMessageZod } from '../api/schemas/SimpleMessage.schema'
+import userSchema, { UserZod } from '../api/schemas/User.schema'
+import { SessionService } from '../session/session.service'
 
 @Injectable({
   providedIn: 'root',
+  deps: [HttpClient, SessionService],
 })
 export class AuthService {
   private readonly mddEndpointUrl = environment.mddEndpointUrl

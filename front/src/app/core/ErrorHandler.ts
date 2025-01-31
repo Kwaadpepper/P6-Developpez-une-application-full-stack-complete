@@ -1,6 +1,6 @@
 import { Injectable, ErrorHandler as NgErrorHanlder } from '@angular/core'
 import BadResponseFromServerError from './services/api/errors/BadResponseFromServerError'
-import { ToastService } from './services/toast.service'
+import { ToastService } from './services/toast/toast.service'
 
 @Injectable()
 export class ErrorHandler implements NgErrorHanlder {
