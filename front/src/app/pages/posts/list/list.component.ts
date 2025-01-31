@@ -6,10 +6,10 @@ import { ButtonModule } from 'primeng/button'
 import { ProgressSpinnerModule } from 'primeng/progressspinner'
 
 import { PostCardComponent } from '../../../shared'
-import ListPostsViewModel from './list-posts.viewmodel'
+import ListViewModel from './list.viewmodel'
 
 @Component({
-  selector: 'app-list-posts',
+  selector: 'app-list',
   imports: [
     NgFor, NgIf,
     PostCardComponent,
@@ -17,16 +17,16 @@ import ListPostsViewModel from './list-posts.viewmodel'
     InfiniteScrollDirective,
     ProgressSpinnerModule,
   ],
-  providers: [ListPostsViewModel],
-  templateUrl: './list-posts.component.html',
-  styleUrl: './list-posts.component.css',
+  providers: [ListViewModel],
+  templateUrl: './list.component.html',
+  styleUrl: './list.component.css',
 })
-export class ListPostsComponent implements OnInit {
+export class ListComponent implements OnInit {
   public throttle = 1000
   public scrollDistance = 1
   public loading$ = signal(false)
 
-  constructor(public viewModel: ListPostsViewModel) {
+  constructor(public viewModel: ListViewModel) {
   }
 
   ngOnInit(): void {

@@ -6,8 +6,8 @@ import { LoginComponent } from './pages/auth/login/login.component'
 import { RegisterComponent } from './pages/auth/register/register.component'
 import { HomeComponent } from './pages/home/home.component'
 import { NotFoundComponent } from './pages/not-found/not-found.component'
-import { CreatePostComponent } from './pages/posts/create-post/create-post.component'
-import { ListPostsComponent } from './pages/posts/list-posts/list-posts.component'
+import { CreateComponent } from './pages/posts/create/create.component'
+import { ListComponent } from './pages/posts/list/list.component'
 
 export const redirectUrls = {
   posts: '/posts',
@@ -39,13 +39,13 @@ export const routes: Routes = [
     path: 'posts',
     canActivate: [AuthGuard],
     title: 'Articles',
-    component: ListPostsComponent,
+    component: ListComponent,
   },
   {
     path: 'posts/create',
     canActivate: [AuthGuard],
     title: 'Créer un article',
-    component: CreatePostComponent,
+    component: CreateComponent,
   },
   { path: '404', component: NotFoundComponent },
   { path: '**', redirectTo: '404' },

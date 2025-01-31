@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 
-import ListPostsViewModel from './list-posts.viewmodel'
+import CreateViewModel from './create.viewmodel'
 
-describe('ListPostsViewModel', () => {
-  let viewModel: ListPostsViewModel
-  let fixture: ComponentFixture<ListPostsViewModel>
+describe('CreateViewModel', () => {
+  let viewModel: CreateViewModel
+  let fixture: ComponentFixture<CreateViewModel>
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ListPostsViewModel],
+      imports: [CreateViewModel],
     })
       .compileComponents()
 
-    fixture = TestBed.createComponent(ListPostsViewModel)
+    fixture = TestBed.createComponent(CreateViewModel)
     viewModel = fixture.componentInstance
     fixture.detectChanges()
   })

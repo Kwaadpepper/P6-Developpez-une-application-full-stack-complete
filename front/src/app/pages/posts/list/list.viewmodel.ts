@@ -3,7 +3,7 @@ import Post from '../../../core/interfaces/Post.interface'
 import { FeedService } from '../../../core/services'
 
 @Injectable()
-export default class ListPostsViewModel {
+export default class ListViewModel {
   private currentPage = 0
   private postList = signal<Post[]>([])
 
