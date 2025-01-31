@@ -3,6 +3,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "./src",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -17,7 +18,33 @@
     "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
-    "module": "ES2022"
+    "module": "ES2022",
+    "paths": {
+      "@components/*": [
+        "app/components/*"
+      ],
+      "@core/*": [
+        "app/core/*"
+      ],
+      "@env/*": [
+        "environments/*"
+      ],
+      "@guard/*": [
+        "app/guard/*"
+      ],
+      "@pages/*": [
+        "app/pages/*"
+      ],
+      "@pipes/*": [
+        "app/pipes/*"
+      ],
+      "@routes": [
+        "app/app.routes.ts"
+      ],
+      "@shared/*": [
+        "app/shared/*"
+      ]
+    },
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

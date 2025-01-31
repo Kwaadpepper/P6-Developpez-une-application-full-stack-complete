@@ -4,8 +4,8 @@ import { Router, RouterEvent, RouterModule } from '@angular/router'
 import { ButtonModule } from 'primeng/button'
 import { filter } from 'rxjs'
 
-import { redirectUrls } from '../../app.routes'
-import { LogoutButtonComponent } from '../../components/logout-button/logout-button.component'
+import { LogoutButtonComponent } from '@components/index'
+import { redirectUrls } from '@routes'
 
 @Component({
   selector: 'app-header',

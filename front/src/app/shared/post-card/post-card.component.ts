@@ -2,8 +2,8 @@ import { SlicePipe, TitleCasePipe } from '@angular/common'
 import { Component, Input, OnInit } from '@angular/core'
 import { MarkdownService } from 'ngx-markdown'
 
-import Post from '../../core/interfaces/Post.interface'
-import { NiceDate } from '../../pipes/NiceDate'
+import { Post } from '@core/interfaces'
+import { NiceDate } from '@pipes/NiceDate'
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector

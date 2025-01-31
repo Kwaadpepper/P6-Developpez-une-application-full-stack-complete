@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core'
-import { AuthService, errors, ToastService } from '../../../core/services'
+import { AuthService, errors, ToastService } from '@core/services'
 
 @Injectable()
 export default class LoginViewModel {

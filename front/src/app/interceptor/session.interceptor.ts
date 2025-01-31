@@ -8,9 +8,9 @@ import {
 import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
 import { debounceTime, Observable, Subject } from 'rxjs'
-import { redirectUrls } from '../app.routes'
-import { SessionService } from '../core/services/session.service'
-import { ToastService } from '../core/services/toast.service'
+
+import { SessionService, ToastService } from '@core/services'
+import { redirectUrls } from '@routes'
 
 @Injectable({ providedIn: 'root' })
 export class SessionInterceptor implements HttpInterceptor {

@@ -1,14 +1,14 @@
 import { NgIf } from '@angular/common'
 import { Component } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
+import { Router } from '@angular/router'
 import { ButtonModule } from 'primeng/button'
 import { InputTextModule } from 'primeng/inputtext'
 import { MessageModule } from 'primeng/message'
 
-import { Router } from '@angular/router'
-import { redirectUrls } from '../../../app.routes'
-import { ToastService } from '../../../core/services'
-import { BackButtonComponent } from '../../../shared'
+import { ToastService } from '@core/services'
+import { redirectUrls } from '@routes'
+import { BackButtonComponent } from '@shared/index'
 import LoginViewModel from './login.viewmodel'
 
 @Component({
