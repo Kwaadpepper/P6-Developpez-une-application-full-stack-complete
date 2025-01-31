@@ -28,7 +28,7 @@ export default class RegisterViewModel {
     return new Promise<boolean>((resolve, reject) => {
       this.resetErrors()
       this.authService.register(
-        email, username, password,
+        { email, username, password },
       ).subscribe({
         complete: () => {
           this.formErrorMessage.set('')

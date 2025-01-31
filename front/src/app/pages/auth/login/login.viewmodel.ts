@@ -18,7 +18,7 @@ export default class LoginViewModel {
   ): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       this.authService.login(
-        login, password,
+        { login, password },
       ).subscribe({
         complete: () => {
           this.formErrorMessage.set('')

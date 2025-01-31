@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core'
 import { catchError, first, map, Observable, throwError } from 'rxjs'
 
 import LoginFailure from '@core/api/errors/LoginFailure'
+import LoginRequest from '@core/api/requests/login.request'
+import RegisterRequest from '@core/api/requests/register.request'
 import simpleMessageSchema, { SimpleMessageZod } from '@core/api/schemas/SimpleMessage.schema'
 import userSchema, { UserZod } from '@core/api/schemas/User.schema'
 import { User } from '@core/interfaces'
@@ -29,14 +31,13 @@ export class AuthService {
   /**
    * Login user with login and password and so return the user.
    * Cookies are used to store the session.
-   * @param login as non empty string.
-   * @param password as non empty string.
+   * @param login with login and password.
    * @returns the user logged in.
    */
-  public login(login: string, password: string): Observable<User> {
+  public login(login: LoginRequest): Observable<User> {
     return this.http.post<UserZod>(
       this.loginUrl,
-      { login, password },
+      login,
       {
         withCredentials: true,
       },
@@ -60,15 +61,13 @@ export class AuthService {
   /**
    * Register user with email, username and password and so return the user.
    * Cookies are used to store the session, User is logged in after registration.
-   * @param email as non empty string.
-   * @param username as non empty string.
-   * @param password as non empty string.
+   * @param register with email, username and password.
    * @returns the user registered.
    */
-  public register(email: string, username: string, password: string): Observable<User> {
+  public register(register: RegisterRequest): Observable<User> {
     return this.http.post<UserZod>(
       this.registerUrl,
-      { email, username, password },
+      register,
       {
         withCredentials: true,
       },
