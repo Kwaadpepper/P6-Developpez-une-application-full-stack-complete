@@ -19,9 +19,11 @@ public class CorsConfig {
     @Bean
     public CorsFilter corsFilter() {
 
+        final var allowedOrigins = appConfiguration.getAllowedOrigins();
+
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of(appConfiguration.allowedOrigins));
+        config.setAllowedOrigins(List.of(allowedOrigins));
         config.setAllowedMethods(List.of(
                 "POST", "PUT", "PATCH",
                 "GET", "OPTIONS", "DELETE"));

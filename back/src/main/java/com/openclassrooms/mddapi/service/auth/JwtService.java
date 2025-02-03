@@ -21,11 +21,12 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {
-  private final AppConfiguration appConfiguration;
+  private final long jwtTokenExpiration;
+  private final String jwtSigningSecretKey;
 
-  public JwtService(
-      final AppConfiguration appConfiguration) {
-    this.appConfiguration = appConfiguration;
+  public JwtService(final AppConfiguration appConfiguration) {
+    jwtTokenExpiration = appConfiguration.getJwtTokenExpiration();
+    jwtSigningSecretKey = appConfiguration.getJwtSigningSecretKey();
   }
 
   /** Extract the apiToken from a JwtToken that was set in the subject claim. */
@@ -72,7 +73,9 @@ public class JwtService {
 
   /** Generate and sign the actual JWT token. */
   private String generateToken(final Map<String, Object> extraClaims, final UUID apiToken) {
-    final var jwtTokenExpirationMs = appConfiguration.jwtTokenExpirationMs;
+    final var currentDate = new Date();
+    final var expirationDate = new Date();
+    expirationDate.setTime(currentDate.getTime() + jwtTokenExpiration * 60 * 1000);
 
     return Jwts.builder()
         .header()
@@ -80,15 +83,14 @@ public class JwtService {
         .add(extraClaims)
         .and()
         .subject(apiToken.toString())
-        .expiration(new Date(System.currentTimeMillis() + jwtTokenExpirationMs))
+        .expiration(expirationDate)
         .signWith(getSigningKey())
-        .issuedAt(new Date(System.currentTimeMillis()))
+        .issuedAt(currentDate)
         .compact();
   }
 
   /** Get signing key from configuration. */
   private SecretKey getSigningKey() {
-    final var jwtSigningSecretKey = appConfiguration.jwtSigningSecretKey;
     final var keyBytes = jwtSigningSecretKey.getBytes(StandardCharsets.UTF_8);
 
     return Keys.hmacShaKeyFor(keyBytes);

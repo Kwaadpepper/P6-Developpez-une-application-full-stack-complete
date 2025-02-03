@@ -46,8 +46,7 @@ public class SpringSecurityConfig {
   @Bean
   SecurityFilterChain securityFilterChain(
       final HttpSecurity http,
-      final JwtAuthenticationFilter jwtAuthenticationFilter,
-      final AppConfiguration appConfiguration) throws Exception {
+      final JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
 
     final var allowNonAuthRequestToUrls = new String[] {
         "/api/auth/login",

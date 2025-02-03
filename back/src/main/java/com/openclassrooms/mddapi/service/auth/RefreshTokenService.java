@@ -16,13 +16,13 @@ import com.openclassrooms.mddapi.repository.RefreshTokenRepository;
 
 @Service
 public class RefreshTokenService {
-    private final AppConfiguration appConfiguration;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final long refreshTokenDuration;
 
     RefreshTokenService(
             final AppConfiguration appConfiguration,
             final RefreshTokenRepository refreshTokenRepository) {
-        this.appConfiguration = appConfiguration;
+        this.refreshTokenDuration = appConfiguration.getJwtRefreshExpiration();
         this.refreshTokenRepository = refreshTokenRepository;
     }
 
@@ -45,10 +45,9 @@ public class RefreshTokenService {
     public RefreshToken getRefreshToken(User user) {
         final RefreshToken refreshToken;
         final var userUuid = user.getUuid();
-        final var refreshTokenDurationMs = appConfiguration.jwtRefreshExpirationMs;
         final var expiryDate = ZonedDateTime.now();
 
-        expiryDate.plus(refreshTokenDurationMs, ChronoUnit.MILLIS);
+        expiryDate.plus(refreshTokenDuration, ChronoUnit.MINUTES);
 
         refreshToken = refreshTokenRepository.findByUserUuid(userUuid)
                 .map(token -> {
