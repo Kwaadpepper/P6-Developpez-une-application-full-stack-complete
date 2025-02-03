@@ -19,6 +19,8 @@ import jakarta.servlet.http.HttpServletRequest;
 public class CookieService {
     private final AppConfiguration appConfiguration;
 
+    private final String jwtCookieName;
+
     private final String jwtCookieNameSuffix = "-jwt";
     private final String jwtRefreshCookieNameSuffix = "-refresh";
 
@@ -27,7 +29,12 @@ public class CookieService {
 
     CookieService(
             final AppConfiguration appConfiguration) {
+
+        if (appConfiguration.jwtCookieName.isBlank()) {
+            throw new IllegalStateException("Jwt cookie name from app configuraton cannot be empty");
+        }
         this.appConfiguration = appConfiguration;
+        this.jwtCookieName = appConfiguration.jwtCookieName;
     }
 
     /**
@@ -47,7 +54,6 @@ public class CookieService {
      * @return {@link ResponseCookie}
      */
     public ResponseCookie generateCookieRemoval() {
-        final var jwtCookieName = appConfiguration.jwtCookieName;
         return generateCookie(
                 jwtCookieName + jwtCookieNameSuffix,
                 null,
@@ -61,10 +67,9 @@ public class CookieService {
      * @return {@link ResponseCookie}
      */
     public ResponseCookie generateRefreshJwtCookie(final RefreshToken refreshToken) {
-        final var jwtRefreshCookieName = appConfiguration.jwtCookieName;
         final var refreshTokenUuid = refreshToken.getRefreshToken();
         return generateCookie(
-                jwtRefreshCookieName + jwtRefreshCookieNameSuffix,
+                jwtCookieName + jwtRefreshCookieNameSuffix,
                 refreshTokenUuid.toString(),
                 jwtRefreshCookieHttpPath);
     }
