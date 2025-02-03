@@ -13,8 +13,6 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.mddapi.exception.exceptions.ServerErrorException;
@@ -26,9 +24,12 @@ import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.provider.auth.ApiAuthenticationToken;
 import com.openclassrooms.mddapi.repository.CredentialRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
+import com.openclassrooms.mddapi.service.PasswordService;
 import com.openclassrooms.mddapi.valueobject.AuthenticatedResponse;
 import com.openclassrooms.mddapi.valueobject.Email;
 import com.openclassrooms.mddapi.valueobject.JwtToken;
+import com.openclassrooms.mddapi.valueobject.Password;
+import com.openclassrooms.mddapi.valueobject.PasswordHash;
 
 import jakarta.transaction.Transactional;
 
@@ -42,7 +43,7 @@ public class AuthenticationService {
   private final CookieService cookieService;
   private final CredentialRepository credentialRepository;
   private final JwtService jwtService;
-  private final PasswordEncoder passwordEncoder;
+  private final PasswordService passwordService;
   private final RefreshTokenService refreshTokenService;
   private final SessionService sessionService;
   private final UserRepository userRepository;
@@ -54,12 +55,13 @@ public class AuthenticationService {
       final CredentialRepository credentialRepository,
       final RefreshTokenService refreshTokenService,
       final JwtService jwtService,
+      final PasswordService passwordService,
       final UserRepository userRepository) {
     this.authenticationManager = authenticationManager;
     this.cookieService = cookieService;
     this.credentialRepository = credentialRepository;
     this.jwtService = jwtService;
-    this.passwordEncoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();
+    this.passwordService = passwordService;
     this.refreshTokenService = refreshTokenService;
     this.sessionService = sessionService;
     this.userRepository = userRepository;
@@ -164,13 +166,14 @@ public class AuthenticationService {
   public AuthenticatedResponse register(
       final String username,
       final Email email,
-      final String password)
+      final Password password)
       throws ValidationException {
     final User user;
     final Credential credential;
     final UUID apiToken;
     final JwtToken jwtToken;
     final RefreshToken refreshToken;
+    final PasswordHash passwordHash;
 
     if (userRepository.findByEmail(email).isPresent()) {
       logger.debug("The email is already used so we cannot create an account with it.");
@@ -186,8 +189,8 @@ public class AuthenticationService {
     userRepository.save(user);
 
     refreshToken = refreshTokenService.getRefreshToken(user);
-
-    credential = new Credential(passwordEncoder.encode(password), user);
+    passwordHash = passwordService.hash(password);
+    credential = new Credential(passwordHash, user);
     credentialRepository.save(credential);
 
     apiToken = credential.getApiToken();
