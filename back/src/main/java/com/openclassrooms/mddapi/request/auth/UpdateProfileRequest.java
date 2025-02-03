@@ -24,7 +24,6 @@ public record UpdateProfileRequest(
     String username,
 
     @jakarta.annotation.Nullable
-    @NotEmpty
     @Size(max = 255)
     String password
 

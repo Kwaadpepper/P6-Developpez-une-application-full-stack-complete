@@ -34,16 +34,21 @@ public class UserService {
     public void updateUser(UUID userUuid, String name, Email email, @Nullable Password password) {
         final var credential = credentialRepository.findByUserUuid(userUuid)
                 .orElseThrow(() -> ValidationException.of(ValidationError.of("user", "Utilisateur non trouvé")));
+        final var usernameExists = userRepository.findByName(name)
+                .filter(user -> !user.getUuid().equals(userUuid)).isPresent();
         final var emailExists = userRepository.findByEmail(email)
                 .filter(user -> !user.getUuid().equals(userUuid)).isPresent();
         final var user = credential.getUser();
         final PasswordHash newPassword;
 
-        user.setName(name);
-        user.setEmail(email);
-
-        if (!user.getEmail().equals(email) && emailExists) {
+        if (usernameExists) {
+            throw ValidationException.of(ValidationError.of("usernameExists", "Le nom d'utilisateur est déjà utilisé"));
+        }
+        if (emailExists) {
             throw ValidationException.of(ValidationError.of("email", "L'adresse e-mail est déjà utilisée"));
+        }
+        if (!user.getName().equals(name)) {
+            user.setName(name);
         }
         if (!user.getEmail().equals(email)) {
             user.setEmail(email);
