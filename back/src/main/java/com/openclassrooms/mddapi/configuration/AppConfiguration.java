@@ -13,21 +13,25 @@ public class AppConfiguration {
   private static final Integer MIN_JWT_EXPIRATION = 1;
 
   private final String allowedOrigins;
-  private final String jwtSigningSecretKey;
+  private final String jwtSecretKey;
   private final String jwtCookieName;
   private final Integer jwtTokenExpiration;
   private final Integer jwtRefreshExpiration;
 
   AppConfiguration(
       @Value("${server.cors.allowed-origins}") final String allowedOrigins,
-      @Value("${jwt.signing.secret_key}") final String jwtSigningSecretKey,
+      @Value("${jwt.secret_key}") final String jwtSecretKey,
       @Value("${jwt.cookie.name}") final String jwtCookieName,
       @Value("${jwt.token.expiration}") final Integer jwtTokenExpiration,
       @Value("${jwt.refresh.expiration}") final Integer jwtRefreshExpiration) {
 
     assertNotEmpty(allowedOrigins, "server.cors.allowed-origins");
-    assertNotEmpty(jwtSigningSecretKey, "jwt.signing.secret_key");
+    assertNotEmpty(jwtSecretKey, "jwt.secret_key");
     assertNotEmpty(jwtCookieName, "jwt.cookie.name");
+
+    if (jwtSecretKey.length() < 256) {
+      throw new IllegalStateException("Property 'jwt.secret_key' must be at least 256 characters long");
+    }
 
     if (jwtTokenExpiration == null || jwtTokenExpiration < MIN_JWT_EXPIRATION) {
       throw new IllegalStateException(
@@ -45,7 +49,7 @@ public class AppConfiguration {
     }
 
     this.allowedOrigins = allowedOrigins;
-    this.jwtSigningSecretKey = jwtSigningSecretKey;
+    this.jwtSecretKey = jwtSecretKey;
     this.jwtCookieName = jwtCookieName;
     this.jwtTokenExpiration = jwtTokenExpiration;
     this.jwtRefreshExpiration = jwtRefreshExpiration;
@@ -55,8 +59,8 @@ public class AppConfiguration {
     return allowedOrigins;
   }
 
-  public String getJwtSigningSecretKey() {
-    return jwtSigningSecretKey;
+  public String getJwtSecretKey() {
+    return jwtSecretKey;
   }
 
   public String getJwtCookieName() {

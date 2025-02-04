@@ -1,12 +1,17 @@
 package com.openclassrooms.mddapi.service.auth;
 
-import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.stereotype.Service;
 
@@ -17,16 +22,21 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.AeadAlgorithm;
 
 @Service
 public class JwtService {
   private final long jwtTokenExpiration;
-  private final String jwtSigningSecretKey;
+  private final String jwtSecretKey;
+  private final AeadAlgorithm signingAlgorithm;
+  private final SecretKey jwtEncryptKey;
 
-  public JwtService(final AppConfiguration appConfiguration) {
+  public JwtService(final AppConfiguration appConfiguration) throws NoSuchAlgorithmException, InvalidKeySpecException {
     jwtTokenExpiration = appConfiguration.getJwtTokenExpiration();
-    jwtSigningSecretKey = appConfiguration.getJwtSigningSecretKey();
+    jwtSecretKey = appConfiguration.getJwtSecretKey();
+
+    signingAlgorithm = Jwts.ENC.A256CBC_HS512;
+    jwtEncryptKey = getPasswordBasedKey("AES", 512, jwtSecretKey);
   }
 
   /** Extract the apiToken from a JwtToken that was set in the subject claim. */
@@ -53,9 +63,9 @@ public class JwtService {
   /** Attempt to extract the pay load from JWT token. */
   private Claims extractAllClaims(final JwtToken jwtToken) throws JwtException {
     return Jwts.parser()
-        .verifyWith(getSigningKey())
+        .decryptWith(jwtEncryptKey)
         .build()
-        .parseSignedClaims(jwtToken.value())
+        .parseEncryptedClaims(jwtToken.value())
         .getPayload();
   }
 
@@ -84,15 +94,19 @@ public class JwtService {
         .and()
         .subject(apiToken.toString())
         .expiration(expirationDate)
-        .signWith(getSigningKey())
+        .encryptWith(jwtEncryptKey, signingAlgorithm)
         .issuedAt(currentDate)
         .compact();
   }
 
-  /** Get signing key from configuration. */
-  private SecretKey getSigningKey() {
-    final var keyBytes = jwtSigningSecretKey.getBytes(StandardCharsets.UTF_8);
-
-    return Keys.hmacShaKeyFor(keyBytes);
+  /** Generate a key from a password using PBKDF2WithHmacSHA256 */
+  private static SecretKey getPasswordBasedKey(String cipher, int keySize, String password)
+      throws NoSuchAlgorithmException, InvalidKeySpecException {
+    var salt = new byte[100];
+    var random = new SecureRandom();
+    random.nextBytes(salt);
+    var pbeKeySpec = new PBEKeySpec(password.toCharArray(), salt, 1000, keySize);
+    var pbeKey = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256").generateSecret(pbeKeySpec);
+    return new SecretKeySpec(pbeKey.getEncoded(), cipher);
   }
 }
