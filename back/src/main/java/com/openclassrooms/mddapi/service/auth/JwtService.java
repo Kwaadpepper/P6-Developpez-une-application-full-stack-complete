@@ -27,11 +27,13 @@ import io.jsonwebtoken.security.AeadAlgorithm;
 @Service
 public class JwtService {
   private final long jwtTokenExpiration;
+  private final String appName;
   private final String jwtSecretKey;
   private final AeadAlgorithm signingAlgorithm;
   private final SecretKey jwtEncryptKey;
 
   public JwtService(final AppConfiguration appConfiguration) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    appName = appConfiguration.getAppName();
     jwtTokenExpiration = appConfiguration.getJwtTokenExpiration();
     jwtSecretKey = appConfiguration.getJwtSecretKey();
 
@@ -64,6 +66,7 @@ public class JwtService {
   private Claims extractAllClaims(final JwtToken jwtToken) throws JwtException {
     return Jwts.parser()
         .decryptWith(jwtEncryptKey)
+        .requireIssuer(appName)
         .build()
         .parseEncryptedClaims(jwtToken.value())
         .getPayload();
@@ -92,6 +95,7 @@ public class JwtService {
         .type("JWT")
         .add(extraClaims)
         .and()
+        .issuer(appName)
         .subject(apiToken.toString())
         .expiration(expirationDate)
         .encryptWith(jwtEncryptKey, signingAlgorithm)
