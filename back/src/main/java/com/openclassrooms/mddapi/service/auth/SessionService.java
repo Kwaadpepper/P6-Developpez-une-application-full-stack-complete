@@ -89,6 +89,9 @@ public class SessionService {
         final RefreshToken refreshToken = cookieService.getRefreshTokenUuidFromRequest(request)
                 .map(uuidToken -> refreshTokenService.findByToken(uuidToken).orElse(null))
                 .orElseThrow(() -> new JwtAuthenticationFailureException("Refresh token is missing from request"));
+
+        refreshTokenService.verifyExpiration(refreshToken);
+
         final var user = refreshToken.getUser();
         final var credential = credentialRepository.findByUserUuid(user.getUuid())
                 .orElseThrow(
