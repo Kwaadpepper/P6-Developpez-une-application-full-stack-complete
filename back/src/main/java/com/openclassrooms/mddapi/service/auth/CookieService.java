@@ -75,7 +75,7 @@ public class CookieService {
      * @return {@link ResponseCookie}
      */
     public ResponseCookie generateRefreshJwtCookie(final RefreshToken refreshToken) {
-        final var refreshTokenUuid = refreshToken.getRefreshToken();
+        final var refreshTokenUuid = refreshToken.getToken();
         return generateCookie(
                 jwtCookieName + jwtRefreshCookieNameSuffix,
                 refreshTokenUuid.toString(),

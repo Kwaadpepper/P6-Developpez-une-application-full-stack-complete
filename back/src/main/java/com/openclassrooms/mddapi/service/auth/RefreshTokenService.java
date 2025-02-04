@@ -42,7 +42,7 @@ public class RefreshTokenService {
      * @param user {@link User}
      * @return {@link RefreshToken}
      */
-    public RefreshToken getRefreshToken(User user) {
+    public RefreshToken getExpandedRefreshToken(User user) {
         final RefreshToken refreshToken;
         final var userUuid = user.getUuid();
         final var expiryDate = ZonedDateTime.now();

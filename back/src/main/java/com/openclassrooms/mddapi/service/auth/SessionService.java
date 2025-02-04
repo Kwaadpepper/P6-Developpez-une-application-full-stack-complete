@@ -86,7 +86,7 @@ public class SessionService {
         final var jwtToken = jwtService.generateToken(apiToken);
         final RefreshToken newRefreshToken;
 
-        newRefreshToken = refreshTokenService.getRefreshToken(user);
+        newRefreshToken = refreshTokenService.getExpandedRefreshToken(user);
 
         return List.of(
                 cookieService.generateRefreshJwtCookie(newRefreshToken),
@@ -103,7 +103,7 @@ public class SessionService {
         final var user = credential.getUser();
         final var apiToken = credential.getApiToken();
         final var jwtToken = jwtService.generateToken(apiToken);
-        final var refreshToken = refreshTokenService.getRefreshToken(user);
+        final var refreshToken = refreshTokenService.getExpandedRefreshToken(user);
 
         return List.of(
                 cookieService.generateRefreshJwtCookie(refreshToken),
