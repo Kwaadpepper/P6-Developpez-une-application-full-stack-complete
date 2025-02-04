@@ -40,6 +40,11 @@ public class SessionService {
         this.jwtService = jwtService;
     }
 
+    /**
+     * Get the authenticated user
+     *
+     * @return {@link Optional} of {@link User}
+     */
     public Optional<User> getAuthenticatedUser() {
         final var securityContext = SecurityContextHolder.getContext();
         final var authentication = securityContext.getAuthentication();
@@ -55,25 +60,6 @@ public class SessionService {
         }
 
         return Optional.of(toUser(authentication));
-    }
-
-    /**
-     * Convert an {@link Authentication} to a {@link User}
-     *
-     * @param authentication The authentication to convert
-     * @return {@link User}
-     * @throws ServerErrorException If the principal is not a {@link User}
-     */
-    public User toUser(final Authentication authentication) throws ServerErrorException {
-        final var principal = authentication.getPrincipal();
-
-        if (!(principal instanceof Credential)) {
-            logger.debug("Given authentication principal is not a Credential instance.");
-            throw new ServerErrorException("Expected principal to be a '%s' instance given is '%s'"
-                    .formatted(Credential.class, principal.getClass()));
-        }
-
-        return ((Credential) principal).getUser();
     }
 
     /**
@@ -108,6 +94,23 @@ public class SessionService {
     }
 
     /**
+     * Create a session for the given user
+     *
+     * @param credential The user credential to which a session should be created
+     * @return {@link List} of {@link ResponseCookie}
+     */
+    public List<ResponseCookie> createSessionFor(Credential credential) {
+        final var user = credential.getUser();
+        final var apiToken = credential.getApiToken();
+        final var jwtToken = jwtService.generateToken(apiToken);
+        final var refreshToken = refreshTokenService.getRefreshToken(user);
+
+        return List.of(
+                cookieService.generateRefreshJwtCookie(refreshToken),
+                cookieService.generateJwtCookie(jwtToken));
+    }
+
+    /**
      * Remove the session for the given user
      *
      * @param user The user to remove the session for
@@ -120,5 +123,24 @@ public class SessionService {
         return List.of(
                 cookieService.generateCookieRemoval(),
                 cookieService.generateRefreshJwtCookieRemoval());
+    }
+
+    /**
+     * Convert an {@link Authentication} to a {@link User}
+     *
+     * @param authentication The authentication to convert
+     * @return {@link User}
+     * @throws ServerErrorException If the principal is not a {@link User}
+     */
+    private User toUser(final Authentication authentication) throws ServerErrorException {
+        final var principal = authentication.getPrincipal();
+
+        if (!(principal instanceof Credential)) {
+            logger.debug("Given authentication principal is not a Credential instance.");
+            throw new ServerErrorException("Expected principal to be a '%s' instance given is '%s'"
+                    .formatted(Credential.class, principal.getClass()));
+        }
+
+        return ((Credential) principal).getUser();
     }
 }

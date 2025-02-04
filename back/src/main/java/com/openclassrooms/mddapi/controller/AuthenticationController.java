@@ -49,9 +49,9 @@ public class AuthenticationController {
     public ResponseEntity<UserDto> login(@Valid @RequestBody final LoginRequest request)
             throws BadCredentialsException {
 
-        final var authenticated = authenticationService.authenticate(request.login(), request.password());
-        final var user = authenticated.user();
-        final var cookieList = authenticated.cookieList();
+        final var credentials = authenticationService.authenticate(request.login(), request.password());
+        final var user = credentials.getUser();
+        final var cookieList = sessionService.createSessionFor(credentials);
         final var response = ResponseEntity.ok();
 
         cookieList.forEach(cookie -> response.header(HttpHeaders.SET_COOKIE, cookie.toString()));
@@ -70,12 +70,12 @@ public class AuthenticationController {
     public ResponseEntity<UserDto> register(@Valid @RequestBody final RegisterRequest request)
             throws ValidationException {
 
-        final var registered = authenticationService.register(
+        final var credentials = authenticationService.register(
                 request.getUsername(),
                 request.getEmail(),
                 request.getPassword());
-        final var user = registered.user();
-        final var cookieList = registered.cookieList();
+        final var user = credentials.getUser();
+        final var cookieList = sessionService.createSessionFor(credentials);
         final var response = ResponseEntity.ok();
 
         cookieList.forEach(cookie -> response.header(HttpHeaders.SET_COOKIE, cookie.toString()));
