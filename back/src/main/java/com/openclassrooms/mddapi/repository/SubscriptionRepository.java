@@ -3,6 +3,8 @@ package com.openclassrooms.mddapi.repository;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,15 +13,14 @@ import com.openclassrooms.mddapi.model.Subscription;
 @Repository
 public interface SubscriptionRepository extends CrudRepository<Subscription, UUID> {
     /**
-     * Returns all instances of the type {@code T} with the given uuid.
-     *
-     * Note that the order of elements in the result is not guaranteed.
+     * Returns paginated entities with the given {@literal userUuid}.
      *
      * @param userUuid must not be {@literal null}.
-     * @return guaranteed to be not {@literal null}. The size can be equal to zero.
+     * @param pageable must not be {@literal null}.
+     * @return a {@link Page} of entities with the given {@literal userUuid}.
      * @throws IllegalArgumentException if {@literal userUuid} is {@literal null}.
      */
-    Iterable<Subscription> findAllByUserUuid(UUID userUuid);
+    Page<Subscription> findAllByUserUuidOrderByCreatedAtDesc(UUID userUuid, Pageable pageable);
 
     /**
      * Returns whether an entity with the given uuids exists.
