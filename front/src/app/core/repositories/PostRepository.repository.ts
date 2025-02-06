@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { checkServerReponse } from '@core/tools/checkServerReponse'
-import { first } from 'rxjs'
+import { first, Observable } from 'rxjs'
 
 import CreatePost from '@core/api/requests/createPost.request'
 import { pageOf, postSchema, PostZod } from '@core/api/schemas'
@@ -31,27 +31,18 @@ export default class PostRepository {
    * @param ascending If true, the oldest post will be the first.
    * @returns The current user feed.
    */
-  public getCurrentUserFeed(page: number, ascending = false): Promise<PageOf<Post>> {
+  public getCurrentUserFeed(page: number, ascending = false): Observable<PageOf<Post>> {
     const feedUrl = new URL(this.feedUrl)
     feedUrl.searchParams.append('page', String(page))
     feedUrl.searchParams.append('ascending', ascending ? 'true' : 'false')
 
-    return new Promise<PageOf<Post>>((resolve, reject) => {
-      this.http.get<PageOf<Post>>(feedUrl.toString(), {
-        withCredentials: true,
-      }).pipe(
-        verifyResponseType(pageOf(postSchema)),
-        retryMultipleTimes(),
-        first(),
-      ).subscribe({
-        next: (pageOfPosts) => {
-          resolve(pageOfPosts)
-        },
-        error: (error) => {
-          reject(error)
-        },
-      })
-    })
+    return this.http.get<PageOf<Post>>(feedUrl.toString(), {
+      withCredentials: true,
+    }).pipe(
+      verifyResponseType(pageOf(postSchema)),
+      retryMultipleTimes(),
+      first(),
+    )
   }
 
   /**
@@ -59,49 +50,30 @@ export default class PostRepository {
    * @param create  The post to create.
    * @returns The created post.
    */
-  public createPost(create: CreatePost): Promise<Post> {
-    return new Promise<Post>((resolve, reject) => {
-      this.http.post<PostZod>(
-        this.postsUrl,
-        create,
-        {
-          withCredentials: true,
-        },
-      ).pipe(
-        checkServerReponse(),
-        verifyResponseType(postSchema),
-        retryMultipleTimes(),
-        first(),
-      ).subscribe({
-        next: (post) => {
-          resolve(post)
-        },
-        error: (error) => {
-          reject(error)
-        },
-      })
-    })
+  public createPost(create: CreatePost): Observable<Post> {
+    return this.http.post<PostZod>(
+      this.postsUrl,
+      create,
+      {
+        withCredentials: true,
+      },
+    ).pipe(
+      checkServerReponse(),
+      verifyResponseType(postSchema),
+      retryMultipleTimes(),
+      first(),
+    )
   }
 
-  public findPostBySlug(slug: string): Promise<Post> {
-    return new Promise<Post>((resolve, reject) => {
-      this.http.get<PostZod>(
-        `${this.postsUrl}/${slug}`,
-        {
-          withCredentials: true,
-        },
-      ).pipe(
-        verifyResponseType(postSchema),
-        retryMultipleTimes(),
-        first(),
-      ).subscribe({
-        next: (post) => {
-          resolve(post)
-        },
-        error: (error) => {
-          reject(error)
-        },
-      })
-    })
+  public findPostBySlug(slug: string): Observable<Post> {
+    return this.http.get<PostZod>(
+      `${this.postsUrl}/${slug}`,
+      {
+        withCredentials: true,
+      },
+    ).pipe(
+      verifyResponseType(postSchema),
+      first(),
+    )
   }
 }

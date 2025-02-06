@@ -1,29 +1,27 @@
 import { NgIf } from '@angular/common'
-import { Component, effect } from '@angular/core'
+import { Component, effect, OnInit } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
-import { Router } from '@angular/router'
 import { ButtonModule } from 'primeng/button'
 import { InputTextModule } from 'primeng/inputtext'
 import { MessageModule } from 'primeng/message'
 
 import { ToastService } from '@core/services'
-import { redirectUrls } from '@routes'
-import { BackButtonComponent } from '@shared/index'
-import RegisterViewModel from './register.viewmodel'
+import InformationsViewModel from './informations.viewmodel'
 
 @Component({
-  selector: 'app-register',
+  selector: 'app-informations',
   imports: [
-    ButtonModule, BackButtonComponent,
     InputTextModule, ReactiveFormsModule,
-    MessageModule, NgIf,
+    MessageModule, NgIf, ButtonModule,
   ],
-  providers: [RegisterViewModel],
-  templateUrl: './register.component.html',
-  styleUrl: './register.component.css',
+  providers: [
+    InformationsViewModel,
+  ],
+  templateUrl: './informations.component.html',
+  styleUrl: './informations.component.css',
 })
-export class RegisterComponent {
-  public form = new FormGroup({
+export class InformationsComponent implements OnInit {
+  public readonly form = new FormGroup({
     username: new FormControl('', {
       validators: [
         Validators.required,
@@ -43,9 +41,8 @@ export class RegisterComponent {
   })
 
   constructor(
+    public readonly viewModel: InformationsViewModel,
     private readonly toastService: ToastService,
-    public readonly viewModel: RegisterViewModel,
-    public readonly router: Router,
   ) {
     this.form.valueChanges.subscribe((value) => {
       this.viewModel.email.set(value.email ?? '')
@@ -68,16 +65,15 @@ export class RegisterComponent {
     })
   }
 
-  public onSubmit(): void {
-    const { email, username, password } = this.viewModel
-    if (this.form.invalid) {
-      this.toastService.error('Tous les champs sont obligatoires')
-      return
-    }
+  ngOnInit(): void {
+    this.viewModel.refreshUserInformation()
+  }
 
-    this.viewModel
-      .proceedToRegister(email(), username(), password()).then(() => {
-        this.router.navigateByUrl(redirectUrls.posts)
-      })
+  onSubmit(): void {
+    this.viewModel.updateUserInformation().then(() => {
+      this.toastService.success('Informations mises à jour')
+    }).catch(() => {
+      this.toastService.error('Erreur lors de la mise à jour des informations')
+    })
   }
 }

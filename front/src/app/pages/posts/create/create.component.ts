@@ -128,22 +128,26 @@ export class CreateComponent implements OnInit {
       return
     }
 
-    this.viewModel.persistPost().then((newPostSlug) => {
-      this.toastService.success('Article créé avec succès')
-      this.router.navigateByUrl(`/posts/${newPostSlug}`)
+    this.viewModel.persistPost().subscribe({
+      next: () => {
+        this.toastService.success('Post créé')
+        this.router.navigateByUrl('/posts')
+      },
     })
   }
 
   private initFirstTopicPage(filter = ''): void {
     this.currentPage.set(1)
     this.viewModel.topicNames.set([])
-    this.viewModel.getTopicNamesPage(1, filter).finally(() => {
-      this.selectOptions.set({
-        ...this.selectOptions(),
-        ...{
-          totalRecords: this.viewModel.totalTopicNames(),
-        },
-      })
+    this.viewModel.getTopicNamesPage(1, filter).subscribe({
+      complete: () => {
+        this.selectOptions.update((current) => {
+          return {
+            ...current,
+            totalRecords: this.viewModel.totalTopicNames(),
+          }
+        })
+      },
     })
   }
 

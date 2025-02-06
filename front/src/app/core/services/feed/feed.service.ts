@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core'
 import { Post } from '@core/interfaces'
 import { PostRepository } from '@core/repositories'
 import { PageOf } from '@core/types'
+import { Observable } from 'rxjs'
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ export class FeedService {
     private postRepository: PostRepository,
   ) { }
 
-  getUserFeedPage(pageNumber: number, ascending = false): Promise<PageOf<Post>> {
+  getUserFeedPage(pageNumber: number, ascending = false): Observable<PageOf<Post>> {
     const page = Math.max(1, pageNumber)
 
     return this.postRepository.getCurrentUserFeed(page, ascending)

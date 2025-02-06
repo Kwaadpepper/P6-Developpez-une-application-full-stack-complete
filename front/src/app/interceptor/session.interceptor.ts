@@ -4,12 +4,14 @@ import {
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
+  HttpResponse,
 } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
-import { debounceTime, Observable, Subject, tap } from 'rxjs'
+import { catchError, debounceTime, Observable, Subject, switchMap, takeWhile, throwError } from 'rxjs'
 
-import { SessionService, ToastService } from '@core/services'
+import SessionExpired from '@core/errors/SessionExpired'
+import { AuthService, SessionService, ToastService } from '@core/services'
 import { redirectUrls } from '@routes'
 
 @Injectable({ providedIn: 'root' })
@@ -20,6 +22,7 @@ export class SessionInterceptor implements HttpInterceptor {
 
   constructor(
     private rooter: Router,
+    private authService: AuthService,
     private sessionService: SessionService,
     private toastService: ToastService,
   ) {
@@ -34,16 +37,29 @@ export class SessionInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const wasLoginRequest = request.url.endsWith('login') === true
+    const wasRefreshRequest = request.url.endsWith('refresh-token') === true
+
+    // * Ignore some requests
+    if (wasLoginRequest || wasRefreshRequest) {
+      return next.handle(request)
+    }
+
     return next.handle(request).pipe(
-      tap({
-        error: (error: HttpErrorResponse) => {
-          if (error.status === 401 && !wasLoginRequest) {
-            this.notifyForLogout.next(!wasLoginRequest)
-            this.sessionService.setLoggedOut()
-            this.rooter.navigateByUrl(this.redirectUrl)
-          }
-        },
+      catchError((error) => {
+        if (error instanceof HttpErrorResponse && error.status === 401) {
+          return this.authService.refreshSession().pipe(
+            switchMap(() => next.handle(request)),
+            catchError(() => {
+              this.notifyForLogout.next(!wasLoginRequest)
+              this.sessionService.setLoggedOut()
+              this.rooter.navigateByUrl(this.redirectUrl)
+              return throwError(() => new SessionExpired())
+            }),
+          )
+        }
+        return throwError(() => error)
       }),
+      takeWhile(event => !(event instanceof HttpResponse), true),
     )
   }
 }

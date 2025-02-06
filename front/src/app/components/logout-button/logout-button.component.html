@@ -1,4 +1,2 @@
-<p-button *ngIf="isLoggedIn$()" [link]="true" [variant]="variant" [severity]="severity" (onClick)="onLogout()"
-  [title]="title">
-  <i class="pi pi-sign-out text-lg"></i>
-</p-button>
+<p-button [link]="true" [variant]="variant" [severity]="severity" (onClick)="onLogout()" [title]="title">{{ title
+  }}</p-button>

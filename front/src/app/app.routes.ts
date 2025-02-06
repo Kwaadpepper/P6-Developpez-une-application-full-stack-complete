@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router'
 
+import { ProfileComponent as UserProfileComponent } from '@pages/user/profile/profile.component'
 import { AuthGuard } from './guard/auth.guard'
 import { UnauthGuard } from './guard/unauth.guard'
 import { LoginComponent } from './pages/auth/login/login.component'
@@ -60,6 +61,12 @@ export const routes: Routes = [
     resolve: {
       post: PostResolver,
     },
+  },
+  {
+    path: 'account',
+    canActivate: [AuthGuard],
+    title: 'Mon compte',
+    component: UserProfileComponent,
   },
   { path: '404', component: NotFoundComponent },
   { path: '**', redirectTo: '404' },

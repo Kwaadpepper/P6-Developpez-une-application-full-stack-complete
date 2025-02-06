@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core'
 
 import { Post, TopicName } from '@core/interfaces'
 import { PostRepository } from '@core/repositories'
+import { map, Observable } from 'rxjs'
 
 @Injectable({
   providedIn: 'root',
@@ -18,17 +19,17 @@ export class PostService {
    * @param topicName The topic of the post.
    * @returns The slug of the created post.
    */
-  public async createPost(title: string, content: string, topicName: TopicName): Promise<string> {
-    const post = await this.postRepository.createPost({
+  public createPost(title: string, content: string, topicName: TopicName): Observable<string> {
+    return this.postRepository.createPost({
       title,
       content,
       topic: topicName.uuid,
-    })
-
-    return post.slug
+    }).pipe(
+      map(post => post.slug),
+    )
   }
 
-  public findPostBySlug(slug: string): Promise<Post> {
+  public findPostBySlug(slug: string): Observable<Post> {
     return this.postRepository.findPostBySlug(slug)
   }
 }

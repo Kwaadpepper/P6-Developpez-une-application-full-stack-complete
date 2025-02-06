@@ -3,6 +3,7 @@ import { Injectable, signal } from '@angular/core'
 import { TopicName } from '@core/interfaces'
 import { errors, PostService, TopicService } from '@core/services'
 import { UUID } from '@core/types'
+import { catchError, EMPTY, finalize, map, Observable } from 'rxjs'
 
 @Injectable()
 export default class CreateViewModel {
@@ -33,17 +34,23 @@ export default class CreateViewModel {
   ) {
   }
 
-  public getTopicNamesPage(page: number, searchLike = ''): Promise<void> {
+  public getTopicNamesPage(page: number, searchLike = ''): Observable<void> {
     this.topicsAreLoading.set(true)
     return this.topicService.paginateTopicsNames(page, searchLike)
-      .then((topics) => {
-        this.topicNames.update((current) => {
-          return [...current, ...topics.list]
-        })
-        this.totalTopicNames.set(topics.totalItems)
-      }).finally(() => {
-        this.topicsAreLoading.set(false)
-      })
+      .pipe(
+        map((topics) => {
+          this.topicNames.update((current) => {
+            return [...current, ...topics.list]
+          })
+          this.totalTopicNames.set(topics.totalItems)
+        }),
+        catchError(() => {
+          return EMPTY
+        }),
+        finalize(() => {
+          this.topicsAreLoading.set(false)
+        }),
+      )
   }
 
   public setTopicNameByUUID(uuid: UUID): void {
@@ -56,7 +63,7 @@ export default class CreateViewModel {
     this.topicName.set(topicName)
   }
 
-  public persistPost(): Promise<string | false> {
+  public persistPost(): Observable<string> {
     this.loading.set(true)
     this.resetErrors()
 
@@ -64,21 +71,25 @@ export default class CreateViewModel {
       this.title(),
       this.content(),
       this.topicName(),
-    ).then((newPostSlug) => {
-      this.loading.set(false)
-      this.formErrorMessage.set('')
-      return newPostSlug
-    }).catch((error) => {
-      this.loading.set(false)
-      if (error instanceof errors.ValidationError) {
-        this.formErrorMessage.set('Des champ n\'ont pas pu être validés')
-        this.setErrors(error.getErrors())
-        return false
-      }
+    ).pipe(
+      map((newPostSlug) => {
+        this.formErrorMessage.set('')
+        return newPostSlug
+      }),
+      catchError((error) => {
+        if (error instanceof errors.ValidationError) {
+          this.formErrorMessage.set('Des champ n\'ont pas pu être validés')
+          this.setErrors(error.getErrors())
+          return EMPTY
+        }
 
-      this.formErrorMessage.set(error.message)
-      return false
-    })
+        this.formErrorMessage.set(error.message)
+        return EMPTY
+      }),
+      finalize(() => {
+        this.loading.set(false)
+      }),
+    )
   }
 
   private resetErrors(): void {

@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="row mb-3">
+    <div class="col">
+      <app-back-button backUrl="/" />
+
+      <h1 class="ms-24">Profil utilisateur</h1>
+    </div>
+  </div>
+  <div class="row mb-5">
+    <div class="col">
+      <app-informations></app-informations>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <app-logout-button variant="text" severity="danger" [redirectUrl]="logoutUrl$()" title="Se déconnecter" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <hr>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <app-topics></app-topics>
+    </div>
+  </div>
+</div>

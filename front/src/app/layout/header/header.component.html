@@ -12,6 +12,9 @@
       routerLinkActive="router-link-active" title="Consulter les themes">
       <span pButtonLabel>Themes</span>
     </a>
-    <app-logout-button variant="text" severity="contrast" [redirectUrl]="logoutUrl$()" title="Se déconnecter" />
+    <a class="mx-2" pButton variant="text" severity="contrast" routerLink="/account"
+      routerLinkActive="router-link-active" title="Accéder à mon compte">
+      <span pButtonLabel>Mon compte</span>
+    </a>
   </div>
 </div>

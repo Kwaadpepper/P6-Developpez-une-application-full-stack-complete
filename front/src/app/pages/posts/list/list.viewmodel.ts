@@ -23,10 +23,13 @@ export default class ListViewModel {
     this.loading.set(true)
     this.currentPage += 1
     this.feedService.getUserFeedPage(this.currentPage, this.sortAscending$())
-      .then((newPage) => {
-        this.postList.update(posts => [...posts, ...newPage.list])
-      }).finally(() => {
-        this.loading.set(false)
+      .subscribe({
+        next: (newPage) => {
+          this.postList.update(posts => [...posts, ...newPage.list])
+        },
+        complete: () => {
+          this.loading.set(false)
+        },
       })
   }
 

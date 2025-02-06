@@ -6,6 +6,7 @@ import LoginRequest from '@core/api/requests/login.request'
 import RegisterRequest from '@core/api/requests/register.request'
 import { simpleMessageSchema, SimpleMessageZod, userSchema, UserZod } from '@core/api/schemas'
 import LoginFailure from '@core/errors/LoginFailure'
+import SessionExpired from '@core/errors/SessionExpired'
 import { User } from '@core/interfaces'
 import { checkServerReponse } from '@core/tools/checkServerReponse'
 import { verifyResponseType } from '@core/tools/verifyReponseType'
@@ -19,6 +20,7 @@ import { SessionService } from '../session/session.service'
 export class AuthService {
   private readonly mddEndpointUrl = environment.mddEndpointUrl
   private readonly loginUrl = `${this.mddEndpointUrl}/api/auth/login`
+  private readonly refreshUrl = `${this.mddEndpointUrl}/api/auth/refresh-token`
   private readonly registerUrl = `${this.mddEndpointUrl}/api/auth/register`
   private readonly logoutUrl = `${this.mddEndpointUrl}/api/auth/logout`
 
@@ -58,6 +60,30 @@ export class AuthService {
   }
 
   /**
+   * Refresh the session and so return a simple message.
+   * @returns a simple message.
+   */
+  public refreshSession(): Observable<SimpleMessageZod> {
+    return this.http.post<SimpleMessageZod>(
+      this.refreshUrl,
+      {},
+      {
+        withCredentials: true,
+      },
+    ).pipe(
+      catchError((error) => {
+        if (error instanceof HttpErrorResponse && error.status === 401) {
+          this.sessionService.setLoggedOut()
+          return throwError(() => new SessionExpired())
+        }
+        return throwError(() => error)
+      }),
+      verifyResponseType(simpleMessageSchema),
+      first(),
+    )
+  }
+
+  /**
    * Register user with email, username and password and so return the user.
    * Cookies are used to store the session, User is logged in after registration.
    * @param register with email, username and password.
@@ -89,7 +115,10 @@ export class AuthService {
   public logout(): Observable<SimpleMessageZod> {
     return this.http.post<SimpleMessageZod>(
       this.logoutUrl,
-      { },
+      {},
+      {
+        withCredentials: true,
+      },
     ).pipe(
       catchError((error) => {
         if (error instanceof HttpErrorResponse && error.status === 401) {
