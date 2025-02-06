@@ -1,23 +1,24 @@
 <div class="bg-gray-100 dark:bg-gray-800 m-4 p-4 rounded-lg h-52 md:h-56 flex flex-col">
   <span class="h4 block font-bold">{{
-    (post.title.length>60)? (post.title| slice:0:61)+'...':(post.title) | titlecase
+    (viewModel.post().title.length>60)? (viewModel.post().title| slice:0:61)+'...':(viewModel.post().title) | titlecase
     }}</span>
   <div class="row mb-3">
-    <div class="col">{{ (post.updated_at ?? post.created_at) | nicedate }}</div>
+    <div class="col">{{ (viewModel.post().updated_at ?? viewModel.post().created_at) | nicedate }}</div>
     <div class="col">{{
-      (post.author_name.length>60)? (post.author_name| slice:0:61)+'...':(post.author_name) | titlecase
+      (viewModel.post().author_name.length>60)? (viewModel.post().author_name|
+      slice:0:61)+'...':(viewModel.post().author_name) | titlecase
       }}</div>
   </div>
   <div class="row mb-3 h-28">
     <div class="col">
       <div class="prose dark:text-gray-100 leading-[1.06rem] table-cell align-middle">{{
-        (strippedPostContent.length>220)? (strippedPostContent | slice:0:221)+'...':(strippedPostContent)
+        (viewModel.post().content.length>220)? (viewModel.post().content | slice:0:221)+'...':(viewModel.post().content)
         }}</div>
     </div>
   </div>
   <div class="row">
     <div class="col text-center">
-      <a [routerLink]="['/posts', post.slug]" class="btn btn-primary">Lire la suite</a>
+      <a [routerLink]="['/posts', viewModel.post().slug]" class="btn btn-primary">Lire la suite</a>
     </div>
   </div>
 </div>

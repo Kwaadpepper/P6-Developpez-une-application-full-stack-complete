@@ -1,0 +1,25 @@
+<div class="bg-gray-100 dark:bg-gray-800 m-4 p-4 rounded-lg h-52 md:h-56 flex flex-col">
+  <span class="h4 block font-bold">{{
+    (viewModel.topic().name)? (viewModel.topic().name| slice:0:61)+'...':(viewModel.topic().name) | titlecase
+    }}</span>
+  <div class="row mb-3 h-28">
+    <div class="col">
+      <div class="prose dark:text-gray-100 leading-[1.06rem] table-cell align-middle">{{
+        (viewModel.topic().description.length>220)? (viewModel.topic().description |
+        slice:0:221)+'...':(viewModel.topic().description)
+        }}</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col text-center">
+      <p-button *ngIf="canSubscribe" styleClass="mx-4 my-4" variant="outlined" severity="contrast"
+        title="S'abonner à ce theme" (onClick)="onSubscribeClick()">
+        <span class="inline-block min-w-32 font-bold" pButtonLabel>S´abonner</span>
+      </p-button>
+      <p-button *ngIf="!canSubscribe" styleClass="mx-4 my-4" variant="outlined" severity="contrast"
+        title="Se désabonner de ce theme" (onClick)="onUnsubscribeClick()">
+        <span class="inline-block min-w-32 font-bold" pButtonLabel>Se désabonner</span>
+      </p-button>
+    </div>
+  </div>
+</div>

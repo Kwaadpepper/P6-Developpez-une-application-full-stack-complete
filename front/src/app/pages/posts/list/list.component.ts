@@ -5,7 +5,7 @@ import { InfiniteScrollDirective } from 'ngx-infinite-scroll'
 import { ButtonModule } from 'primeng/button'
 import { ProgressSpinnerModule } from 'primeng/progressspinner'
 
-import { PostCardComponent } from '../../../shared'
+import { PostCardComponent } from '@shared/index'
 import ListViewModel from './list.viewmodel'
 
 @Component({
@@ -22,8 +22,8 @@ import ListViewModel from './list.viewmodel'
   styleUrl: './list.component.css',
 })
 export class ListComponent implements OnInit {
-  public throttle = 1000
-  public scrollDistance = 1
+  public readonly throttle = 1000
+  public readonly scrollDistance = 1
 
   constructor(public viewModel: ListViewModel) {
   }

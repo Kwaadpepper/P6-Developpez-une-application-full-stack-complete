@@ -1,10 +1,10 @@
 import { SlicePipe, TitleCasePipe } from '@angular/common'
-import { Component, Input, OnInit } from '@angular/core'
-import { MarkdownService } from 'ngx-markdown'
+import { Component, Input } from '@angular/core'
 
 import { RouterLink } from '@angular/router'
 import { Post } from '@core/interfaces'
 import { NiceDate } from '@pipes/NiceDate'
+import PostCardViewModel from './post-card.viewmodel'
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -13,49 +13,16 @@ import { NiceDate } from '@pipes/NiceDate'
     TitleCasePipe, SlicePipe,
     NiceDate, RouterLink,
   ],
+  providers: [
+    PostCardViewModel,
+  ],
   templateUrl: './post-card.component.html',
   styleUrl: './post-card.component.css',
 })
-export class PostCardComponent implements OnInit {
-  @Input({ required: true })
-  public post: Post = {} as Post
-
-  public strippedPostContent = ''
-
-  constructor(private markdownService: MarkdownService) {}
-
-  ngOnInit(): void {
-    this.strippedPostContent = ''
-    const parsed = this.markdownService.parse(this.post.content, {
-      decodeHtml: false,
-      inline: false,
-      mermaid: false,
-    })
-    if (typeof parsed === 'string') {
-      this.strippedPostContent = this.decodeHTmlEntities(
-        parsed.replace(/<\/?[^>]+(>|$)/g, ''),
-      )
-      return
-    }
-    parsed.then((value) => {
-      this.strippedPostContent = this.decodeHTmlEntities(
-        value.replace(/<\/?[^>]+(>|$)/g, ''),
-      )
-    })
+export class PostCardComponent {
+  @Input({ required: true }) set post(value: Post) {
+    this.viewModel.setPost(value)
   }
 
-  private decodeHTmlEntities(value: string): string {
-    const element = document.createElement('div')
-
-    if (value && typeof value === 'string') {
-      // strip script/html tags
-      value = value.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '')
-      value = value.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '')
-      element.innerHTML = value
-      value = element.textContent ?? ''
-      element.textContent = ''
-    }
-
-    return value
-  }
+  constructor(public readonly viewModel: PostCardViewModel) {}
 }

@@ -1,1 +1,24 @@
-<p>topics works!</p>
+<div class="container-fluid">
+  <div class="row mb-3">
+    <div class="col">
+      <h2 class="h1 text-center">Abonnements</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col text-center">
+      <p-progressSpinner *ngIf="viewModel.loading()" role="status" class="w-7 h-7">
+        <span class="visually-hidden">Chargement...</span>
+      </p-progressSpinner>
+    </div>
+  </div>
+  <div class="row" *ngIf="viewModel.userTopics().length === 0 && !viewModel.loading()">
+    <div class="col text-center">
+      <span class="h3">Aucun abonnement.</span>
+    </div>
+  </div>
+  <div class="row" *ngIf="viewModel.userTopics().length > 0" infiniteScroll [infiniteScrollDistance]="scrollDistance"
+    [infiniteScrollThrottle]="throttle" (scrolled)="onScroll()">
+    <div class="col-12 md:col-6" *ngFor="let topic of viewModel.userTopics()" app-topic-card [topic]="topic"
+      [canSubscribe]="false" (unsubscribeEvent)="onUnsubscribe($event)"></div>
+  </div>
+</div>

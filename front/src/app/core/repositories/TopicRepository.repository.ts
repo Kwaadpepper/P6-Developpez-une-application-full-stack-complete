@@ -2,10 +2,10 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { first, Observable } from 'rxjs'
 
-import { pageOf, topicNameSchema, topicSchema } from '@core/api/schemas'
+import { pageOf, simpleMessageSchema, SimpleMessageZod, topicNameSchema, topicSchema } from '@core/api/schemas'
 import { Topic, TopicName } from '@core/interfaces'
 import { verifyResponseType } from '@core/tools/verifyReponseType'
-import { PageOf } from '@core/types'
+import { PageOf, UUID } from '@core/types'
 import { environment } from '@env/environment'
 import retryMultipleTimes from './repoRetry'
 
@@ -16,6 +16,7 @@ import retryMultipleTimes from './repoRetry'
 export default class TopicRepository {
   private readonly mddEndpointUrl = environment.mddEndpointUrl
   private readonly topicUrl = `${this.mddEndpointUrl}/api/topics`
+  private readonly topicSubscriptionUrl = `${this.topicUrl}/subscription`
 
   private constructor(
     private http: HttpClient,
@@ -61,6 +62,66 @@ export default class TopicRepository {
       withCredentials: true,
     }).pipe(
       verifyResponseType(pageOf(topicNameSchema)),
+      retryMultipleTimes(),
+      first(),
+    )
+  }
+
+  /**
+   * Paginate user subscribed topics.
+  * @param page The page number to get. The first page is 1.
+   * @returns A page of user subscribed topics.
+   */
+  public getUserSubscribedTopics(page: number): Observable<PageOf<Topic>> {
+    const userTopicsUrl = new URL(`${this.topicUrl}/me`)
+    userTopicsUrl.searchParams.append('page', String(page))
+
+    return this.http.get<PageOf<Topic>>(userTopicsUrl.toString(), {
+      withCredentials: true,
+    }).pipe(
+      verifyResponseType(pageOf(topicSchema)),
+      retryMultipleTimes(),
+      first(),
+    )
+  }
+
+  /**
+   * Subscribe to a topic.
+   * @param topic The topic to subscribe to.
+   * @returns A simple message.
+   */
+  public subscribeTo(topic: Topic): Observable<SimpleMessageZod> {
+    const subscribeUrl = new URL(this.topicSubscriptionUrl)
+
+    return this.http.post<void>(subscribeUrl.toString(), {
+      topic: topic.uuid,
+    }, {
+      withCredentials: true,
+    }).pipe(
+      verifyResponseType(simpleMessageSchema),
+      retryMultipleTimes(),
+      first(),
+    )
+  }
+
+  /**
+  * Subscribe to a topic.
+  * @param topic The topic to subscribe to.
+  * @returns A simple message.
+  */
+  public unsubscribeFrom(topicUuid: UUID): Observable<SimpleMessageZod> {
+    const unsubscribeUrl = new URL(this.topicSubscriptionUrl)
+
+    return this.http.delete<void>(unsubscribeUrl.toString(), {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: {
+        topic: topicUuid,
+      },
+    }).pipe(
+      verifyResponseType(simpleMessageSchema),
       retryMultipleTimes(),
       first(),
     )
