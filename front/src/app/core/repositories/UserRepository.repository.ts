@@ -2,8 +2,10 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { first, Observable } from 'rxjs'
 
-import { userSchema } from '@core/api/schemas'
+import UpdateProfileRequest from '@core/api/requests/updateUserProfile.request'
+import { simpleMessageSchema, SimpleMessageZod, userSchema } from '@core/api/schemas'
 import { User } from '@core/interfaces'
+import { checkServerReponse } from '@core/tools/checkServerReponse'
 import { verifyResponseType } from '@core/tools/verifyReponseType'
 import { environment } from '@env/environment'
 import retryMultipleTimes from './repoRetry'
@@ -35,11 +37,12 @@ export default class UserRepository {
     )
   }
 
-  public updateUserProfile(user: User): Observable<User> {
-    return this.http.put<User>(this.profileUrl, user, {
+  public updateUserProfile(request: UpdateProfileRequest): Observable<SimpleMessageZod> {
+    return this.http.put<SimpleMessageZod>(this.profileUrl, request, {
       withCredentials: true,
     }).pipe(
-      verifyResponseType(userSchema),
+      checkServerReponse(),
+      verifyResponseType(simpleMessageSchema),
       retryMultipleTimes(),
       first(),
     )

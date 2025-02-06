@@ -1,5 +1,6 @@
+import { ValidationError } from '@core/errors'
 import SessionExpired from '@core/errors/SessionExpired'
-import { EMPTY, MonoTypeOperatorFunction, ObservableInput, retry, RetryConfig, timer } from 'rxjs'
+import { EMPTY, MonoTypeOperatorFunction, ObservableInput, retry, RetryConfig, throwError, timer } from 'rxjs'
 
 const retryConfig: RetryConfig = {
   count: 3,
@@ -8,11 +9,13 @@ const retryConfig: RetryConfig = {
       return EMPTY
     }
 
+    if (error instanceof ValidationError) {
+      return throwError(() => error)
+    }
+
     if (localStorage.getItem('loggedin') === null) {
       return EMPTY
     }
-
-    // FIXME merge repo retry with session interceptor : need to refresh token before retry
 
     if (retryCount < 3) {
       return timer(1000)

@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common'
-import { Component, effect, OnInit } from '@angular/core'
+import { Component, effect, OnInit, untracked } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { ButtonModule } from 'primeng/button'
 import { InputTextModule } from 'primeng/inputtext'
@@ -35,7 +35,7 @@ export class InformationsComponent implements OnInit {
     }),
     password: new FormControl('', {
       validators: [
-        Validators.required,
+        Validators.minLength(0),
       ],
     }),
   })
@@ -44,24 +44,39 @@ export class InformationsComponent implements OnInit {
     public readonly viewModel: InformationsViewModel,
     private readonly toastService: ToastService,
   ) {
+    // * Update the view model with the form values
     this.form.valueChanges.subscribe((value) => {
       this.viewModel.email.set(value.email ?? '')
       this.viewModel.username.set(value.username ?? '')
       this.viewModel.password.set(value.password ?? '')
     })
+
     effect(() => {
+      const email = this.viewModel.email()
+      const username = this.viewModel.username()
+      const password = this.viewModel.password()
+
       const emailError = this.viewModel.errors.email()
       const usernameError = this.viewModel.errors.username()
       const passwordError = this.viewModel.errors.password()
-      if (emailError) {
-        this.form.controls.email.setErrors({ emailError })
-      }
-      if (usernameError) {
-        this.form.controls.username.setErrors({ usernameError })
-      }
-      if (passwordError) {
-        this.form.controls.password.setErrors({ passwordError })
-      }
+
+      untracked(() => {
+        // * Update the form with the view model values
+        this.form.controls.email.setValue(email)
+        this.form.controls.username.setValue(username)
+        this.form.controls.password.setValue(password)
+
+        // * Update the form with the view model errors
+        if (emailError) {
+          this.form.controls.email.setErrors({ emailError })
+        }
+        if (usernameError) {
+          this.form.controls.username.setErrors({ usernameError })
+        }
+        if (passwordError) {
+          this.form.controls.password.setErrors({ passwordError })
+        }
+      })
     })
   }
 
@@ -70,10 +85,14 @@ export class InformationsComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.viewModel.updateUserInformation().then(() => {
-      this.toastService.success('Informations mises à jour')
-    }).catch(() => {
-      this.toastService.error('Erreur lors de la mise à jour des informations')
+    this.viewModel.updateUserInformation().subscribe({
+      next: () => {
+        this.toastService.success('Votre profil a été mis à jour !')
+      },
+      error: (error) => {
+        this.toastService.error('Erreur lors de la mise à jour des informations')
+        console.error('Error:', error)
+      },
     })
   }
 }
