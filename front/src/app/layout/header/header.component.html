@@ -1,4 +1,5 @@
-<div *ngIf="displayHeader" class="w-100 border-b-2 border-b-gray-400 sm:flex" [class.hidden]="isOnAuthPage">
+<div *ngIf="viewModel.displayHeader()" class="w-100 border-b-2 border-b-gray-400 sm:flex"
+  [class.hidden]="viewModel.isOnAuthPage()">
   <a class="ms-3 me-auto inline-block cursor-pointer" routerLink="" routerLinkActive="router-link-active"
     title="Retourner sur la page d'accueil">
     <img class="img-fluid w-20" src="/assets/pictures/logo_p6.png" alt="Logo Monde de dèv" />
