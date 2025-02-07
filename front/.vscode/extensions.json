@@ -4,6 +4,7 @@
     "angular.ng-template",
     "johnpapa.angular2",
     "christian-kohler.path-intellisense",
-    "dbaeumer.vscode-eslint"
+    "dbaeumer.vscode-eslint",
+    "firefox-devtools.vscode-firefox-debug"
   ]
 }

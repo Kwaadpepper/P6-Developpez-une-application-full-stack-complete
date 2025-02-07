@@ -2,6 +2,27 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug with firefox",
+      "type": "firefox",
+      "request": "launch",
+      "url": "http://localhost:4200",
+      "preLaunchTask": "npm: start",
+      "postDebugTask": "postdebugKill",
+      "reAttach": true,
+      "reloadOnAttach": true,
+      "clearConsoleOnReload": true,
+      "webRoot": "${workspaceFolder}",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "pathMappings": [
+        {
+          "url": "webpack:///",
+          "path": "${webRoot}/"
+        }
+      ]
+    },
+    {
       "name": "Debug with chrome",
       "type": "chrome",
       "request": "launch",
