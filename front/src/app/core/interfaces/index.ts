@@ -1,3 +1,4 @@
+import Comment from './Comment.interface'
 import Entity from './Entity.interface'
 import Post from './Post.interface'
 import Subscription from './Subscription.interface'
@@ -6,10 +7,8 @@ import TopicName from './TopicName.interface'
 import User from './User.interface'
 
 export type {
-  Entity,
+  Comment, Entity,
   Post,
-  Subscription,
-  Topic,
-  TopicName,
-  User,
+  Subscription, Topic,
+  TopicName, User,
 }

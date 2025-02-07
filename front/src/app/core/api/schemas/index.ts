@@ -1,3 +1,4 @@
+import commentSchema, { CommentZod } from './Comment.schema'
 import { pageOf } from './PageOf.schema'
 import postSchema, { PostZod } from './Post.schema'
 import simpleMessageSchema, { SimpleMessageZod } from './SimpleMessage.schema'
@@ -7,14 +8,12 @@ import userSchema, { UserZod } from './User.schema'
 import validationErrorSchema, { ValidationErrorZod } from './ValidationError.schema'
 
 export {
-  pageOf,
-  postSchema,
-  simpleMessageSchema, topicNameSchema, topicSchema, userSchema,
+  commentSchema, pageOf,
+  postSchema, simpleMessageSchema, topicNameSchema, topicSchema, userSchema,
   validationErrorSchema,
 }
 
 export type {
-  PostZod,
-  SimpleMessageZod, TopicNameZod, TopicZod, UserZod,
+  CommentZod, PostZod, SimpleMessageZod, TopicNameZod, TopicZod, UserZod,
   ValidationErrorZod,
 }

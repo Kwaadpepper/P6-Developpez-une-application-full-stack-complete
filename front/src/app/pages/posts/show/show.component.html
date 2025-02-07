@@ -22,14 +22,22 @@
     </div>
   </div>
   <div class="row mb-10">
-    <div class="col">
-      <markdown [textContent]="viewModel.post$().content"></markdown>
+    <div class="col" markdown [textContent]="viewModel.post$().content" ngPreserveWhitespaces>
     </div>
   </div>
   <hr class="mb-5">
-  <div class="row mb-5">
+  <div class="row">
     <div class="col">
       <h2>Commentaires</h2>
     </div>
   </div>
-</div>
+  <div class="row mb-5">
+    <div class="col">
+      <app-list-comments [postUuid]="viewModel.post$().uuid" [reloadComments]="reloadCommentsEvent"></app-list-comments>
+    </div>
+  </div>
+  <div class="row mb-5">
+    <div class="col">
+      <app-add-comment [forPost]="viewModel.post$().uuid" (submitComment)="onCommentSubmitted()"></app-add-comment>
+    </div>
+  </div>

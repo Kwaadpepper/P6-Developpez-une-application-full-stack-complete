@@ -93,7 +93,7 @@ export default class TopicRepository {
   public subscribeTo(topicUuid: UUID): Observable<SimpleMessageZod> {
     const subscribeUrl = new URL(this.topicSubscriptionUrl)
 
-    return this.http.post<void>(subscribeUrl.toString(), {
+    return this.http.post<SimpleMessageZod>(subscribeUrl.toString(), {
       topic: topicUuid,
     }, {
       withCredentials: true,
