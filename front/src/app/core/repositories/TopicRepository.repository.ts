@@ -87,14 +87,14 @@ export default class TopicRepository {
 
   /**
    * Subscribe to a topic.
-   * @param topic The topic to subscribe to.
-   * @returns A simple message.
+   * @param topicUuid The topic UUID to subscribe to.
+   * @returns A message indicating the success of the operation.
    */
-  public subscribeTo(topic: Topic): Observable<SimpleMessageZod> {
+  public subscribeTo(topicUuid: UUID): Observable<SimpleMessageZod> {
     const subscribeUrl = new URL(this.topicSubscriptionUrl)
 
     return this.http.post<void>(subscribeUrl.toString(), {
-      topic: topic.uuid,
+      topic: topicUuid,
     }, {
       withCredentials: true,
     }).pipe(
@@ -105,10 +105,10 @@ export default class TopicRepository {
   }
 
   /**
-  * Subscribe to a topic.
-  * @param topic The topic to subscribe to.
-  * @returns A simple message.
-  */
+   * Unsubscribe from a topic.
+   * @param topicUuid The topic UUID to unsubscribe from.
+   * @returns A message indicating the success of the operation.
+   */
   public unsubscribeFrom(topicUuid: UUID): Observable<SimpleMessageZod> {
     const unsubscribeUrl = new URL(this.topicSubscriptionUrl)
 

@@ -35,8 +35,8 @@ export class TopicService {
     return this.topicRepository.getUserSubscribedTopics(page)
   }
 
-  subcribeToTopic(topic: Topic): Observable<void> {
-    return this.topicRepository.subscribeTo(topic).pipe(
+  subcribeToTopic(topicUuid: UUID): Observable<void> {
+    return this.topicRepository.subscribeTo(topicUuid).pipe(
       map(() => { return }),
     )
   }

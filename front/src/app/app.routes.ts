@@ -1,20 +1,19 @@
 import { Routes } from '@angular/router'
 
-import { ProfileComponent as UserProfileComponent } from '@pages/user/profile/profile.component'
 import { AuthGuard } from './guard/auth.guard'
 import { UnauthGuard } from './guard/unauth.guard'
-import { LoginComponent } from './pages/auth/login/login.component'
-import { RegisterComponent } from './pages/auth/register/register.component'
-import { HomeComponent } from './pages/home/home.component'
-import { NotFoundComponent } from './pages/not-found/not-found.component'
-import { CreateComponent as PostCreateComponent } from './pages/posts/create/create.component'
-import { ListComponent as PostListComponent } from './pages/posts/list/list.component'
-import { ShowComponent as PostShowComponent } from './pages/posts/show/show.component'
+import {
+  HomeComponent, LoginComponent, NotFoundComponent, PostCreateComponent,
+  PostListComponent, PostShowComponent, ProfileComponent, RegisterComponent,
+  TopicListComponent,
+} from './pages'
 import { PostResolver } from './resolvers'
 
 export const redirectUrls = {
+  home: '',
   posts: '/posts',
   login: '/login',
+  register: '/register',
 }
 
 // consider a guard combined with canLoad / canActivate route option
@@ -37,6 +36,12 @@ export const routes: Routes = [
     canActivate: [UnauthGuard],
     title: 'Créer un compte',
     component: RegisterComponent,
+  },
+  {
+    path: 'topics',
+    canActivate: [AuthGuard],
+    title: 'Sujets',
+    component: TopicListComponent,
   },
   {
     path: 'posts',
@@ -66,7 +71,7 @@ export const routes: Routes = [
     path: 'account',
     canActivate: [AuthGuard],
     title: 'Mon compte',
-    component: UserProfileComponent,
+    component: ProfileComponent,
   },
   { path: '404', component: NotFoundComponent },
   { path: '**', redirectTo: '404' },
