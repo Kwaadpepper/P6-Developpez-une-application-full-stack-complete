@@ -29,8 +29,7 @@ export default class ListViewModel {
 
   public loadMoreTopics(): void {
     this.loading.set(true)
-    this.currentPage += 1
-    this.topicService.paginateTopics(this.currentPage)
+    this.topicService.paginateTopics(this.currentPage++)
       .subscribe({
         next: (newPage) => {
           this.topicList.update(topics => [...topics, ...newPage.list])
