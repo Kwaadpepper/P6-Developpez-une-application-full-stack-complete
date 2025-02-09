@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { first, Observable } from 'rxjs'
 
-import { pageOf, simpleMessageSchema, SimpleMessageZod, topicNameSchema, topicSchema } from '@core/api/schemas'
-import { Topic, TopicName } from '@core/interfaces'
+import { pageOf, simpleMessageSchema, SimpleMessageZod, topicNameSchema, topicSchema, topicWithSubscriptionSchema } from '@core/api/schemas'
+import { Topic, TopicName, TopicWithSubscription } from '@core/interfaces'
 import { verifyResponseType } from '@core/tools/verifyReponseType'
 import { PageOf, UUID } from '@core/types'
 import { environment } from '@env/environment'
@@ -28,14 +28,14 @@ export default class TopicRepository {
    * @param page The page number to get. The first page is 1.
    * @returns A topic list page.
    */
-  public getTopics(page: number): Observable<PageOf<Topic>> {
+  public getTopics(page: number): Observable<PageOf<TopicWithSubscription>> {
     const topicUrl = new URL(this.topicUrl)
     topicUrl.searchParams.append('page', String(page))
 
-    return this.http.get<PageOf<Topic>>(topicUrl.toString(), {
+    return this.http.get<PageOf<TopicWithSubscription>>(topicUrl.toString(), {
       withCredentials: true,
     }).pipe(
-      verifyResponseType(pageOf(topicSchema)),
+      verifyResponseType(pageOf(topicWithSubscriptionSchema)),
       retryMultipleTimes(),
       first(),
     )

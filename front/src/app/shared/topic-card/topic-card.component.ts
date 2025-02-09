@@ -1,10 +1,9 @@
 import { NgIf, SlicePipe, TitleCasePipe } from '@angular/common'
-import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { Component, EventEmitter, Input } from '@angular/core'
+import { ToastService } from '@core/services'
 import { ButtonModule } from 'primeng/button'
 
-import { Topic } from '@core/interfaces'
-import { UUID } from '@core/types'
-import TopicCardViewModel from './topic-card.viewmodel'
+import TopicCardViewModel, { TopicCard } from './topic-card.viewmodel'
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -21,30 +20,26 @@ import TopicCardViewModel from './topic-card.viewmodel'
   styleUrl: './topic-card.component.css',
 })
 export class TopicCardComponent {
-  @Input({ required: true }) set topic(value: Topic) {
+  @Input({ required: true }) set topicCardElement(value: TopicCard) {
     this.viewModel.setTopic(value)
   }
 
-  @Input({ required: true })
-  public canSubscribe = true
-
-  @Output()
-  public subscribeEvent = new EventEmitter<UUID>()
-
-  @Output()
-  public unsubscribeEvent = new EventEmitter<UUID>()
-
   constructor(
+    private readonly toastService: ToastService,
     public readonly viewModel: TopicCardViewModel,
   ) { }
 
   onSubscribeClick(): void {
-    const topic = this.viewModel.topic()
-    this.subscribeEvent.emit(topic.uuid)
+    this.viewModel.subscribeTo(this.viewModel.topic().uuid)
+      .add(() => {
+        this.toastService.success('Subscribed to topic')
+      })
   }
 
   onUnsubscribeClick(): void {
-    const topic = this.viewModel.topic()
-    this.unsubscribeEvent.emit(topic.uuid)
+    this.viewModel.unsubscribeFrom(this.viewModel.topic().uuid)
+      .add(() => {
+        this.toastService.success('Unsubscribed from topic')
+      })
   }
 }

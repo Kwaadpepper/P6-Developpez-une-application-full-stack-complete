@@ -4,13 +4,17 @@ import { ToastService, TopicService } from '@core/services'
 import { UUID } from '@core/types'
 import { catchError, EMPTY, finalize, map } from 'rxjs'
 
+type TopicElement = Topic & {
+  subscribed: boolean
+}
+
 @Injectable({
   providedIn: 'root',
   deps: [TopicService, ToastService],
 })
 export default class TopicsViewModel {
   public readonly loading = signal(false)
-  public readonly userTopics = signal<Topic[]>([])
+  public readonly userTopics = signal<TopicElement[]>([])
 
   private readonly currentPage = signal(1)
 
@@ -60,7 +64,10 @@ export default class TopicsViewModel {
       )
       .subscribe({
         next: (topics) => {
-          this.userTopics.update(current => [...current, ...topics])
+          this.userTopics.update(current => [...current, ...topics.map(topic => ({
+            ...topic,
+            subscribed: true,
+          }))])
         },
       })
   }

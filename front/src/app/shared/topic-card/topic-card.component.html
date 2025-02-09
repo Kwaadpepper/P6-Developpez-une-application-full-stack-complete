@@ -12,11 +12,11 @@
   </div>
   <div class="row">
     <div class="col text-center">
-      <p-button *ngIf="canSubscribe" styleClass="mx-4 my-4" variant="outlined" severity="contrast"
+      <p-button *ngIf="viewModel.canSubscribe()" styleClass="mx-4 my-4" variant="outlined" severity="contrast"
         title="S'abonner à ce theme" (onClick)="onSubscribeClick()">
         <span class="inline-block min-w-32 font-bold" pButtonLabel>S´abonner</span>
       </p-button>
-      <p-button *ngIf="!canSubscribe" styleClass="mx-4 my-4" variant="outlined" severity="contrast"
+      <p-button *ngIf="!viewModel.canSubscribe()" styleClass="mx-4 my-4" variant="outlined" severity="contrast"
         title="Se désabonner de ce theme" (onClick)="onUnsubscribeClick()">
         <span class="inline-block min-w-32 font-bold" pButtonLabel>Se désabonner</span>
       </p-button>

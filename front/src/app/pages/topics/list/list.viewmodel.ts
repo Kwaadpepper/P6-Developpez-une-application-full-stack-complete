@@ -1,14 +1,22 @@
 import { computed, Injectable, signal } from '@angular/core'
 
-import { Topic } from '@core/interfaces'
 import { TopicService } from '@core/services'
 import { UUID } from '@core/types'
-import { Subscription } from 'rxjs'
 
-@Injectable()
+interface TopicListElement {
+  uuid: UUID
+  description: string
+  name: string
+  subscribed: boolean
+}
+
+@Injectable({
+  providedIn: 'root',
+  deps: [TopicService],
+})
 export default class ListViewModel {
   private currentPage = 0
-  private topicList = signal<Topic[]>([])
+  private topicList = signal<TopicListElement[]>([])
 
   public readonly currentPage$ = computed(() => this.currentPage)
   public readonly topicList$ = computed(() => this.topicList())
@@ -32,22 +40,15 @@ export default class ListViewModel {
     this.topicService.paginateTopics(this.currentPage++)
       .subscribe({
         next: (newPage) => {
-          this.topicList.update(topics => [...topics, ...newPage.list])
+          this.topicList.update(topics => [...topics, ...newPage.list.map(topic => ({
+            uuid: topic.uuid,
+            description: topic.description,
+            name: topic.name,
+            subscribed: topic.subscribed,
+          }))])
         },
         complete: () => {
           this.loading.set(false)
-        },
-      })
-  }
-
-  public subscribeTo(topicUuid: UUID): Subscription {
-    return this.topicService.subcribeToTopic(topicUuid)
-      .subscribe({
-        next: () => {
-          this.reloadTopics()
-        },
-        error: (error) => {
-          console.error('Error:', error)
         },
       })
   }

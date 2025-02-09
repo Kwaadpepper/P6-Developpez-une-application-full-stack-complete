@@ -1,35 +1,50 @@
 import { computed, Injectable, signal } from '@angular/core'
+import { TopicService } from '@core/services'
 
-import { Topic } from '@core/interfaces'
 import { decodeHTmlEntities } from '@core/tools/decodeHtmlEntities'
+import { UUID } from '@core/types'
 import { MarkdownService } from 'ngx-markdown'
+import { Subscription } from 'rxjs'
 
+export interface TopicCard {
+  uuid: string
+  name: string
+  description: string
+  subscribed: boolean
+}
 @Injectable({
   providedIn: 'root',
-  deps: [MarkdownService],
+  deps: [
+    TopicService,
+    MarkdownService,
+  ],
 })
 export default class TopicCardViewModel {
-  private _topic = signal({
+  public _topic = signal<TopicCard>({
     uuid: '',
     name: '',
     description: '',
+    subscribed: false,
   })
 
   public readonly topic = computed(() => this._topic())
+  public readonly canSubscribe = computed(() => !this._topic().subscribed)
   public readonly strippedTopicContent = signal('')
 
   constructor(
+    private topicService: TopicService,
     private markdownService: MarkdownService,
   ) {
   }
 
-  public setTopic(topic: Topic): void {
+  public setTopic(topic: TopicCard): void {
     const topicDecription = topic.description
 
     this._topic.update((current) => {
       current.uuid = topic.uuid
       current.name = topic.name
       current.description = topicDecription
+      current.subscribed = topic.subscribed
       return current
     })
 
@@ -37,6 +52,34 @@ export default class TopicCardViewModel {
       const stripped = this.getPlainTextFromHtml(html)
       this.strippedTopicContent.set(stripped)
     })
+  }
+
+  public subscribeTo(topicUuid: UUID): Subscription {
+    return this.topicService.subcribeToTopic(topicUuid)
+      .subscribe({
+        next: () => {
+          this._topic.update((current) => {
+            return { ...current, subscribed: true }
+          })
+        },
+        error: (error) => {
+          console.error('Error:', error)
+        },
+      })
+  }
+
+  public unsubscribeFrom(topicUuid: UUID): Subscription {
+    return this.topicService.unSubcribeFromTopic(topicUuid)
+      .subscribe({
+        next: () => {
+          this._topic.update((current) => {
+            return { ...current, subscribed: false }
+          })
+        },
+        error: (error) => {
+          console.error('Error:', error)
+        },
+      })
   }
 
   private async getPlainHtmlFromMarkdown(markdown: string): Promise<string> {

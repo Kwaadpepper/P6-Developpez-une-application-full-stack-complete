@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 
-import { Topic, TopicName } from '@core/interfaces'
+import { Topic, TopicName, TopicWithSubscription } from '@core/interfaces'
 import { TopicRepository } from '@core/repositories'
 import { PageOf, UUID } from '@core/types'
 import { map, Observable } from 'rxjs'
@@ -14,7 +14,7 @@ export class TopicService {
     private topicRepository: TopicRepository,
   ) { }
 
-  paginateTopics(pageNumber: number): Observable<PageOf<Topic>> {
+  paginateTopics(pageNumber: number): Observable<PageOf<TopicWithSubscription>> {
     const page = Math.max(1, pageNumber)
 
     return this.topicRepository.getTopics(page)

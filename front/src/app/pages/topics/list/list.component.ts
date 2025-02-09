@@ -3,8 +3,6 @@ import { Component, OnInit } from '@angular/core'
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll'
 import { ProgressSpinnerModule } from 'primeng/progressspinner'
 
-import { ToastService } from '@core/services'
-import { UUID } from '@core/types'
 import { TopicCardComponent } from '@shared/index'
 import { BackButtonComponent } from '../../../shared/back-button/back-button.component'
 import ListViewModel from './list.viewmodel'
@@ -20,7 +18,6 @@ import ListViewModel from './list.viewmodel'
   ],
   providers: [
     ListViewModel,
-    ToastService,
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.css',
@@ -31,7 +28,6 @@ export class ListComponent implements OnInit {
 
   constructor(
     public readonly viewModel: ListViewModel,
-    private readonly toastService: ToastService,
   ) {
   }
 
@@ -41,11 +37,5 @@ export class ListComponent implements OnInit {
 
   onScroll(): void {
     this.viewModel.loadMoreTopics()
-  }
-
-  onSubscribe(topicUuid: UUID): void {
-    this.viewModel.subscribeTo(topicUuid).add(() => {
-      this.toastService.success('Subscribed!')
-    })
   }
 }
