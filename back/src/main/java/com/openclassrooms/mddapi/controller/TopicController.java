@@ -19,6 +19,7 @@ import com.openclassrooms.mddapi.dto.PaginatedDto;
 import com.openclassrooms.mddapi.dto.SimpleMessage;
 import com.openclassrooms.mddapi.dto.TopicDto;
 import com.openclassrooms.mddapi.dto.TopicNameDto;
+import com.openclassrooms.mddapi.dto.TopicWithSubscriptionDto;
 import com.openclassrooms.mddapi.exception.exceptions.JwtAuthenticationFailureException;
 import com.openclassrooms.mddapi.model.Subscription;
 import com.openclassrooms.mddapi.model.Topic;
@@ -77,13 +78,19 @@ public class TopicController {
      * @return {@link PaginatedDto} of {@link TopicDto}
      */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public PaginatedDto<TopicDto> paginatedTopics(
+    public PaginatedDto<TopicWithSubscriptionDto> paginatedTopics(
             @RequestParam(required = false, defaultValue = "1") @Min(value = 1) final Integer page) {
+
+        final var authUser = sessionService.getAuthenticatedUser().or(() -> {
+            throw new JwtAuthenticationFailureException("No user is authenticated.");
+        }).get();
+        final var userUuid = authUser.getUuid();
+
         var pageRequest = PageRequest.of(page - 1, 30);
 
-        final var topicList = topicService.getPaginatedTopics(pageRequest);
+        final var topicWitSubscriptionList = topicService.getPaginatedTopics(userUuid, pageRequest);
 
-        return topicPresenter.presentModelPage(topicList, page);
+        return topicPresenter.presentModelWithSubscriptionPage(topicWitSubscriptionList, page);
     }
 
     /**

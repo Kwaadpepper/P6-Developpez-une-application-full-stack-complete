@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import com.openclassrooms.mddapi.model.Topic;
+import com.openclassrooms.mddapi.query_dto.TopicWithSubscription;
 import com.openclassrooms.mddapi.repository.TopicRepository;
 
 @Service
@@ -17,11 +17,11 @@ public class TopicService {
         this.topicRepository = topicRepository;
     }
 
-    public Page<Topic> getPaginatedTopics(PageRequest page) {
+    public Page<TopicWithSubscription> getPaginatedTopics(UUID userUuid, PageRequest page) {
         if (page.getPageSize() > 50) {
             throw new IllegalArgumentException("Page size must be less than or equal to 50");
         }
-        return topicRepository.findAll(page);
+        return topicRepository.findAllWithSubscribed(userUuid, page);
     }
 
     public Page<TopicName> getPaginatedTopicsNamesWhere(PageRequest page, String nameLike) {
