@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core'
 
 import { AuthService, errors, ToastService } from '@core/services'
 import { ProfileService } from '@core/services/profile/profile.service'
-import { catchError, EMPTY, finalize, map, Observable, ObservableInput } from 'rxjs'
+import { catchError, EMPTY, finalize, map, Observable, ObservableInput, Subject } from 'rxjs'
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +21,7 @@ export default class InformationsViewModel {
   public readonly password = signal('')
 
   public readonly loading = signal(false)
+  public readonly hasRefreshedData = new Subject()
 
   constructor(
     private profileService: ProfileService,
@@ -29,6 +30,7 @@ export default class InformationsViewModel {
   }
 
   public refreshUserInformation(): void {
+    this.hasRefreshedData.next(true)
     this.profileService.getCurrentUserProfile().subscribe({
       next: (profile) => {
         this.username.set(profile.name)
@@ -38,6 +40,9 @@ export default class InformationsViewModel {
       error: (error) => {
         this.toastService.error('Erreur lors de la récupération des informations')
         console.error('Error:', error)
+      },
+      complete: () => {
+        this.hasRefreshedData.next(true)
       },
     })
   }
@@ -80,7 +85,7 @@ export default class InformationsViewModel {
     )
   }
 
-  private resetErrors(): void {
+  public resetErrors(): void {
     this.formErrorMessage.set('')
     Object.values(this.errors).forEach((error) => {
       error.set('')

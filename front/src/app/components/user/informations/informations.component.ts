@@ -1,9 +1,11 @@
 import { NgIf } from '@angular/common'
-import { Component, effect, OnInit, untracked } from '@angular/core'
+import { Component, effect, OnInit, signal } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { ButtonModule } from 'primeng/button'
+import { InputGroupModule } from 'primeng/inputgroup'
 import { InputTextModule } from 'primeng/inputtext'
 import { MessageModule } from 'primeng/message'
+import { PasswordModule } from 'primeng/password'
 
 import { ToastService } from '@core/services'
 import InformationsViewModel from './informations.viewmodel'
@@ -11,7 +13,8 @@ import InformationsViewModel from './informations.viewmodel'
 @Component({
   selector: 'app-informations',
   imports: [
-    InputTextModule, ReactiveFormsModule,
+    InputTextModule, PasswordModule,
+    ReactiveFormsModule, InputGroupModule,
     MessageModule, NgIf, ButtonModule,
   ],
   providers: [
@@ -21,6 +24,8 @@ import InformationsViewModel from './informations.viewmodel'
   styleUrl: './informations.component.css',
 })
 export class InformationsComponent implements OnInit {
+  public readonly maskPassword = signal(true)
+
   public readonly form = new FormGroup({
     username: new FormControl('', {
       validators: [
@@ -45,38 +50,44 @@ export class InformationsComponent implements OnInit {
     private readonly toastService: ToastService,
   ) {
     // * Update the view model with the form values
-    this.form.valueChanges.subscribe((value) => {
-      this.viewModel.email.set(value.email ?? '')
-      this.viewModel.username.set(value.username ?? '')
-      this.viewModel.password.set(value.password ?? '')
+    this.form.controls.email.valueChanges.subscribe((value) => {
+      this.viewModel.email.set(value ?? '')
+      this.viewModel.errors.email.set('')
+    })
+    this.form.controls.username.valueChanges.subscribe((value) => {
+      this.viewModel.username.set(value ?? '')
+      this.viewModel.errors.username.set('')
+    })
+    this.form.controls.password.valueChanges.subscribe((value) => {
+      this.viewModel.password.set(value ?? '')
+      this.viewModel.errors.password.set('')
+    })
+
+    this.viewModel.hasRefreshedData.subscribe({
+      next: () => {
+        this.form.patchValue({
+          email: this.viewModel.email(),
+          username: this.viewModel.username(),
+          password: this.viewModel.password(),
+        })
+      },
     })
 
     effect(() => {
-      const email = this.viewModel.email()
-      const username = this.viewModel.username()
-      const password = this.viewModel.password()
-
       const emailError = this.viewModel.errors.email()
       const usernameError = this.viewModel.errors.username()
       const passwordError = this.viewModel.errors.password()
 
-      untracked(() => {
-        // * Update the form with the view model values
-        this.form.controls.email.setValue(email)
-        this.form.controls.username.setValue(username)
-        this.form.controls.password.setValue(password)
-
-        // * Update the form with the view model errors
-        if (emailError) {
-          this.form.controls.email.setErrors({ emailError })
-        }
-        if (usernameError) {
-          this.form.controls.username.setErrors({ usernameError })
-        }
-        if (passwordError) {
-          this.form.controls.password.setErrors({ passwordError })
-        }
-      })
+      // * Update the form with the view model errors
+      if (emailError) {
+        this.form.controls.email.setErrors({ emailError })
+      }
+      if (usernameError) {
+        this.form.controls.username.setErrors({ usernameError })
+      }
+      if (passwordError) {
+        this.form.controls.password.setErrors({ passwordError })
+      }
     })
   }
 
@@ -84,14 +95,17 @@ export class InformationsComponent implements OnInit {
     this.viewModel.refreshUserInformation()
   }
 
+  onToggleMask(): void {
+    this.maskPassword.set(!this.maskPassword())
+  }
+
   onSubmit(): void {
     this.viewModel.updateUserInformation().subscribe({
       next: () => {
         this.toastService.success('Votre profil a été mis à jour !')
       },
-      error: (error) => {
+      error: () => {
         this.toastService.error('Erreur lors de la mise à jour des informations')
-        console.error('Error:', error)
       },
     })
   }

@@ -30,11 +30,24 @@
 
         <div class="flex flex-col mb-6">
           <label for="password">Mot de passe</label>
-          <input pInputText id="password" formControlName="password" aria-describedby="password-help" type="password" />
-          <small id="password-help" class="text-error"
-            *ngIf="form.controls.password.dirty || form.controls.password.touched">
-            <span class="block" *ngIf="form.controls.password.hasError('required')"> Obligatoire.</span>
-            <span class="block" *ngIf="viewModel.errors.password()">{{ viewModel.errors.password() }}</span>
+          <p-inputgroup>
+            <input pPassword id="password" formControlName="password" aria-describedby="password-help"
+              [type]="maskPassword() ? 'password' : 'text'" autocomplete="off" [feedback]="false" />
+            <p-button (click)="onToggleMask()">
+              <span *ngIf="maskPassword()" class="pi pi-eye"></span>
+              <span *ngIf="!maskPassword()" class="pi pi-eye-slash"></span>
+            </p-button>
+          </p-inputgroup>
+          <small id="password-help">
+            <span class="block" *ngIf="form.controls.password.dirty || form.controls.password.touched">
+              <span class="block text-error" *ngIf="form.controls.password.hasError('required')"> Obligatoire.</span>
+              <span class="block text-error" *ngIf="viewModel.errors.password()">{{ viewModel.errors.password()
+                }}</span>
+            </span>
+            <span class="block mt-2">Doit être long d'au moins 8 caratères</span>
+            <span class="block">Doit contenir au moins une lettre majuscule, une lettre minuscule</span>
+            <span class="block">Doit contenir au moins un chiffre</span>
+            <span class="block">Doit contenir au moins un caractère spécial (,.?!:...)</span>
           </small>
         </div>
 
