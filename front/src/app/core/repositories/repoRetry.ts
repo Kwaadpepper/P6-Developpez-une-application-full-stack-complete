@@ -6,15 +6,11 @@ const retryConfig: RetryConfig = {
   count: 3,
   delay: (error: unknown, retryCount: number): ObservableInput<unknown> => {
     if (error instanceof SessionExpired) {
-      return EMPTY
+      return throwError(() => error)
     }
 
     if (error instanceof ValidationError) {
       return throwError(() => error)
-    }
-
-    if (localStorage.getItem('loggedin') === null) {
-      return EMPTY
     }
 
     if (retryCount < 3) {

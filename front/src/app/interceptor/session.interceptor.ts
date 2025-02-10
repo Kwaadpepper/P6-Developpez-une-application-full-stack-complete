@@ -48,13 +48,13 @@ export class SessionInterceptor implements HttpInterceptor {
       catchError((error) => {
         if (error instanceof HttpErrorResponse && error.status === 401) {
           return this.authService.refreshSession().pipe(
-            switchMap(() => next.handle(request)),
             catchError(() => {
               this.notifyForLogout.next(!wasLoginRequest)
               this.sessionService.setLoggedOut()
               this.rooter.navigateByUrl(this.redirectUrl)
               return throwError(() => new SessionExpired())
             }),
+            switchMap(() => next.handle(request)),
           )
         }
         return throwError(() => error)

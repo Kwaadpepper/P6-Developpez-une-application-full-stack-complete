@@ -8,11 +8,11 @@ export function checkServerReponse<T>(): UnaryFunction<Observable<T>, Observable
   return pipe(
     catchError((error) => {
       if (!(error instanceof HttpErrorResponse)) {
-        throw new Error(`Cannot check server reponse if not a HttpErrorResponse`, error)
+        return throwError(() => error)
       }
       if (error.status === 422) {
-        const errors = validationErrorSchema.parse(error.error)
-        throw new ValidationError(errors.errors)
+        const validationError = validationErrorSchema.parse(error.error)
+        throw new ValidationError(validationError.errors)
       }
       return throwError(() => error)
     }),

@@ -6,7 +6,6 @@ import LoginRequest from '@core/api/requests/login.request'
 import RegisterRequest from '@core/api/requests/register.request'
 import { simpleMessageSchema, SimpleMessageZod, userSchema, UserZod } from '@core/api/schemas'
 import LoginFailure from '@core/errors/LoginFailure'
-import SessionExpired from '@core/errors/SessionExpired'
 import { User } from '@core/interfaces'
 import { checkServerReponse } from '@core/tools/checkServerReponse'
 import { verifyResponseType } from '@core/tools/verifyReponseType'
@@ -71,15 +70,7 @@ export class AuthService {
         withCredentials: true,
       },
     ).pipe(
-      catchError((error) => {
-        if (error instanceof HttpErrorResponse && error.status === 401) {
-          this.sessionService.setLoggedOut()
-          return throwError(() => new SessionExpired())
-        }
-        return throwError(() => error)
-      }),
       verifyResponseType(simpleMessageSchema),
-      first(),
     )
   }
 
