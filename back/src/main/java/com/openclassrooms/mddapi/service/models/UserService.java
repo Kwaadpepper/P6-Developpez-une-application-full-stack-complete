@@ -42,7 +42,7 @@ public class UserService {
         final PasswordHash newPassword;
 
         if (usernameExists) {
-            throw ValidationException.of(ValidationError.of("usernameExists", "Le nom d'utilisateur est déjà utilisé"));
+            throw ValidationException.of(ValidationError.of("username", "Le nom d'utilisateur est déjà utilisé"));
         }
         if (emailExists) {
             throw ValidationException.of(ValidationError.of("email", "L'adresse e-mail est déjà utilisée"));
