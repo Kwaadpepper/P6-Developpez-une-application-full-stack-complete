@@ -19,13 +19,15 @@
           <!-- beautify ignore:start -->
           <p-select
             [options]="viewModel.topicNames()"
-            [virtualScroll]="true"
             [filter]="true"
-            [virtualScrollItemSize]="perPage"
-            [virtualScrollOptions]="selectOptions().virtualScrollOptions"
+            [lazy]="true"
+            [virtualScroll]="true"
+            [virtualScrollItemSize]="viewModel.topicsTotalItems()"
+            [virtualScrollOptions]="{ itemSize: viewModel.topicsPerPage }"
             [loading]="viewModel.topicsAreLoading()"
             [optionLabel]="selectOptions().label"
             [optionValue]="selectOptions().value"
+            (onLazyLoad)="onLazyloadTopicsNames($event)"
             (onFilter)="onFilterTopicsNames($event)"
             (onChange)="onSelectTopic($event)"
             placeholder="Sélectionnez un theme"

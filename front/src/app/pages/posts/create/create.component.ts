@@ -1,14 +1,13 @@
 import { NgIf } from '@angular/common'
 import { Component, OnInit, signal } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
-import { ScrollerOptions } from 'primeng/api'
+import { LazyLoadEvent } from 'primeng/api'
 import { ButtonModule } from 'primeng/button'
 import { InputTextModule } from 'primeng/inputtext'
 import { MessageModule } from 'primeng/message'
-import { ScrollerScrollEvent } from 'primeng/scroller'
 import { SelectFilterEvent, SelectModule } from 'primeng/select'
 import { TextareaModule } from 'primeng/textarea'
-import { debounceTime, distinctUntilChanged, filter, Subject } from 'rxjs'
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs'
 
 import { Router } from '@angular/router'
 import { ToastService } from '@core/services'
@@ -17,10 +16,8 @@ import { BackButtonComponent } from '../../../shared/back-button/back-button.com
 import CreateViewModel from './create.viewmodel'
 
 interface selectOptions {
-  virtualScrollOptions: ScrollerOptions
   label: string
   value: string
-  totalRecords: number
 }
 
 @Component({
@@ -34,22 +31,12 @@ interface selectOptions {
   styleUrl: './create.component.css',
 })
 export class CreateComponent implements OnInit {
-  public readonly perPage = 30
-  public readonly currentPage = signal(1)
-
   private readonly topicSearch = ''
   private readonly searchTopicName$ = new Subject<string>()
 
   public readonly selectOptions = signal<selectOptions>({
     label: 'name',
     value: 'uuid',
-    totalRecords: this.perPage * 2,
-    virtualScrollOptions: {
-      step: this.perPage,
-      delay: 300,
-      showLoader: true,
-      onScroll: this.onScrollTopicsNames.bind(this),
-    },
   })
 
   public readonly form = new FormGroup({
@@ -88,11 +75,10 @@ export class CreateComponent implements OnInit {
   ngOnInit(): void {
     // * Debounce search topic names
     this.searchTopicName$.pipe(
-      filter(filter => filter.length >= 2),
       debounceTime(500),
       distinctUntilChanged(),
     ).subscribe((filter) => {
-      this.initFirstTopicPage(filter)
+      this.initFirstTopicPage(filter.length >= 2 ? filter : undefined)
     })
 
     // * Init topic names
@@ -103,14 +89,18 @@ export class CreateComponent implements OnInit {
     this.searchTopicName$.next(event.filter)
   }
 
-  onScrollTopicsNames(event: ScrollerScrollEvent): void {
-    const htmlElement = event.originalEvent!.target as HTMLDivElement
-    const elHeight = htmlElement.scrollHeight
-    const scrollTop = htmlElement.scrollTop
+  onLazyloadTopicsNames(event: LazyLoadEvent): void {
+    const currentPage = this.viewModel.topicsPage()
+    const nextPage = Math.floor((event.last ?? 0) / this.viewModel.topicsPerPage) + 1
 
-    if (scrollTop + htmlElement.clientHeight === elHeight) {
-      this.loadMoreTopicsNames(this.topicSearch)
+    if (currentPage >= nextPage) {
+      return
     }
+
+    this.viewModel.getTopicNamesPage(
+      nextPage,
+      this.topicSearch,
+    )
   }
 
   onSelectTopic(event: {
@@ -137,22 +127,7 @@ export class CreateComponent implements OnInit {
   }
 
   private initFirstTopicPage(filter = ''): void {
-    this.currentPage.set(1)
-    this.viewModel.topicNames.set([])
-    this.viewModel.getTopicNamesPage(1, filter).subscribe({
-      complete: () => {
-        this.selectOptions.update((current) => {
-          return {
-            ...current,
-            totalRecords: this.viewModel.totalTopicNames(),
-          }
-        })
-      },
-    })
-  }
-
-  private loadMoreTopicsNames(filter = ''): void {
-    this.currentPage.set(this.currentPage() + 1)
-    this.viewModel.getTopicNamesPage(this.currentPage(), filter)
+    this.viewModel.resetTopicNameList()
+    this.viewModel.getTopicNamesPage(1, filter)
   }
 }
