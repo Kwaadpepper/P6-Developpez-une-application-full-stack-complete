@@ -10,6 +10,7 @@ import { TextareaModule } from 'primeng/textarea'
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs'
 
 import { Router } from '@angular/router'
+import { MarkdownEditorComponent } from '@components/markdown-editor/markdown-editor.component'
 import { ToastService } from '@core/services'
 import { UUID } from '@core/types'
 import { BackButtonComponent } from '../../../shared/back-button/back-button.component'
@@ -25,7 +26,8 @@ interface selectOptions {
   imports: [
     SelectModule, BackButtonComponent, ButtonModule,
     InputTextModule, ReactiveFormsModule, TextareaModule,
-    NgIf, MessageModule],
+    NgIf, MessageModule, MarkdownEditorComponent,
+  ],
   providers: [CreateViewModel],
   templateUrl: './create.component.html',
   styleUrl: './create.component.css',
@@ -66,7 +68,9 @@ export class CreateComponent implements OnInit {
     private toastService: ToastService,
   ) {
     this.form.valueChanges.subscribe((value) => {
-      this.viewModel.setTopicNameByUUID(value.topicName ?? '')
+      if (value.topicName) {
+        this.viewModel.setTopicNameByUUID(value.topicName ?? '')
+      }
       this.viewModel.title.set(value.title ?? '')
       this.viewModel.content.set(value.content ?? '')
     })

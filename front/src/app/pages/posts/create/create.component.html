@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container">
   <div class="row mb-3">
     <div class="col text-center">
       <app-back-button backUrl="/" />
@@ -6,17 +6,18 @@
       <h1>Créer un nouvel article</h1>
     </div>
   </div>
-  <div class="row">
-    <div class="col">
-      <form [formGroup]="form" class="mx-auto sm:max-w-80" (ngSubmit)="onSubmit()">
+  <form class="row" [formGroup]="form" (ngSubmit)="onSubmit()">
 
-        <p-message styleClass="mb-3" *ngIf="viewModel.formErrorMessage()" severity="error">{{
-          viewModel.formErrorMessage()
-          }}</p-message>
+    <div class="col-12">
+      <p-message styleClass="mb-3" *ngIf="viewModel.formErrorMessage()" severity="error">{{
+        viewModel.formErrorMessage()
+        }}</p-message>
+    </div>
 
-        <div class="flex flex-col mb-3">
-          <label for="topic-name" aria-hidden="true" class="hidden">Sélectionnez un thème</label>
-          <!-- beautify ignore:start -->
+    <div class="col md:col-6">
+      <div class="mx-auto md:me-4 sm:max-w-80 flex flex-col">
+        <label for="topic-name" aria-hidden="true" class="hidden">Sélectionnez un thème</label>
+        <!-- beautify ignore:start -->
           <p-select
             [options]="viewModel.topicNames()"
             [filter]="true"
@@ -33,46 +34,44 @@
             placeholder="Sélectionnez un theme"
 
             id="topic-name"
+            class="w-75"
             formControlName="topicName"
             aria-describedby="topic-name-help"
           />
           <!-- beautify ignore:end -->
-          <small id="topic-name-help" *ngIf="form.controls.topicName.dirty || form.controls.topicName.touched"
-            class="text-error">
-            <span class="block" *ngIf="form.controls.topicName.hasError('required')"> Obligatoire.</span>
-            <span class="block" *ngIf="viewModel.errors.topicName">{{ viewModel.errors.topicName() }}</span>
-          </small>
-        </div>
-
-        <div class="flex flex-col mb-3">
-          <label for="title" aria-hidden="true" class="hidden">Titre de l'article</label>
-          <input pInputText id="title" formControlName="title" aria-describedby="title-help" type="text"
-            placeholder="Titre de l'article" />
-          <small id="title-help" *ngIf="form.controls.title" class="text-error">
-            <span class="block" *ngIf="form.controls.title.hasError('required')"> Obligatoire.</span>
-            <span class="block" *ngIf="viewModel.errors.title">{{ viewModel.errors.title() }}</span>
-          </small>
-        </div>
-
-        <div class="flex flex-col mb-3">
-          <label for="content" aria-hidden="true" class="hidden">Contenu de l'article</label>
-          <textarea pTextarea formControlName="content" aria-describedby="content-help"
-            placeholder="Contenu de l'article"></textarea>
-          <small id="content-help" *ngIf="form.controls.content" class="text-error">
-            <span class="block" *ngIf="form.controls.content.hasError('required')"> Obligatoire.</span>
-            <span class="block" *ngIf="viewModel.errors.content()">{{ viewModel.errors.content() }}</span>
-          </small>
-        </div>
-
-
-        <p-button class="my-6 block text-center" variant="outlined" severity="contrast"
-          [disabled]="!form.valid || viewModel.loading()" type="submit">
-          <span pButtonLabel>Créer</span>
-          <span *ngIf="viewModel.loading()" pButtonLabel>
-            <i class="pi pi-spin pi-cog"></i>
-          </span>
-        </p-button>
-      </form>
+        <small id="topic-name-help" *ngIf="form.controls.topicName.dirty || form.controls.topicName.touched"
+          class="text-error">
+          <span class="block" *ngIf="form.controls.topicName.hasError('required')"> Obligatoire.</span>
+          <span class="block" *ngIf="viewModel.errors.topicName">{{ viewModel.errors.topicName() }}</span>
+        </small>
+      </div>
     </div>
-  </div>
+
+    <div class="col md:col-6">
+      <div class="mx-auto md:ms-4 sm:max-w-80 flex flex-col">
+        <label for="title" aria-hidden="true" class="hidden">Titre de l'article</label>
+        <input pInputText id="title" formControlName="title" aria-describedby="title-help" type="text"
+          placeholder="Titre de l'article" />
+        <small id="title-help" *ngIf="form.controls.title" class="text-error">
+          <span class="block" *ngIf="form.controls.title.hasError('required')"> Obligatoire.</span>
+          <span class="block" *ngIf="viewModel.errors.title">{{ viewModel.errors.title() }}</span>
+        </small>
+      </div>
+    </div>
+
+    <div class="col md:col-10 lg:col-8 my-4 mx-auto">
+      <label for="content" aria-hidden="true" class="hidden">Contenu de l'article</label>
+      <app-markdown-editor title="Contenu de l'article" [textareaInput]="form.controls.content"
+        [value]="viewModel.content()" [error]="viewModel.errors.content()"></app-markdown-editor>
+    </div>
+
+    <div class="col-12 text-center my-6">
+      <p-button variant="outlined" severity="contrast" [disabled]="!form.valid || viewModel.loading()" type="submit">
+        <span pButtonLabel>Créer</span>
+        <span *ngIf="viewModel.loading()" pButtonLabel>
+          <i class="pi pi-spin pi-cog"></i>
+        </span>
+      </p-button>
+    </div>
+  </form>
 </div>

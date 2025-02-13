@@ -3,16 +3,16 @@
     <p-tab value="editor" title="Rédiger le contenu">{{ title() }}</p-tab>
     <p-tab value="preview" title="Prévisualiser le contenu">Prévisualiser</p-tab>
   </p-tablist>
-  <p-tabpanels>
+  <p-tabpanels class="min-h-44 h-full flex flex-col">
     <p-tabpanel value="editor">
       <small id="content-help" *ngIf="textareaInput().dirty || textareaInput().touched" class="text-error">
         <span class="block" *ngIf="textareaInput().hasError('required')"> Obligatoire.</span>
         <span class="block" *ngIf="viewModel.errorMessage()">{{ viewModel.errorMessage() }}</span>
       </small>
-      <textarea [formControl]="textareaInput()" pTextarea [autoResize]="true" class="w-full min-h-40"></textarea>
+      <textarea [formControl]="textareaInput()" pTextarea [autoResize]="true" class="w-full min-h-44"></textarea>
     </p-tabpanel>
-    <p-tabpanel value="preview">
-      <p-scrollpanel [style]="{ width: '100%' }">
+    <p-tabpanel value="preview" class="flex-grow flex flex-col">
+      <p-scrollpanel [style]="{ width: '100%', height: '100%' }" class="flex-grow">
         <div markdown [data]="viewModel.value()" ngPreserveWhitespaces></div>
       </p-scrollpanel>
     </p-tabpanel>
