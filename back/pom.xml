@@ -42,6 +42,7 @@
 		<slugify.version>3.0.7</slugify.version>
 		<slugify-dep-icu4j-icu.version>76.1</slugify-dep-icu4j-icu.version>
 		<apache-commons-validator.version>1.9.0</apache-commons-validator.version>
+		<flexmark.version>0.64.8</flexmark.version>
 	</properties>
 
 	<dependencies>
@@ -128,6 +129,12 @@
 			<groupId>commons-validator</groupId>
 			<artifactId>commons-validator</artifactId>
 			<version>${apache-commons-validator.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.vladsch.flexmark</groupId>
+			<artifactId>flexmark-all</artifactId>
+			<version>${flexmark.version}</version>
 		</dependency>
 
 	</dependencies>

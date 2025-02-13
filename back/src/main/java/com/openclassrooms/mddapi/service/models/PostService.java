@@ -11,7 +11,7 @@ import com.openclassrooms.mddapi.model.Post;
 import com.openclassrooms.mddapi.repository.PostRepository;
 import com.openclassrooms.mddapi.repository.TopicRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
-import com.openclassrooms.mddapi.service.HtmlCleanerService;
+import com.openclassrooms.mddapi.service.ContentCleanerService;
 import com.openclassrooms.mddapi.service.SluggerService;
 import com.openclassrooms.mddapi.valueobject.Slug;
 
@@ -20,19 +20,19 @@ public class PostService {
   private final PostRepository postRepository;
   private final UserRepository userRepository;
   private final TopicRepository topicRepository;
-  private final HtmlCleanerService htmlCleanerService;
+  private final ContentCleanerService contentCleanerService;
   private final SluggerService sluggerService;
 
   public PostService(
       final PostRepository postRepository,
       final UserRepository userRepository,
       final TopicRepository topicRepository,
-      final HtmlCleanerService htmlCleanerService,
+      final ContentCleanerService contentCleanerService,
       final SluggerService sluggerService) {
     this.postRepository = postRepository;
     this.userRepository = userRepository;
     this.topicRepository = topicRepository;
-    this.htmlCleanerService = htmlCleanerService;
+    this.contentCleanerService = contentCleanerService;
     this.sluggerService = sluggerService;
   }
 
@@ -54,7 +54,7 @@ public class PostService {
         .orElseThrow(() -> ValidationException.of(ValidationError.of("topic", "Topic not found")));
     var author = userRepository.findById(authorUuid)
         .orElseThrow(() -> ValidationException.of(ValidationError.of("author", "User not found")));
-    var sanitizedContent = htmlCleanerService.stripHtml(content);
+    var sanitizedContent = contentCleanerService.sanitizeMarkdown(content);
     var slug = generateSlug(title);
 
     if (postRepository.existsBySlug(slug)) {
@@ -76,7 +76,7 @@ public class PostService {
         .orElseThrow(() -> ValidationException.of(ValidationError.of("post", "Post not found")));
     var topic = topicRepository.findById(topicUuid)
         .orElseThrow(() -> ValidationException.of(ValidationError.of("topic", "Topic not found")));
-    var sanitizedContent = htmlCleanerService.stripHtml(content);
+    var sanitizedContent = contentCleanerService.stripHtml(content);
     var slug = generateSlug(title);
 
     post.setTitle(title);

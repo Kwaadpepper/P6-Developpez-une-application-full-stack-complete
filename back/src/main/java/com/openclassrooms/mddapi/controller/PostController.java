@@ -66,9 +66,9 @@ public class PostController {
         final var authenticated = credential.getUser();
 
         final var post = postService.createPost(
-                request.title(),
-                request.content(),
-                request.topic(),
+                request.getTitle(),
+                request.getContent(),
+                request.getTopic(),
                 authenticated.getUuid());
 
         return PostPresenter.present(post);
