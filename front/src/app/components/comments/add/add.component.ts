@@ -1,13 +1,10 @@
 import { Component, effect, EventEmitter, Input, Output, untracked } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
-import { MarkdownModule } from 'ngx-markdown'
 import { ButtonModule } from 'primeng/button'
 import { PanelModule } from 'primeng/panel'
-import { ScrollPanelModule } from 'primeng/scrollpanel'
-import { TabsModule } from 'primeng/tabs'
-import { TextareaModule } from 'primeng/textarea'
 
 import { NgIf } from '@angular/common'
+import { MarkdownEditorComponent } from '@components/markdown-editor/markdown-editor.component'
 import { UUID } from '@core/types'
 import { MessageModule } from 'primeng/message'
 import AddViewModel from './add.viewmodel'
@@ -18,12 +15,9 @@ import AddViewModel from './add.viewmodel'
     NgIf,
     ReactiveFormsModule,
     ButtonModule,
-    TextareaModule,
-    ScrollPanelModule,
-    TabsModule,
-    MarkdownModule,
     MessageModule,
     PanelModule,
+    MarkdownEditorComponent,
   ],
   providers: [
     AddViewModel,

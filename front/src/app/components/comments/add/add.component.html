@@ -8,27 +8,9 @@
               viewModel.formErrorMessage()
               }}</p-message>
 
-            <p-tabs value="editor">
-              <p-tablist>
-                <p-tab value="editor" title="Rédiger le commentaire">Commentaire</p-tab>
-                <p-tab value="preview" title="Prévisualiser le commentaire">Prévisualiser</p-tab>
-              </p-tablist>
-              <p-tabpanels>
-                <p-tabpanel value="editor">
-                  <small id="content-help" *ngIf="form.controls.content.dirty || form.controls.content.touched"
-                    class="text-error">
-                    <span class="block" *ngIf="form.controls.content.hasError('required')"> Obligatoire.</span>
-                    <span class="block" *ngIf="viewModel.errors.content()">{{ viewModel.errors.content() }}</span>
-                  </small>
-                  <textarea formControlName="content" pTextarea [autoResize]="true" class="w-full min-h-40"></textarea>
-                </p-tabpanel>
-                <p-tabpanel value="preview">
-                  <p-scrollpanel [style]="{ width: '100%' }">
-                    <div markdown [data]="viewModel.content()" ngPreserveWhitespaces></div>
-                  </p-scrollpanel>
-                </p-tabpanel>
-              </p-tabpanels>
-            </p-tabs>
+            <app-markdown-editor title="Commentaire" [textareaInput]="form.controls.content"
+              [value]="viewModel.content()" [error]="viewModel.errors.content()"></app-markdown-editor>
+            <input type="hidden" formControlName="content" />
           </div>
           <div class="col sm:pt-28">
             <p-button class="my-6 block text-center" variant="outlined" severity="contrast" [disabled]="!form.valid "
