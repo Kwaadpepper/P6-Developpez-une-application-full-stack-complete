@@ -1,5 +1,7 @@
 package com.openclassrooms.mddapi.request.auth;
 
+import org.jsoup.Jsoup;
+
 import com.openclassrooms.mddapi.request.Request;
 import com.openclassrooms.mddapi.valueobject.Email;
 import com.openclassrooms.mddapi.valueobject.Password;
@@ -28,7 +30,7 @@ public class RegisterRequest {
     }
 
     public String getUsername() {
-        return username;
+        return Jsoup.parse(username).text();
     }
 
     public Password getPassword() {

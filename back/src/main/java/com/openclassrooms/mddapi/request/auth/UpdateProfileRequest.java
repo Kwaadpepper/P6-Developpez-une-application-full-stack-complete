@@ -1,5 +1,6 @@
 package com.openclassrooms.mddapi.request.auth;
 
+import org.jsoup.Jsoup;
 import org.springframework.lang.Nullable;
 
 import com.openclassrooms.mddapi.request.Request;
@@ -30,7 +31,7 @@ public class UpdateProfileRequest {
     }
 
     public String getUsername() {
-        return username;
+        return Jsoup.parse(username).text();
     }
 
     public @Nullable Password getPassword() {
