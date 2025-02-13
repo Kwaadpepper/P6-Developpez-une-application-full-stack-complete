@@ -2,7 +2,6 @@ import { NgFor } from '@angular/common'
 import { Component, EventEmitter, Input, OnDestroy, OnInit } from '@angular/core'
 import { UUID } from '@core/types'
 import { MarkdownModule } from 'ngx-markdown'
-import { PanelModule } from 'primeng/panel'
 import { Subscription } from 'rxjs'
 import ListViewModel from './list.viewmodel'
 
@@ -11,7 +10,6 @@ import ListViewModel from './list.viewmodel'
   imports: [
     NgFor,
     MarkdownModule,
-    PanelModule,
   ],
   templateUrl: './list.component.html',
   styleUrl: './list.component.css',

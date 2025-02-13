@@ -12,9 +12,7 @@
       <textarea [formControl]="textareaInput()" pTextarea [autoResize]="true" class="w-full min-h-44"></textarea>
     </p-tabpanel>
     <p-tabpanel value="preview" class="flex-grow flex flex-col">
-      <p-scrollpanel [style]="{ width: '100%', height: '100%' }" class="flex-grow">
-        <div markdown [data]="viewModel.value()" ngPreserveWhitespaces></div>
-      </p-scrollpanel>
+      <div markdown class="flex-grow prose" [data]="viewModel.value()" ngPreserveWhitespaces></div>
     </p-tabpanel>
   </p-tabpanels>
 </p-tabs>

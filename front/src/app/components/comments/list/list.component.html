@@ -1,10 +1,6 @@
 <div class="container-fluid">
-  <div class="row justify-center" *ngFor="let comment of viewModel.comments$()">
+  <div class="row justify-center my-3" *ngFor="let comment of viewModel.comments$()">
     <div class="col md:col-3">{{ comment.username }}</div>
-    <div class="col md:col-6">
-      <p-panel header="">
-        <markdown [data]="comment.content" ngPreserveWhitespaces></markdown>
-      </p-panel>
-    </div>
+    <div class="col md:col-6 prose rounded p-2 bg-base-300" markdown ngPreserveWhitespaces>{{ comment.content }}</div>
   </div>
 </div>

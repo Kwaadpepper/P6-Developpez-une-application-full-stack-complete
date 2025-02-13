@@ -22,8 +22,7 @@
     </div>
   </div>
   <div class="row mb-10">
-    <div class="col" markdown [textContent]="viewModel.post$().content" ngPreserveWhitespaces>
-    </div>
+    <div class="col prose" markdown ngPreserveWhitespaces>{{ viewModel.post$().content }}</div>
   </div>
   <hr class="mb-5">
   <div class="row">

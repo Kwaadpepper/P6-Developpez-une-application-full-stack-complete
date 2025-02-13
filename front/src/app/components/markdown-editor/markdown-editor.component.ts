@@ -3,7 +3,6 @@ import { Component, input, Input, OnInit, output } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { MarkdownModule } from 'ngx-markdown'
 import { PanelModule } from 'primeng/panel'
-import { ScrollPanelModule } from 'primeng/scrollpanel'
 import { TabsModule } from 'primeng/tabs'
 import { TextareaModule } from 'primeng/textarea'
 import { debounceTime } from 'rxjs'
@@ -14,7 +13,6 @@ import MarkdownEditorViewModel from './markdown-editor.viewmodel'
   imports: [
     NgIf,
     TextareaModule,
-    ScrollPanelModule,
     TabsModule,
     MarkdownModule,
     PanelModule,
