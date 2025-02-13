@@ -8,29 +8,23 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-//@formatter:off
-public record RegisterRequest(
+public class RegisterRequest {
+    private final String email;
+    private final String username;
+    private final String password;
 
-    @NotNull
-    @NotEmpty
-    @Size(min = 4, max = 255)
-    String email,
-
-    @NotNull
-    @NotEmpty
-    @Size(min = 4, max = 255)
-    String username,
-
-    @NotNull
-    @NotEmpty
-    @Size(max = 255)
-    String password
-
-) {
+    public RegisterRequest(
+            @NotNull @NotEmpty @Size(min = 4, max = 255) String email,
+            @NotNull @NotEmpty @Size(min = 4, max = 255) String username,
+            @NotNull @NotEmpty @Size(max = 255) String password) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+    }
 
     public Email getEmail() {
         return Request.validate("email", email,
-            email -> Email.of(email));
+                email -> Email.of(email));
     }
 
     public String getUsername() {
@@ -39,6 +33,6 @@ public record RegisterRequest(
 
     public Password getPassword() {
         return Request.validate("password", password,
-            password -> Password.of(password));
+                password -> Password.of(password));
     }
 }

@@ -10,27 +10,23 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-//@formatter:off
-public record UpdateProfileRequest(
+public class UpdateProfileRequest {
+    private final String email;
+    private final String username;
+    private final String password;
 
-    @NotNull
-    @NotEmpty
-    @Size(min = 4, max = 255)
-    String email,
+    public UpdateProfileRequest(
+            @NotNull @NotEmpty @Size(min = 4, max = 255) String email,
+            @NotNull @NotEmpty @Size(min = 4, max = 255) String username,
+            @jakarta.annotation.Nullable @Size(max = 255) String password) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+    }
 
-    @NotNull
-    @NotEmpty
-    @Size(min = 4, max = 255)
-    String username,
-
-    @jakarta.annotation.Nullable
-    @Size(max = 255)
-    String password
-
-) {
     public Email getEmail() {
         return Request.validate("email", email,
-            email -> Email.of(email));
+                email -> Email.of(email));
     }
 
     public String getUsername() {
@@ -39,6 +35,6 @@ public record UpdateProfileRequest(
 
     public @Nullable Password getPassword() {
         return Request.validate("password", password,
-            password -> password != null ? Password.of(password) : null);
+                password -> password != null ? Password.of(password) : null);
     }
 }

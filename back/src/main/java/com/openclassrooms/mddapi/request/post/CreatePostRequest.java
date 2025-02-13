@@ -6,22 +6,29 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-//@formatter:off
-public record CreatePostRequest (
+public class CreatePostRequest {
+  private final String title;
+  private final String content;
+  private final UUID author;
 
-  @NotNull
-  @NotEmpty
-  @Size(min = 3, max = 255)
-  String title,
+  public CreatePostRequest(
+      @NotNull @NotEmpty @Size(min = 4, max = 255) String title,
+      @NotNull @NotEmpty @Size(min = 4, max = 255) String content,
+      @NotNull UUID author) {
+    this.title = title;
+    this.content = content;
+    this.author = author;
+  }
 
-  @NotNull
-  @NotEmpty
-  @Size(min = 4)
-  String content,
+  public String getTitle() {
+    return title;
+  }
 
-  @NotNull
-  UUID topic
+  public String getContent() {
+    return content;
+  }
 
-
-) {
+  public UUID getAuthor() {
+    return author;
+  }
 }
