@@ -1,17 +1,16 @@
 <div class="container">
-  <div class="row mb-3">
-    <div class="col">
+  <div class="row mb-3 sticky top-0 bg-base-100 z-10">
+    <div class="col relative mb-10 py-2">
       <app-back-button backUrl="/" />
-
       <h1 class="hidden" aria-hidden="true">Sujets</h1>
     </div>
   </div>
   <div class="row" infiniteScroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollThrottle]="throttle"
     (scrolled)="onScroll()">
-    <div *ngIf="!viewModel.topicList$().length" class="col">
+    <div *ngIf="!viewModel.topics().length && !viewModel.loading()" class="col">
       Aucun sujet disponible
     </div>
-    <div class="col-12 md:col-6 lg:col-4" *ngFor="let topic of viewModel.topicList$()" app-topic-card
+    <div class="col-12 md:col-6 lg:col-4" *ngFor="let topic of viewModel.topics()" app-topic-card
       [topicCardElement]="topic"></div>
     <div class="col-12 text-center pb-28">
       <app-progress-spinner [visible]="viewModel.loading()"></app-progress-spinner>

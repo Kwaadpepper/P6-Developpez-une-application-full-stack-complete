@@ -1,5 +1,4 @@
 :host {
   position: absolute;
-  top: var(--page-top-padding);
   left: 1rem;
 }

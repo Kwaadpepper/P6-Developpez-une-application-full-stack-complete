@@ -15,12 +15,11 @@ interface TopicListElement {
   deps: [TopicService],
 })
 export default class ListViewModel {
-  private currentPage = 0
+  private _currentPage = 0
   private topicList = signal<TopicListElement[]>([])
 
-  public readonly currentPage$ = computed(() => this.currentPage)
-  public readonly topicList$ = computed(() => this.topicList())
-  public readonly sortAscending$ = signal(false)
+  public readonly currentPage = computed(() => this._currentPage)
+  public readonly topics = computed(() => this.topicList())
 
   public readonly loading = signal(false)
 
@@ -30,14 +29,14 @@ export default class ListViewModel {
   }
 
   public reloadTopics(): void {
-    this.currentPage = 1
+    this._currentPage = 1
     this.topicList.set([])
     this.loadMoreTopics()
   }
 
   public loadMoreTopics(): void {
     this.loading.set(true)
-    this.topicService.paginateTopics(this.currentPage++)
+    this.topicService.paginateTopics(this._currentPage++)
       .subscribe({
         next: (newPage) => {
           this.topicList.update(topics => [...topics, ...newPage.list.map(topic => ({
