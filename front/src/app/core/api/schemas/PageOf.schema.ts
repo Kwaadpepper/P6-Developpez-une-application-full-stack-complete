@@ -7,7 +7,7 @@ export function pageOf<T extends zSchema>(schema: T) {
   return z.object({
     list: z.array(schema),
     page: z.number().min(1),
-    totalPages: z.number().min(1),
+    totalPages: z.number().min(0),
     totalItems: z.number().min(0),
   })
 }
