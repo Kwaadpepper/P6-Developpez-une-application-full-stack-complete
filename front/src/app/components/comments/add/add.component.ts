@@ -1,4 +1,4 @@
-import { Component, effect, EventEmitter, Input, Output, untracked } from '@angular/core'
+import { Component, effect, Input, output, untracked } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { ButtonModule } from 'primeng/button'
 import { PanelModule } from 'primeng/panel'
@@ -30,8 +30,7 @@ export class AddComponent {
     this.viewModel.setPostUuid(value)
   }
 
-  @Output()
-  submitComment = new EventEmitter<void>()
+  submitComment = output<void>()
 
   public readonly form = new FormGroup({
     content: new FormControl('', {
