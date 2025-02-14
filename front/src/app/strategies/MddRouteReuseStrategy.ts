@@ -28,7 +28,6 @@ export class MddRouteReuseStrategy implements RouteReuseStrategy {
      */
   shouldDetach(route: ActivatedRouteSnapshot): boolean {
     const detach = route.data['reuse'] === true
-    console.debug('detaching', route, 'return: ', detach)
     return detach
   }
 
@@ -43,7 +42,6 @@ export class MddRouteReuseStrategy implements RouteReuseStrategy {
       handle: handle,
     }
 
-    console.debug('store:', storedRoute, 'into: ', this.storedRoutes)
     // routes are stored by path - the key is the path name, and the handle is stored under it so that you can only ever have one object stored for a single path
     if (route.routeConfig && route.routeConfig.path) {
       this.storedRoutes.set(route.routeConfig.path, storedRoute)

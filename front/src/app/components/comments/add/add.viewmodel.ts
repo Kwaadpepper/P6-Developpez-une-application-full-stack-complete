@@ -80,7 +80,6 @@ export default class AddViewModel {
   }
 
   private setErrors(errors: Map<string, string>): void {
-    console.log(errors)
     this.errors.content.set(errors.get('content') ?? '')
   }
 }
