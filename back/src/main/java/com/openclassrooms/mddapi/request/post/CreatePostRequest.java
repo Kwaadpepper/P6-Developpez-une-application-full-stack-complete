@@ -11,14 +11,23 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class CreatePostRequest {
+  @NotNull
+  @NotEmpty
+  @Size(min = 4, max = 255)
   private final String title;
+
+  @NotNull
+  @NotEmpty
+  @Size(min = 4, max = 255)
   private final String content;
+
+  @NotNull
   private final UUID topic;
 
   public CreatePostRequest(
-      @NotNull @NotEmpty @Size(min = 4, max = 255) String title,
-      @NotNull @NotEmpty @Size(min = 4, max = 255) String content,
-      @NotNull UUID topic) {
+      String title,
+      String content,
+      UUID topic) {
     this.title = title;
     this.content = content;
     this.topic = topic;

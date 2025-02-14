@@ -11,12 +11,16 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class CreateCommentRequest {
+    @NotNull
+    @NotEmpty
+    @Size(min = 4, max = 255)
     private final String content;
+    @NotNull
     private final UUID post;
 
     public CreateCommentRequest(
-            @NotNull @NotEmpty @Size(min = 4, max = 255) String content,
-            @NotNull UUID post) {
+            String content,
+            UUID post) {
         this.post = post;
         this.content = content;
     }
