@@ -13,12 +13,12 @@
     {
       "name": "jwt.token.expiration",
       "type": "java.lang.Long",
-      "description": "Expiration delay for jwt token"
+      "description": "Expiration delay for jwt token in minutes"
     },
     {
       "name": "jwt.refresh.expiration",
       "type": "java.lang.Long",
-      "description": "Expiration delay for refresh token"
+      "description": "Expiration delay for refresh token in minutes"
     },
     {
       "name": "server.cors.allowed-origins",
