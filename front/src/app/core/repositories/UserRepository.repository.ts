@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { first, Observable } from 'rxjs'
+import { Observable } from 'rxjs'
 
 import UpdateProfileRequest from '@core/api/requests/updateUserProfile.request'
 import { simpleMessageSchema, SimpleMessageZod, userSchema } from '@core/api/schemas'
@@ -33,7 +33,6 @@ export default class UserRepository {
     }).pipe(
       verifyResponseType(userSchema),
       retryMultipleTimes(),
-      first(),
     )
   }
 
@@ -44,7 +43,6 @@ export default class UserRepository {
       checkServerReponse(),
       verifyResponseType(simpleMessageSchema),
       retryMultipleTimes(),
-      first(),
     )
   }
 }

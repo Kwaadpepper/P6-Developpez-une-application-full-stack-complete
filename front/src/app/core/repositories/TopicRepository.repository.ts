@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { first, Observable } from 'rxjs'
+import { Observable } from 'rxjs'
 
 import { pageOf, simpleMessageSchema, SimpleMessageZod, topicNameSchema, topicSchema, topicWithSubscriptionSchema } from '@core/api/schemas'
 import { Topic, TopicName, TopicWithSubscription } from '@core/interfaces'
@@ -37,7 +37,6 @@ export default class TopicRepository {
     }).pipe(
       verifyResponseType(pageOf(topicWithSubscriptionSchema)),
       retryMultipleTimes(),
-      first(),
     )
   }
 
@@ -63,7 +62,6 @@ export default class TopicRepository {
     }).pipe(
       verifyResponseType(pageOf(topicNameSchema)),
       retryMultipleTimes(),
-      first(),
     )
   }
 
@@ -81,7 +79,6 @@ export default class TopicRepository {
     }).pipe(
       verifyResponseType(pageOf(topicSchema)),
       retryMultipleTimes(),
-      first(),
     )
   }
 
@@ -100,7 +97,6 @@ export default class TopicRepository {
     }).pipe(
       verifyResponseType(simpleMessageSchema),
       retryMultipleTimes(),
-      first(),
     )
   }
 
@@ -123,7 +119,6 @@ export default class TopicRepository {
     }).pipe(
       verifyResponseType(simpleMessageSchema),
       retryMultipleTimes(),
-      first(),
     )
   }
 }

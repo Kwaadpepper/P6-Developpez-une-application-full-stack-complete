@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { first, Observable } from 'rxjs'
+import { Observable } from 'rxjs'
 
 import { commentSchema, pageOf, simpleMessageSchema, SimpleMessageZod } from '@core/api/schemas'
 import { Comment } from '@core/interfaces'
@@ -39,7 +39,6 @@ export default class CommentsRepository {
     }).pipe(
       verifyResponseType(pageOf(commentSchema)),
       retryMultipleTimes(),
-      first(),
     )
   }
 
@@ -60,7 +59,6 @@ export default class CommentsRepository {
       checkServerReponse(),
       verifyResponseType(simpleMessageSchema),
       retryMultipleTimes(),
-      first(),
     )
   }
 

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { checkServerReponse } from '@core/tools/checkServerReponse'
-import { first, Observable } from 'rxjs'
+import { Observable } from 'rxjs'
 
 import CreatePost from '@core/api/requests/createPost.request'
 import { pageOf, postSchema, PostZod } from '@core/api/schemas'
@@ -41,7 +41,6 @@ export default class PostRepository {
     }).pipe(
       verifyResponseType(pageOf(postSchema)),
       retryMultipleTimes(),
-      first(),
     )
   }
 
@@ -61,7 +60,6 @@ export default class PostRepository {
       checkServerReponse(),
       verifyResponseType(postSchema),
       retryMultipleTimes(),
-      first(),
     )
   }
 
@@ -73,7 +71,6 @@ export default class PostRepository {
       },
     ).pipe(
       verifyResponseType(postSchema),
-      first(),
     )
   }
 }
