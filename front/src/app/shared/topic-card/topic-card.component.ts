@@ -29,17 +29,17 @@ export class TopicCardComponent {
     public readonly viewModel: TopicCardViewModel,
   ) { }
 
-  onSubscribeClick(): void {
+  onSubscribeClick(topicName: string): void {
     this.viewModel.subscribeTo(this.viewModel.topic().uuid)
       .add(() => {
-        this.toastService.success('Subscribed to topic')
+        this.toastService.success(`Vous suivez le thème ${topicName}`)
       })
   }
 
-  onUnsubscribeClick(): void {
+  onUnsubscribeClick(topicName: string): void {
     this.viewModel.unsubscribeFrom(this.viewModel.topic().uuid)
       .add(() => {
-        this.toastService.success('Unsubscribed from topic')
+        this.toastService.warning(`Vous ne suivez plus le thème ${topicName}`)
       })
   }
 }
