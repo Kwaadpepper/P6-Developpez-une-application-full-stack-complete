@@ -1,9 +1,9 @@
 import { NgFor, NgIf } from '@angular/common'
 import { Component, OnInit } from '@angular/core'
+import { ProgressSpinnerComponent } from '@components/index'
 import { UUID } from '@core/types'
 import { TopicCardComponent } from '@shared/index'
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll'
-import { ProgressSpinnerModule } from 'primeng/progressspinner'
 import TopicsViewModel from './topics.viewmodel'
 
 @Component({
@@ -12,7 +12,7 @@ import TopicsViewModel from './topics.viewmodel'
     NgIf, NgFor,
     TopicCardComponent,
     InfiniteScrollDirective,
-    ProgressSpinnerModule,
+    ProgressSpinnerComponent,
   ],
   providers: [
     TopicsViewModel,

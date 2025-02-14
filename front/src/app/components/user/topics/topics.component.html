@@ -6,9 +6,7 @@
   </div>
   <div class="row">
     <div class="col text-center">
-      <p-progressSpinner *ngIf="viewModel.loading()" role="status" class="w-7 h-7">
-        <span class="visually-hidden">Chargement...</span>
-      </p-progressSpinner>
+      <app-progress-spinner [visible]="viewModel.loading()"></app-progress-spinner>
     </div>
   </div>
   <div class="row" *ngIf="viewModel.userTopics().length === 0 && !viewModel.loading()">

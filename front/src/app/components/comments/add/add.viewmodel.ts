@@ -1,8 +1,8 @@
 import { Injectable, signal } from '@angular/core'
-import { errors } from '@core/services'
-import { CommentService } from '@core/services/comment/comment.service'
-import { UUID } from '@core/types'
 import { catchError, EMPTY, finalize, map, Observable } from 'rxjs'
+
+import { CommentService, errors } from '@core/services'
+import { UUID } from '@core/types'
 
 @Injectable({
   providedIn: 'root',

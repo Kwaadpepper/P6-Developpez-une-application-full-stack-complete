@@ -18,6 +18,7 @@ import MarkdownEditorViewModel from './markdown-editor.viewmodel'
     PanelModule,
     ReactiveFormsModule,
   ],
+  providers: [MarkdownEditorViewModel],
   templateUrl: './markdown-editor.component.html',
   styleUrl: './markdown-editor.component.css',
 })

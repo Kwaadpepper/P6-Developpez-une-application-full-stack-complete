@@ -1,10 +1,7 @@
 import { Injectable, signal } from '@angular/core'
 
-import { PostService, TopicService } from '@core/services'
-
 @Injectable({
   providedIn: 'root',
-  deps: [PostService, TopicService],
 })
 export default class MarkdownEditorViewModel {
   public readonly errorMessage = signal<string>('')

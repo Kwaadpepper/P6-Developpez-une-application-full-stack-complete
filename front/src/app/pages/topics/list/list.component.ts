@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core'
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll'
 import { ProgressSpinnerModule } from 'primeng/progressspinner'
 
-import { TopicCardComponent } from '@shared/index'
-import { BackButtonComponent } from '../../../shared/back-button/back-button.component'
+import { ProgressSpinnerComponent } from '@components/index'
+import { BackButtonComponent, TopicCardComponent } from '@shared/index'
 import ListViewModel from './list.viewmodel'
 
 @Component({
@@ -15,6 +15,7 @@ import ListViewModel from './list.viewmodel'
     InfiniteScrollDirective,
     ProgressSpinnerModule,
     BackButtonComponent,
+    ProgressSpinnerComponent,
   ],
   providers: [
     ListViewModel,

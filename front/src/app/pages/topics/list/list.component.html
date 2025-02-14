@@ -14,7 +14,7 @@
     <div class="col-12 md:col-6 lg:col-4" *ngFor="let topic of viewModel.topicList$()" app-topic-card
       [topicCardElement]="topic"></div>
     <div class="col-12 text-center pb-28">
-      <p-progressSpinner *ngIf="viewModel.loading()" class="w-7 h-7"></p-progressSpinner>
+      <app-progress-spinner [visible]="viewModel.loading()"></app-progress-spinner>
     </div>
   </div>
 </div>

@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll'
 import { ButtonModule } from 'primeng/button'
-import { ProgressSpinnerModule } from 'primeng/progressspinner'
 
+import { ProgressSpinnerComponent } from '@components/index'
 import { PostCardComponent } from '@shared/index'
 import ListViewModel from './list.viewmodel'
 
@@ -15,7 +15,7 @@ import ListViewModel from './list.viewmodel'
     PostCardComponent,
     ButtonModule, RouterModule,
     InfiniteScrollDirective,
-    ProgressSpinnerModule,
+    ProgressSpinnerComponent,
   ],
   providers: [ListViewModel],
   templateUrl: './list.component.html',
