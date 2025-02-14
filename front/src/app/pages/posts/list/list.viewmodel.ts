@@ -1,9 +1,12 @@
-import { computed, Injectable, signal } from '@angular/core'
+import { computed, Injectable, Signal, signal } from '@angular/core'
 
 import { Post } from '@core/interfaces'
 import { FeedService } from '@core/services'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+  deps: [FeedService],
+})
 export default class ListViewModel {
   private _currentPage = 0
   private _postList = signal<Post[]>([])
@@ -12,10 +15,12 @@ export default class ListViewModel {
   public readonly posts = computed(() => this._postList())
   public readonly sortAscending = signal(false)
   public readonly loading = signal(false)
+  public readonly feedInvalidated: Signal<boolean>
 
   constructor(
     private feedService: FeedService,
   ) {
+    this.feedInvalidated = computed(() => feedService.feedInvalidated())
   }
 
   public feedUserWithMorePosts(): void {

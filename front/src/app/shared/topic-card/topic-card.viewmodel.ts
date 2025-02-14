@@ -1,10 +1,10 @@
 import { computed, Injectable, signal } from '@angular/core'
-import { TopicService } from '@core/services'
-
-import { decodeHTmlEntities } from '@core/tools/decodeHtmlEntities'
-import { UUID } from '@core/types'
 import { MarkdownService } from 'ngx-markdown'
 import { Subscription } from 'rxjs'
+
+import { FeedService, TopicService } from '@core/services'
+import { decodeHTmlEntities } from '@core/tools/decodeHtmlEntities'
+import { UUID } from '@core/types'
 
 export interface TopicCard {
   uuid: string
@@ -16,6 +16,7 @@ export interface TopicCard {
   providedIn: 'root',
   deps: [
     TopicService,
+    FeedService,
     MarkdownService,
   ],
 })
@@ -32,6 +33,7 @@ export default class TopicCardViewModel {
   public readonly strippedTopicContent = signal('')
 
   constructor(
+    private feedService: FeedService,
     private topicService: TopicService,
     private markdownService: MarkdownService,
   ) {
@@ -58,6 +60,7 @@ export default class TopicCardViewModel {
     return this.topicService.subcribeToTopic(topicUuid)
       .subscribe({
         next: () => {
+          this.feedService.invalidateFeed()
           this._topic.update((current) => {
             return { ...current, subscribed: true }
           })
@@ -72,6 +75,7 @@ export default class TopicCardViewModel {
     return this.topicService.unSubcribeFromTopic(topicUuid)
       .subscribe({
         next: () => {
+          this.feedService.invalidateFeed()
           this._topic.update((current) => {
             return { ...current, subscribed: false }
           })

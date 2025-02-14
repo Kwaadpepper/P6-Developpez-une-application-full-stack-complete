@@ -42,9 +42,11 @@ export class ListComponent implements OnInit, OnDestroy {
       next: (event: NavigationEnd) => {
         const currentNavigation = this.router.getCurrentNavigation()
         const isPostListRoute = event.url === '/posts'
-        const foRefresh = isPostListRoute && currentNavigation?.extras.state?.['refresh']
+        const doRefresh = isPostListRoute
+          && (currentNavigation?.extras.state?.['refresh']
+            || this.viewModel.feedInvalidated())
 
-        if (!foRefresh) {
+        if (!doRefresh) {
           return
         }
 
