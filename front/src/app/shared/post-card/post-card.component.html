@@ -1,4 +1,4 @@
-<div class="bg-gray-100 dark:bg-gray-800 m-4 p-4 rounded-lg h-52 md:h-56 flex flex-col">
+<div class="bg-gray-100 dark:bg-gray-800 m-4 p-4 rounded-lg h-80 sm:h-72 md:h-60 lg:h-72 flex flex-col">
   <span class="h4 block font-bold">{{
     (viewModel.post().title.length>60)? (viewModel.post().title| slice:0:61)+'...':(viewModel.post().title) | titlecase
     }}</span>
@@ -9,14 +9,14 @@
       slice:0:61)+'...':(viewModel.post().author_name) | titlecase
       }}</div>
   </div>
-  <div class="row mb-3 h-28">
+  <div class="row mb-3 h-32 md:h-28 ">
     <div class="col">
       <div class="prose dark:text-gray-100 leading-[1.06rem] table-cell align-middle">{{
         (viewModel.post().content.length>220)? (viewModel.post().content | slice:0:221)+'...':(viewModel.post().content)
         }}</div>
     </div>
   </div>
-  <div class="row">
+  <div class="row mt-4">
     <div class="col text-center">
       <a [routerLink]="['/posts', viewModel.post().slug]" class="btn btn-primary">Lire la suite</a>
     </div>
