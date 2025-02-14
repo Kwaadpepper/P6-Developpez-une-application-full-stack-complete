@@ -1,13 +1,14 @@
 <div class="container-fluid">
   <div class="row mb-3 sticky top-0 bg-base-100 z-10 py-3">
     <div class="col px-7 flex justify-between">
-      <p-button variant="outlined" severity="contrast" routerLink="/posts/create">
+      <a class="btn btn-primary" pButton routerLink="/posts/create" title="Créer un nouvel article">
         <span pButtonLabel>Créer un article</span>
-      </p-button>
-      <p-button variant="text" severity="contrast" title="Recharger les articles" (click)="onRefresh()">
+      </a>
+      <p-button class="ms-auto me-2" variant="text" severity="contrast" title="Recharger les articles"
+        (click)="onRefresh()">
         <span pButtonLabel><i class="pi pi-sync"></i></span>
       </p-button>
-      <p-button variant="text" severity="contrast" title="Trier par ordre de publication"
+      <p-button class="mx-2" variant="text" severity="contrast" title="Trier par ordre de publication"
         (click)="onClickFeedSorting()">
         <span pButtonLabel class="font-bold">Trier par</span>
         <span *ngIf="!viewModel.sortAscending()" pButtonLabel class="pi pi-arrow-down"
