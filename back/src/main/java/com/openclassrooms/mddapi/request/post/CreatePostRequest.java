@@ -18,16 +18,13 @@ public class CreatePostRequest {
 
   @NotNull
   @NotEmpty
-  @Size(min = 4, max = 255)
+  @Size(min = 4)
   private final String content;
 
   @NotNull
   private final UUID topic;
 
-  public CreatePostRequest(
-      String title,
-      String content,
-      UUID topic) {
+  public CreatePostRequest(String title, String content, UUID topic) {
     this.title = title;
     this.content = content;
     this.topic = topic;
