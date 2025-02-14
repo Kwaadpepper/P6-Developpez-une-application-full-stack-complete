@@ -3,12 +3,23 @@
     <div class="col relative mb-10 py-2">
       <app-back-button backUrl="/" />
       <h1 class="hidden" aria-hidden="true">Sujets</h1>
+      <div class="join join-horizontal mx-20">
+        <p-iconfield styleClass="relative">
+          <p-inputicon styleClass="join-item top-4 start-2">
+            <button pButton type="button" class="btn btn-sm btn-ghost z-10 w-6" title="Effacer la barre de rechercher"
+              (click)="onClearSearch()"><i class="pi pi-eraser"></i></button>
+          </p-inputicon>
+          <input type="text" [formControl]="searchTerm" pInputText class="input input-primary ps-10"
+            placeholder="Rechercher un sujet" />
+          <p-inputicon *ngIf="viewModel.loading()" styleClass="pi pi-spin pi-spinner" />
+        </p-iconfield>
+      </div>
     </div>
   </div>
   <div class="row" infiniteScroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollThrottle]="throttle"
     (scrolled)="onScroll()">
     <div *ngIf="!viewModel.topics().length && !viewModel.loading()" class="col">
-      Aucun sujet disponible
+      <div class="h1 text-center">Aucun sujet trouvé</div>
     </div>
     <div class="col-12 md:col-6 lg:col-4" *ngFor="let topic of viewModel.topics()" app-topic-card
       [topicCardElement]="topic"></div>

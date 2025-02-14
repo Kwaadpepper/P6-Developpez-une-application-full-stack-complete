@@ -14,10 +14,13 @@ export class TopicService {
     private topicRepository: TopicRepository,
   ) { }
 
-  paginateTopics(pageNumber: number): Observable<PageOf<TopicWithSubscription>> {
+  paginateTopics(
+    pageNumber: number,
+    searchLike: string | undefined = undefined,
+  ): Observable<PageOf<TopicWithSubscription>> {
     const page = Math.max(1, pageNumber)
 
-    return this.topicRepository.getTopics(page)
+    return this.topicRepository.getTopics(page, searchLike)
   }
 
   paginateTopicsNames(

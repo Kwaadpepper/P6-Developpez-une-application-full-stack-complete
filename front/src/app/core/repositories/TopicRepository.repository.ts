@@ -26,11 +26,19 @@ export default class TopicRepository {
   /**
    * Paginate all topics.
    * @param page The page number to get. The first page is 1.
+   * @param searchLike A string to search for in the topics.
    * @returns A topic list page.
    */
-  public getTopics(page: number): Observable<PageOf<TopicWithSubscription>> {
+  public getTopics(
+    page: number,
+    searchLike: string | undefined = undefined,
+  ): Observable<PageOf<TopicWithSubscription>> {
     const topicUrl = new URL(this.topicUrl)
     topicUrl.searchParams.append('page', String(page))
+
+    if (searchLike) {
+      topicUrl.searchParams.append('name', searchLike)
+    }
 
     return this.http.get<PageOf<TopicWithSubscription>>(topicUrl.toString(), {
       withCredentials: true,

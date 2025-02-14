@@ -15,6 +15,7 @@ interface TopicListElement {
   deps: [TopicService],
 })
 export default class ListViewModel {
+  private _topicNameFilter: string | undefined = undefined
   private _currentPage = 0
   private topicList = signal<TopicListElement[]>([])
 
@@ -34,9 +35,13 @@ export default class ListViewModel {
     this.loadMoreTopics()
   }
 
+  public setSetTopicNameFilter(name: string | undefined): void {
+    this._topicNameFilter = name
+  }
+
   public loadMoreTopics(): void {
     this.loading.set(true)
-    this.topicService.paginateTopics(this._currentPage++)
+    this.topicService.paginateTopics(this._currentPage++, this._topicNameFilter)
       .subscribe({
         next: (newPage) => {
           this.topicList.update(topics => [...topics, ...newPage.list.map(topic => ({
@@ -45,6 +50,9 @@ export default class ListViewModel {
             name: topic.name,
             subscribed: topic.subscribed,
           }))])
+        },
+        error: () => {
+          this.loading.set(false)
         },
         complete: () => {
           this.loading.set(false)
