@@ -65,7 +65,7 @@ public class RefreshTokenService {
      * @throws RefreshExpiredException If token is expired
      */
     public RefreshToken verifyExpiration(RefreshToken token) throws RefreshExpiredException {
-        if (ZonedDateTime.now().compareTo(token.getExpiryDate()) < 0) {
+        if (ZonedDateTime.now().compareTo(token.getExpiryDate()) >= 0) {
             refreshTokenRepository.delete(token);
             throw new RefreshExpiredException();
         }
