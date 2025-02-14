@@ -1,13 +1,13 @@
 import { NgFor, NgIf } from '@angular/common'
-import { Component, OnInit } from '@angular/core'
-import { RouterModule } from '@angular/router'
+import { Component, OnDestroy, OnInit } from '@angular/core'
+import { NavigationEnd, Router, RouterModule } from '@angular/router'
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll'
 import { NgxPullToRefreshModule } from 'ngx-pull-to-refresh'
 import { ButtonModule } from 'primeng/button'
 
 import { ProgressSpinnerComponent } from '@components/index'
 import { PostCardComponent } from '@shared/index'
-import { Subject } from 'rxjs'
+import { filter, Subject } from 'rxjs'
 import ListViewModel from './list.viewmodel'
 
 @Component({
@@ -24,15 +24,38 @@ import ListViewModel from './list.viewmodel'
   templateUrl: './list.component.html',
   styleUrl: './list.component.css',
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
   public readonly throttle = 1000
   public readonly scrollDistance = 1
 
-  constructor(public viewModel: ListViewModel) {
+  constructor(
+    public readonly viewModel: ListViewModel,
+    private readonly router: Router,
+  ) {
+
   }
 
   ngOnInit(): void {
     this.viewModel.feedUserWithMorePosts()
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+    ).subscribe({
+      next: (event: NavigationEnd) => {
+        const currentNavigation = this.router.getCurrentNavigation()
+        const isPostListRoute = event.url === '/posts'
+        const foRefresh = isPostListRoute && currentNavigation?.extras.state?.['refresh']
+
+        if (!foRefresh) {
+          return
+        }
+
+        this.viewModel.reloadPosts()
+      },
+    })
+  }
+
+  ngOnDestroy(): void {
+    throw new Error('Method not implemented.')
   }
 
   onRefresh(): void {

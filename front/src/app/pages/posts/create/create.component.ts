@@ -125,7 +125,9 @@ export class CreateComponent implements OnInit {
     this.viewModel.persistPost().subscribe({
       next: () => {
         this.toastService.success('Post créé')
-        this.router.navigateByUrl('/posts')
+        this.router.navigate(['posts'], {
+          state: { refresh: true },
+        })
       },
     })
   }
