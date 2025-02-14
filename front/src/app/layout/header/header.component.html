@@ -1,21 +1,21 @@
 <div *ngIf="viewModel.displayHeader()" class="w-100 border-b-2 border-b-gray-400 sm:flex"
   [class.hidden]="viewModel.isOnAuthPage()">
-  <a class="ms-3 me-auto inline-block cursor-pointer" routerLink="" routerLinkActive="router-link-active"
-    title="Retourner sur la page d'accueil">
-    <img class="img-fluid w-20" src="/assets/pictures/logo_p6.png" alt="Logo Monde de dèv" />
-  </a>
   <div class="flex-grow flex flex-row justify-end items-center">
-    <a class="mx-2" pButton variant="text" severity="contrast" routerLink="/posts" routerLinkActive="router-link-active"
-      title="Consulter les articles">
-      <span pButtonLabel>Articles</span>
+    <a class="ms-3 mt-2 me-auto inline-block cursor-pointer" routerLink="" title="Retourner sur la page d'accueil">
+      <img class="img-fluid w-20 sm:w-28" src="/assets/pictures/logo_p6.png" [alt]="viewModel.appName()"
+        [title]="'Logo ' + viewModel.appName()" />
     </a>
-    <a class="mx-2" pButton variant="text" severity="contrast" routerLink="/topics"
-      routerLinkActive="router-link-active" title="Consulter les themes">
-      <span pButtonLabel>Themes</span>
+    <a *ngIf="viewModel.loggedIn()" class="mx-2 text-lg link-primary" routerLink="/posts"
+      routerLinkActive="underline underline-offset-8 font-bold" title="Consulter les articles">
+      <span>Articles</span>
     </a>
-    <a class="mx-2" pButton variant="text" severity="contrast" routerLink="/account"
-      routerLinkActive="router-link-active" title="Accéder à mon compte">
-      <span pButtonLabel>Mon compte</span>
+    <a *ngIf="viewModel.loggedIn()" class="mx-2 sm:me-6 text-lg link-primary" routerLink="/topics"
+      routerLinkActive="underline underline-offset-8 font-bold" title="Consulter les themes">
+      <span>Thèmes</span>
+    </a>
+    <a *ngIf="viewModel.loggedIn()" class="mx-2 sm:me-6 btn-sm sm:btn-md btn-circle btn-accent" pButton variant="text"
+      routerLink="/account" routerLinkActive="border border-secondary" title="Accéder à mon compte">
+      <span pButtonLabel><i class="pi pi-user text-xl sm:text-2xl"></i></span>
     </a>
   </div>
 </div>

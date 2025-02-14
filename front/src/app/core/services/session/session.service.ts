@@ -7,10 +7,10 @@ import { User } from '@core/interfaces'
 })
 export class SessionService {
   private user = signal<User | null>(null)
-  private isLoggedIn = signal<boolean>(false)
+  private _isLoggedIn = signal<boolean>(false)
 
-  public isLoggedIn$ = computed(() => this.isLoggedIn())
-  public loggedUser$ = computed(() => this.user())
+  public readonly isLoggedIn = computed(() => this._isLoggedIn())
+  public readonly loggedUser = computed(() => this.user())
 
   constructor() {
     if (this.hasLoggedIsStatusInPersistence()) {
@@ -32,12 +32,12 @@ export class SessionService {
   }
 
   private persistLoggedIsStatus(): void {
-    this.isLoggedIn.set(true)
+    this._isLoggedIn.set(true)
     localStorage.setItem('loggedin', '')
   }
 
   private removeLoggedInStatus(): void {
-    this.isLoggedIn.set(false)
+    this._isLoggedIn.set(false)
     localStorage.removeItem('loggedin')
   }
 
