@@ -16,7 +16,7 @@ export class MddRouteReuseStrategy implements RouteReuseStrategy {
      * The keys will all be a path (as in route.routeConfig.path)
      * This allows us to see if we've got a route stored for the requested path
      */
-  storedRoutes: Record<string, RouteStorageObject> = {}
+  storedRoutes: Map<string, RouteStorageObject> = new Map<string, RouteStorageObject>()
 
   /**
      * Decides when the route should be stored
@@ -46,7 +46,7 @@ export class MddRouteReuseStrategy implements RouteReuseStrategy {
     console.debug('store:', storedRoute, 'into: ', this.storedRoutes)
     // routes are stored by path - the key is the path name, and the handle is stored under it so that you can only ever have one object stored for a single path
     if (route.routeConfig && route.routeConfig.path) {
-      this.storedRoutes[route.routeConfig.path] = storedRoute
+      this.storedRoutes.set(route.routeConfig.path, storedRoute)
     }
   }
 
@@ -58,25 +58,19 @@ export class MddRouteReuseStrategy implements RouteReuseStrategy {
   shouldAttach(route: ActivatedRouteSnapshot): boolean {
     // this will be true if the route has been stored before
     const routeConfigPath = route.routeConfig?.path
+    const routeconfig = routeConfigPath ? this.storedRoutes.get(routeConfigPath) : undefined
 
     // this decides whether the route already stored should be rendered in place of the requested route, and is the return value
     // at this point we already know that the paths match because the storedResults key is the route.routeConfig.path
     // so, if the route.params and route.queryParams also match, then we should reuse the component
-    if (routeConfigPath && this.storedRoutes[routeConfigPath]) {
-      console.debug('param comparison:')
-      console.debug(this.compareObjects(route.params, this.storedRoutes[routeConfigPath].snapshot.params))
-      console.debug('query param comparison')
-      console.debug(this.compareObjects(route.queryParams, this.storedRoutes[routeConfigPath].snapshot.queryParams))
-
-      const paramsMatch: boolean = this.compareObjects(route.params, this.storedRoutes[routeConfigPath].snapshot.params)
-      const queryParamsMatch: boolean = this.compareObjects(route.queryParams, this.storedRoutes[routeConfigPath].snapshot.queryParams)
-
-      console.debug('deciding to attach...', route, 'does it match?', this.storedRoutes[routeConfigPath].snapshot, 'return: ', paramsMatch && queryParamsMatch)
-      return paramsMatch && queryParamsMatch
-    }
-    else {
+    if (routeconfig === undefined) {
       return false
     }
+
+    const paramsMatch: boolean = this.compareObjects(route.params, routeconfig.snapshot.params)
+    const queryParamsMatch: boolean = this.compareObjects(route.queryParams, routeconfig.snapshot.queryParams)
+
+    return paramsMatch && queryParamsMatch
   }
 
   /**
@@ -86,16 +80,16 @@ export class MddRouteReuseStrategy implements RouteReuseStrategy {
      */
   retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle | null {
     const routeConfigPath = route.routeConfig?.path
+    const routeconfig = routeConfigPath ? this.storedRoutes.get(routeConfigPath) : undefined
 
     // return null if the path does not have a routerConfig OR if there is no stored route for that routerConfig
-    if (!route.routeConfig || !routeConfigPath || !this.storedRoutes[routeConfigPath]) {
+    if (routeconfig === undefined) {
       return null
     }
-    console.debug('retrieving', 'return: ', this.storedRoutes[routeConfigPath])
 
     /** returns handle when the route.routeConfig.path is already stored */
 
-    return this.storedRoutes[routeConfigPath].handle
+    return routeconfig.handle
   }
 
   /**
@@ -105,8 +99,7 @@ export class MddRouteReuseStrategy implements RouteReuseStrategy {
      * @returns boolean basically indicating true if the user intends to leave the current route
      */
   shouldReuseRoute(future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean {
-    console.debug('deciding to reuse', 'future', future.routeConfig, 'current', curr.routeConfig, 'return: ', future.routeConfig === curr.routeConfig)
-    return future.routeConfig === curr.routeConfig
+    return curr.routeConfig?.data?.['reuse'] === true
   }
 
   /**
