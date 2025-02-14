@@ -27,4 +27,20 @@ export class AppComponent {
       },
     })
   }
+
+  onActivate(): void {
+    this.scrollToTop()
+  }
+
+  onAttach(): void {
+    this.scrollToTop()
+  }
+
+  private scrollToTop(): void {
+    window.scroll({
+      top: 0,
+      left: 0,
+    })
+    window.scrollTo(0, 0) // For Safari
+  }
 }

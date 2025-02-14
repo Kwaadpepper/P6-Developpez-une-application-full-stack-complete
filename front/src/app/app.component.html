@@ -3,5 +3,5 @@
   <p-toast />
 </header>
 <main>
-  <router-outlet></router-outlet>
+  <router-outlet (activate)="onActivate()" (attach)="onAttach()"></router-outlet>
 </main>
