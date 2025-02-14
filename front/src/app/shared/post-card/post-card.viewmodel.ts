@@ -19,7 +19,6 @@ export default class PostCardViewModel {
   })
 
   public readonly post = computed(() => this._post())
-  public readonly strippedPostContent = signal('')
 
   constructor(
     private markdownService: MarkdownService,
@@ -29,28 +28,22 @@ export default class PostCardViewModel {
   public setPost(post: Post): void {
     const postContent = post.content
 
-    this._post.update((current) => {
-      current.slug = post.slug
-      current.title = post.title
-      current.author_name = post.author_name
-      current.content = postContent
-      current.created_at = post.created_at
-      current.updated_at = post.updated_at
-      return current
-    })
-
     this.getPlainHtmlFromMarkdown(postContent).then((html) => {
       const stripped = this.getPlainTextFromHtml(html)
-      this.strippedPostContent.set(stripped)
+      this._post.update((current) => {
+        current.slug = post.slug
+        current.title = post.title
+        current.author_name = post.author_name
+        current.content = stripped
+        current.created_at = post.created_at
+        current.updated_at = post.updated_at
+        return current
+      })
     })
   }
 
   private async getPlainHtmlFromMarkdown(markdown: string): Promise<string> {
-    const parsed = this.markdownService.parse(markdown, {
-      decodeHtml: false,
-      inline: false,
-      mermaid: false,
-    })
+    const parsed = this.markdownService.parse(markdown)
 
     return typeof parsed === 'string' ? parsed : (await parsed)
   }
