@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <div class="row justify-center">
+  <div class="row justify-center relative">
     <div class="lg:col-12 xl:col-8">
       <p-panel>
         <form class="row" [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -12,8 +12,8 @@
               [value]="viewModel.content()" [error]="viewModel.errors.content()"></app-markdown-editor>
             <input type="hidden" formControlName="content" />
           </div>
-          <div class="col sm:pt-28">
-            <p-button class="my-6 block text-center" variant="outlined" severity="contrast" [disabled]="!form.valid "
+          <div class="col">
+            <p-button class="sticky top-6 z-10" variant="outlined" severity="contrast" [disabled]="!form.valid "
               type="submit">
               <span pButtonLabel>
                 <i class="pi pi-send"></i>

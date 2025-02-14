@@ -1,14 +1,16 @@
 <p-tabs value="editor">
-  <p-tablist>
-    <p-tab value="editor" title="Rédiger le contenu">{{ title() }}</p-tab>
-    <p-tab value="preview" title="Prévisualiser le contenu">Prévisualiser</p-tab>
-  </p-tablist>
+  <div class="sticky top-0 z-10 bg-base-300 p-2">
+    <p-tablist class="">
+      <p-tab value="editor" title="Rédiger le contenu">{{ title() }}</p-tab>
+      <p-tab value="preview" title="Prévisualiser le contenu">Prévisualiser</p-tab>
+    </p-tablist>
+    <small *ngIf="textareaInput().dirty || textareaInput().touched" class="block text-error">
+      <span class="block" *ngIf="textareaInput().hasError('required')"> Obligatoire.</span>
+      <span class="block" *ngIf="viewModel.errorMessage()">{{ viewModel.errorMessage() }}</span>
+    </small>
+  </div>
   <p-tabpanels class="min-h-44 h-full flex flex-col">
     <p-tabpanel value="editor">
-      <small id="content-help" *ngIf="textareaInput().dirty || textareaInput().touched" class="text-error">
-        <span class="block" *ngIf="textareaInput().hasError('required')"> Obligatoire.</span>
-        <span class="block" *ngIf="viewModel.errorMessage()">{{ viewModel.errorMessage() }}</span>
-      </small>
       <textarea [formControl]="textareaInput()" pTextarea [autoResize]="true" class="w-full min-h-44"></textarea>
     </p-tabpanel>
     <p-tabpanel value="preview" class="flex-grow flex flex-col">
