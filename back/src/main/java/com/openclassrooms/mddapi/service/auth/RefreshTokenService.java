@@ -45,9 +45,7 @@ public class RefreshTokenService {
     public RefreshToken getExpandedRefreshToken(User user) {
         final RefreshToken refreshToken;
         final var userUuid = user.getUuid();
-        final var expiryDate = ZonedDateTime.now();
-
-        expiryDate.plus(refreshTokenDuration, ChronoUnit.MINUTES);
+        final var expiryDate = ZonedDateTime.now().plus(refreshTokenDuration, ChronoUnit.MINUTES);
 
         refreshToken = refreshTokenRepository.findByUserUuid(userUuid)
                 .map(token -> {
