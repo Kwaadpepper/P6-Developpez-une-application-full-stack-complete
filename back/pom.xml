@@ -42,6 +42,7 @@
 		<slugify.version>3.0.7</slugify.version>
 		<slugify-dep-icu4j-icu.version>76.1</slugify-dep-icu4j-icu.version>
 		<apache-commons-validator.version>1.9.0</apache-commons-validator.version>
+		<common-mark.version>0.21.0</common-mark.version>
 		<flexmark.version>0.64.8</flexmark.version>
 	</properties>
 
@@ -129,6 +130,27 @@
 			<groupId>commons-validator</groupId>
 			<artifactId>commons-validator</artifactId>
 			<version>${apache-commons-validator.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.commonmark</groupId>
+			<artifactId>commonmark</artifactId>
+			<version>${common-mark.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.commonmark</groupId>
+			<artifactId>commonmark-ext-gfm-strikethrough</artifactId>
+			<version>${common-mark.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.commonmark</groupId>
+			<artifactId>commonmark-ext-gfm-tables</artifactId>
+			<version>${common-mark.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.commonmark</groupId>
+			<artifactId>commonmark-ext-autolink</artifactId>
+			<version>${common-mark.version}</version>
 		</dependency>
 
 		<dependency>

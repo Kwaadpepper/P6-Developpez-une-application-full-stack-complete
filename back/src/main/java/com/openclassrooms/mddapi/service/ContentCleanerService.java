@@ -1,17 +1,25 @@
 package com.openclassrooms.mddapi.service;
 
+import java.util.Arrays;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.commonmark.ext.autolink.AutolinkExtension;
+import org.commonmark.ext.gfm.strikethrough.StrikethroughExtension;
+import org.commonmark.ext.gfm.tables.TablesExtension;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document.OutputSettings;
 import org.jsoup.safety.Safelist;
 import org.springframework.stereotype.Service;
 
-import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.html2md.converter.FlexmarkHtmlConverter;
-import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 
 @Service
 public class ContentCleanerService {
+    private static final Logger logger = LogManager.getLogger(ContentCleanerService.class.getName());
 
     /**
      * Strip html tags from a string
@@ -32,14 +40,33 @@ public class ContentCleanerService {
      * @return sanitized markdown content
      */
     public String sanitizeMarkdown(String unsafeString) {
-        String htmlString;
+        var markdownParser = Parser.builder()
+                .extensions(Arrays.asList(
+                        StrikethroughExtension.create(),
+                        TablesExtension.create(),
+                        AutolinkExtension.create()))
+                .build();
+
+        var markdownDocument = markdownParser.parse(unsafeString);
+
+        var htmlRenderer = HtmlRenderer.builder()
+                .extensions(Arrays.asList(
+                        StrikethroughExtension.create(),
+                        TablesExtension.create(),
+                        AutolinkExtension.create()))
+                .sanitizeUrls(true)
+                .build();
         var options = new MutableDataSet();
-        var parser = Parser.builder(options).build();
-        var converter = FlexmarkHtmlConverter.builder(options).build();
-        var renderer = HtmlRenderer.builder(options).build();
+        var htmlToMarkDownConverter = FlexmarkHtmlConverter.builder(options).build();
 
-        htmlString = renderer.render(parser.parse(unsafeString));
+        String htmlString = htmlRenderer.render(markdownDocument);
 
-        return converter.convert(htmlString);
+        String sanitizedString = htmlToMarkDownConverter.convert(htmlString);
+
+        logger.info("Unsanitized markdown: {}", unsafeString);
+        logger.info("Sanitized html: {}", htmlString);
+        logger.info("Sanitized markdown: {}", sanitizedString);
+
+        return sanitizedString;
     }
 }
