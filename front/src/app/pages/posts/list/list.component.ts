@@ -5,8 +5,7 @@ import { InfiniteScrollDirective } from 'ngx-infinite-scroll'
 import { NgxPullToRefreshModule } from 'ngx-pull-to-refresh'
 import { ButtonModule } from 'primeng/button'
 
-import { ProgressSpinnerComponent } from '@components/index'
-import { PostCardComponent } from '@shared/index'
+import { PostCardComponent, ProgressSpinnerComponent } from '@shared/index'
 import { filter, Subject } from 'rxjs'
 import ListViewModel from './list.viewmodel'
 

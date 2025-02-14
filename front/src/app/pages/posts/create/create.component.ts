@@ -10,10 +10,9 @@ import { TextareaModule } from 'primeng/textarea'
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs'
 
 import { Router } from '@angular/router'
-import { MarkdownEditorComponent } from '@components/index'
 import { ToastService } from '@core/services'
 import { UUID } from '@core/types'
-import { BackButtonComponent } from '@shared/index'
+import { BackButtonComponent, MarkdownEditorComponent } from '@shared/index'
 import CreateViewModel from './create.viewmodel'
 
 interface selectOptions {

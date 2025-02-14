@@ -4,8 +4,8 @@ import { ButtonModule } from 'primeng/button'
 import { PanelModule } from 'primeng/panel'
 
 import { NgIf } from '@angular/common'
-import { MarkdownEditorComponent } from '@components/markdown-editor/markdown-editor.component'
 import { UUID } from '@core/types'
+import { MarkdownEditorComponent } from '@shared/markdown-editor/markdown-editor.component'
 import { MessageModule } from 'primeng/message'
 import AddViewModel from './add.viewmodel'
 
