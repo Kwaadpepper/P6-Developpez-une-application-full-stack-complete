@@ -79,6 +79,7 @@ public class TopicController {
      */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public PaginatedDto<TopicWithSubscriptionDto> paginatedTopics(
+            @RequestParam(required = false) @Nullable @org.springframework.lang.Nullable final String name,
             @RequestParam(required = false, defaultValue = "1") @Min(value = 1) final Integer page) {
 
         final var authUser = sessionService.getAuthenticatedUser().or(() -> {
@@ -88,7 +89,9 @@ public class TopicController {
 
         var pageRequest = PageRequest.of(page - 1, 30);
 
-        final var topicWitSubscriptionList = topicService.getPaginatedTopics(userUuid, pageRequest);
+        final var topicWitSubscriptionList = Optional.ofNullable(name)
+                .map(nameLike -> topicService.getPaginatedTopics(userUuid, pageRequest, nameLike))
+                .orElseGet(() -> topicService.getPaginatedTopics(userUuid, pageRequest));
 
         return topicPresenter.presentModelWithSubscriptionPage(topicWitSubscriptionList, page);
     }

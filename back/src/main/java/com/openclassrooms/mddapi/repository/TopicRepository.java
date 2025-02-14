@@ -35,8 +35,12 @@ public interface TopicRepository extends PagingAndSortingRepository<Topic, UUID>
             " t.updated_at AS updated_at" +
             " FROM mddapi.topics AS t" +
             " LEFT OUTER JOIN mddapi.subscriptions AS s ON t.uuid = s.topic_uuid AND s.user_uuid = :useruuid" +
+            " WHERE LOWER(t.name) LIKE LOWER(CONCAT('%', :title, '%'))" +
             " ORDER BY t.updated_at DESC", nativeQuery = true)
-    Page<TopicWithSubscription> findAllWithSubscribed(@Param("useruuid") UUID userUuid, Pageable pageable);
+    Page<TopicWithSubscription> findAllWithSubscribedByNameIgnoreCaseContaining(
+            @Param("useruuid") UUID userUuid,
+            Pageable pageable,
+            @Param("title") String title);
 
     /**
      * Returns a {@link Page} of entities meeting the paging restriction provided in

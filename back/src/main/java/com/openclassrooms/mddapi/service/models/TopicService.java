@@ -18,10 +18,14 @@ public class TopicService {
     }
 
     public Page<TopicWithSubscription> getPaginatedTopics(UUID userUuid, PageRequest page) {
+        return getPaginatedTopics(userUuid, page, "");
+    }
+
+    public Page<TopicWithSubscription> getPaginatedTopics(UUID userUuid, PageRequest page, String nameLike) {
         if (page.getPageSize() > 50) {
             throw new IllegalArgumentException("Page size must be less than or equal to 50");
         }
-        return topicRepository.findAllWithSubscribed(userUuid, page);
+        return topicRepository.findAllWithSubscribedByNameIgnoreCaseContaining(userUuid, page, nameLike);
     }
 
     public Page<TopicName> getPaginatedTopicsNamesWhere(PageRequest page, String nameLike) {
