@@ -5,13 +5,12 @@ import { FeedService } from '@core/services'
 
 @Injectable()
 export default class ListViewModel {
-  private currentPage = 0
-  private postList = signal<Post[]>([])
+  private _currentPage = 0
+  private _postList = signal<Post[]>([])
 
-  public readonly currentPage$ = computed(() => this.currentPage)
-  public readonly postList$ = computed(() => this.postList())
-  public readonly sortAscending$ = signal(false)
-
+  public readonly currentPage = computed(() => this._currentPage)
+  public readonly posts = computed(() => this._postList())
+  public readonly sortAscending = signal(false)
   public readonly loading = signal(false)
 
   constructor(
@@ -21,11 +20,11 @@ export default class ListViewModel {
 
   public feedUserWithMorePosts(): void {
     this.loading.set(true)
-    this.currentPage += 1
-    this.feedService.getUserFeedPage(this.currentPage, this.sortAscending$())
+    this._currentPage += 1
+    this.feedService.getUserFeedPage(this._currentPage, this.sortAscending())
       .subscribe({
         next: (newPage) => {
-          this.postList.update(posts => [...posts, ...newPage.list])
+          this._postList.update(posts => [...posts, ...newPage.list])
         },
         complete: () => {
           this.loading.set(false)
@@ -33,10 +32,16 @@ export default class ListViewModel {
       })
   }
 
+  public reloadPosts(): void {
+    this._currentPage = 0
+    this._postList.set([])
+    this.feedUserWithMorePosts()
+  }
+
   public togglePostsSorting(): void {
-    this.sortAscending$.set(!this.sortAscending$())
-    this.currentPage = 0
-    this.postList.set([])
+    this.sortAscending.set(!this.sortAscending())
+    this._currentPage = 0
+    this._postList.set([])
     this.feedUserWithMorePosts()
   }
 }

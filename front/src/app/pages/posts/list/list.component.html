@@ -4,24 +4,33 @@
       <p-button variant="outlined" severity="contrast" routerLink="/posts/create">
         <span pButtonLabel>Créer un article</span>
       </p-button>
+      <p-button variant="text" severity="contrast" title="Recharger les articles" (click)="onRefresh()">
+        <span pButtonLabel><i class="pi pi-sync"></i></span>
+      </p-button>
       <p-button variant="text" severity="contrast" title="Trier par ordre de publication"
         (click)="onClickFeedSorting()">
         <span pButtonLabel class="font-bold">Trier par</span>
-        <span *ngIf="!viewModel.sortAscending$()" pButtonLabel class="pi pi-arrow-down"
+        <span *ngIf="!viewModel.sortAscending()" pButtonLabel class="pi pi-arrow-down"
           title="Du plus récent au plus ancien"></span>
-        <span *ngIf="viewModel.sortAscending$()" pButtonLabel class="pi pi-arrow-up"
+        <span *ngIf="viewModel.sortAscending()" pButtonLabel class="pi pi-arrow-up"
           title="Du plus ancien au plus récent"></span>
       </p-button>
     </div>
   </div>
-  <div class="row" infiniteScroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollThrottle]="throttle"
-    (scrolled)="onScroll()">
-    <div *ngIf="!viewModel.postList$().length" class="col">
-      Pas d'article pour l'instant
+
+  <ngx-pull-to-refresh [spinnerSize]="30" [distanceForRefresh]="40" [isEnable]="true"
+    (refresh)="onPullToRefresh($event)">
+
+    <div class="row" infiniteScroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollThrottle]="throttle"
+      (scrolled)="onScroll()">
+      <div *ngIf="!viewModel.posts().length && !viewModel.loading()" class="col">
+        Pas d'article pour l'instant
+      </div>
+      <div class="col-12 md:col-6 lg:col-4" *ngFor="let post of viewModel.posts()" app-post-card [post]="post"></div>
+      <div class="col-12 text-center pb-28">
+        <app-progress-spinner [visible]="viewModel.loading()"></app-progress-spinner>
+      </div>
     </div>
-    <div class="col-12 md:col-6 lg:col-4" *ngFor="let post of viewModel.postList$()" app-post-card [post]="post"></div>
-    <div class="col-12 text-center pb-28">
-      <app-progress-spinner [visible]="viewModel.loading()"></app-progress-spinner>
-    </div>
-  </div>
+
+  </ngx-pull-to-refresh>
 </div>

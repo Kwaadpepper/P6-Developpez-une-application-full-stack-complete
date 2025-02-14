@@ -1,5 +1,5 @@
 import { NgFor } from '@angular/common'
-import { Component, EventEmitter, Input, OnDestroy, OnInit } from '@angular/core'
+import { Component, EventEmitter, input, Input, OnDestroy, OnInit } from '@angular/core'
 import { UUID } from '@core/types'
 import { MarkdownModule } from 'ngx-markdown'
 import { Subscription } from 'rxjs'
@@ -15,8 +15,7 @@ import ListViewModel from './list.viewmodel'
   styleUrl: './list.component.css',
 })
 export class ListComponent implements OnInit, OnDestroy {
-  @Input({ required: true })
-  postUuid!: UUID
+  postUuid = input.required<UUID>()
 
   @Input({ required: true })
   reloadComments!: EventEmitter<void>
@@ -29,10 +28,10 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.viewModel.reloadComments(this.postUuid)
+    this.viewModel.reloadComments(this.postUuid())
 
     this.reloadSubscription = this.reloadComments.subscribe(() => {
-      this.viewModel.reloadComments(this.postUuid)
+      this.viewModel.reloadComments(this.postUuid())
     })
   }
 
