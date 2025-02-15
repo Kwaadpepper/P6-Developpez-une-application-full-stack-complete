@@ -1,21 +1,19 @@
 <div class="container-fluid min-h-full flex flex-col justify-center">
   <div class="row mb-1">
     <div class="col text-center">
-      <img class="img-fluid mx-auto" src="/assets/pictures/logo_p6.png" alt="Logo Monde de Dév"
-        title="Un nuage violet estampillé MDD" />
-      <h1 class="hidden" aria-hidden="true">Bienvenue sur Monde de Dév</h1>
+      <img class="img-fluid mx-auto" src="/assets/pictures/logo_p6.png" [alt]="viewModel.appName()"
+        [title]="'Logo ' + viewModel.appName()" />
+      <h1 class="hidden" aria-hidden="true">Bienvenue sur {{ viewModel.appName() }}</h1>
     </div>
   </div>
   <div class="row">
     <div class="col text-center flex flex-col justify-center md:block">
-      <p-button routerLink="/login" styleClass="mx-4 my-4 inline-block min-w-32" variant="outlined" severity="contrast"
-        title="Se connecter à l'application">
-        <span class="inline-block min-w-32 font-bold" pButtonLabel>Se connecter</span>
-      </p-button>
-      <p-button routerLink="/register" styleClass="mx-4 my-4" variant="outlined" severity="contrast"
-        title="S'inscrire à l'application">
-        <span class="inline-block min-w-32 font-bold" pButtonLabel>S'inscrire</span>
-      </p-button>
+      <a pButton routerLink="/login" class="mx-4 my-4 inline-block min-w-32" title="Se connecter à l'application">
+        <span>Se connecter</span>
+      </a>
+      <a pButton routerLink="/register" class="mx-4 my-4 inline-block min-w-32" title="S'inscrire à l'application">
+        <span>S'inscrire</span>
+      </a>
     </div>
   </div>
 </div>
