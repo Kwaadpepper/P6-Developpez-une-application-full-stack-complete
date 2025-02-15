@@ -1,24 +1,37 @@
-<div class="bg-gray-100 dark:bg-gray-800 m-4 p-4 rounded-lg h-80 sm:h-72 md:h-60 lg:h-72 flex flex-col">
-  <span class="h4 block font-bold">{{
-    (viewModel.post().title.length>60)? (viewModel.post().title| slice:0:61)+'...':(viewModel.post().title) | titlecase
-    }}</span>
+<div class="container-fluid bg-gray-100 dark:bg-gray-800 rounded-lg py-4 post-card">
   <div class="row mb-3">
-    <div class="col">{{ (viewModel.post().updated_at ?? viewModel.post().created_at) | nicedate }}</div>
-    <div class="col">{{
+    <div class="col">
+      <span class="h3 font-extrabold">{{
+        (viewModel.post().title.length>60)? (viewModel.post().title| slice:0:61)+'...':(viewModel.post().title) |
+        titlecase
+        }}</span>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-12 md:col-6">{{ (viewModel.post().updated_at ?? viewModel.post().created_at) | nicedate }}</div>
+    <div class="col-12 md:col-6 text-end md:text-start">{{
       (viewModel.post().author_name.length>60)? (viewModel.post().author_name|
       slice:0:61)+'...':(viewModel.post().author_name) | titlecase
       }}</div>
   </div>
-  <div class="row mb-3 h-32 md:h-28 ">
-    <div class="col">
-      <div class="prose dark:text-gray-100 leading-[1.06rem] table-cell align-middle">{{
-        (viewModel.post().content.length>220)? (viewModel.post().content | slice:0:221)+'...':(viewModel.post().content)
-        }}</div>
+
+  <div class="row mb-6 post-card-content">
+    <div class="col-12 mt-4">
+      <div class="flex justify-center items-center h-full">
+        <div class="h-fit w-fit prose dark:text-gray-100 leading-[1.3rem]">{{
+          (viewModel.post().content.length>220)? (viewModel.post().content |
+          slice:0:221)+'...':(viewModel.post().content)
+          }}</div>
+      </div>
     </div>
   </div>
-  <div class="row mt-4">
+
+  <div class="row">
     <div class="col text-center">
-      <a [routerLink]="['/posts', viewModel.post().slug]" class="btn btn-primary">Lire la suite</a>
+      <a pButton [routerLink]="['/posts', viewModel.post().slug]" title="Lire la suite de l'article">
+        <span pButtonLabel>Lire la suite</span>
+      </a>
     </div>
   </div>
 </div>

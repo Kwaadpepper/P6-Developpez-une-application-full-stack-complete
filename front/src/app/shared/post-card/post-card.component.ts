@@ -1,17 +1,18 @@
 import { SlicePipe, TitleCasePipe } from '@angular/common'
 import { Component, Input } from '@angular/core'
-
 import { RouterLink } from '@angular/router'
+import { ButtonModule } from 'primeng/button'
+
 import { Post } from '@core/interfaces'
 import { NiceDate } from '@pipes/NiceDate'
 import PostCardViewModel from './post-card.viewmodel'
 
 @Component({
-  // eslint-disable-next-line @angular-eslint/component-selector
-  selector: 'div[app-post-card]',
+  selector: 'app-post-card',
   imports: [
     TitleCasePipe, SlicePipe,
     NiceDate, RouterLink,
+    ButtonModule,
   ],
   providers: [
     PostCardViewModel,

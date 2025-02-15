@@ -1,14 +1,14 @@
-<div class="container-fluid">
-  <div class="row mb-3 sticky top-0 bg-base-100 z-10 py-3">
-    <div class="col px-7 flex justify-between">
-      <a class="btn btn-primary" pButton routerLink="/posts/create" title="Créer un nouvel article">
+<div class="container">
+  <div class="row mb-3 sticky top-0 bg-surface-0 dark:bg-surface-900 z-10 py-3">
+    <div class="col px-7 flex flex-wrap justify-between items-center">
+      <a class="btn btn-primary my-2" pButton routerLink="/posts/create" title="Créer un nouvel article">
         <span pButtonLabel>Créer un article</span>
       </a>
-      <p-button class="ms-auto me-2" variant="text" severity="contrast" title="Recharger les articles"
+      <p-button class="ms-auto me-2 my-2" variant="text" severity="contrast" title="Recharger les articles"
         (click)="onRefresh()">
         <span pButtonLabel><i class="pi pi-sync"></i></span>
       </p-button>
-      <p-button class="mx-2" variant="text" severity="contrast" title="Trier par ordre de publication"
+      <p-button class="mx-2 my-2" variant="text" severity="contrast" title="Trier par ordre de publication"
         (click)="onClickFeedSorting()">
         <span pButtonLabel class="font-bold">Trier par</span>
         <span *ngIf="!viewModel.sortAscending()" pButtonLabel class="pi pi-arrow-down"
@@ -19,7 +19,7 @@
     </div>
   </div>
 
-  <ngx-pull-to-refresh [spinnerSize]="30" [distanceForRefresh]="40" [isEnable]="true"
+  <ngx-pull-to-refresh customClass="container-fluid" [spinnerSize]="30" [distanceForRefresh]="40" [isEnable]="true"
     (refresh)="onPullToRefresh($event)">
 
     <div class="row" infiniteScroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollThrottle]="throttle"
@@ -27,7 +27,9 @@
       <div *ngIf="!viewModel.posts().length && !viewModel.loading()" class="col">
         Pas d'article pour l'instant
       </div>
-      <div class="col-12 md:col-6 lg:col-4" *ngFor="let post of viewModel.posts()" app-post-card [post]="post"></div>
+      <div class="col-12 md:col-6 lg:col-4 py-4" *ngFor="let post of viewModel.posts()">
+        <app-post-card [post]="post" classList="my-4"></app-post-card>
+      </div>
       <div class="col-12 text-center pb-28">
         <app-progress-spinner [visible]="viewModel.loading()"></app-progress-spinner>
       </div>
