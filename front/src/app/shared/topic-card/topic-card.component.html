@@ -24,7 +24,7 @@
         (onClick)="onSubscribeClick(viewModel.topic().name)">
         <span class="inline-block min-w-32 font-bold" pButtonLabel>S´abonner</span>
       </p-button>
-      <p-button *ngIf="!viewModel.canSubscribe()" styleClass="mx-4 my-4" variant="outlined" severity="warn"
+      <p-button *ngIf="!viewModel.canSubscribe()" styleClass="mx-4 my-4" severity="warn"
         title="Se désabonner de ce theme" (onClick)="onUnsubscribeClick(viewModel.topic().name)">
         <span class="inline-block min-w-32 font-bold" pButtonLabel>Se désabonner</span>
       </p-button>
