@@ -1,9 +1,4 @@
 <div class="container-fluid">
-  <div class="row mb-3">
-    <div class="col">
-      <h2 class="h1 text-center">Abonnements</h2>
-    </div>
-  </div>
   <div class="row">
     <div class="col text-center">
       <app-progress-spinner [visible]="viewModel.loading()"></app-progress-spinner>
@@ -16,7 +11,7 @@
   </div>
   <div class="row" *ngIf="viewModel.userTopics().length > 0" infiniteScroll [infiniteScrollDistance]="scrollDistance"
     [infiniteScrollThrottle]="throttle" (scrolled)="onScroll()">
-    <div class="col-12 md:col-6" *ngFor="let topic of viewModel.userTopics()">
+    <div class="col-12 md:col-6 xl:col-4 my-3" *ngFor="let topic of viewModel.userTopics()">
       <app-topic-card [topicCardElement]="topic"></app-topic-card>
     </div>
   </div>
