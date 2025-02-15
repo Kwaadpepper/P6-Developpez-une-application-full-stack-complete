@@ -4,7 +4,6 @@ import localeFr from '@angular/common/locales/fr'
 import { ApplicationConfig, LOCALE_ID, ErrorHandler as NgErrorHandler, provideZoneChangeDetection } from '@angular/core'
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
 import { provideRouter, RouteReuseStrategy, TitleStrategy } from '@angular/router'
-import Aura from '@primeng/themes/aura'
 import { provideMarkdown } from 'ngx-markdown'
 import { MessageService } from 'primeng/api'
 import { providePrimeNG } from 'primeng/config'
@@ -13,6 +12,7 @@ import { routes } from './app.routes'
 import { ErrorHandler } from './core/ErrorHandler'
 import { SessionInterceptor } from './interceptor/session.interceptor'
 import { DynamicTitleStrategy, MddRouteReuseStrategy } from './strategies'
+import OpenClassrooms from './themes/OpenClassrooms'
 
 registerLocaleData(localeFr)
 
@@ -24,8 +24,9 @@ export const appConfig: ApplicationConfig = {
     providePrimeNG({
       ripple: false,
       theme: {
-        preset: Aura,
+        preset: OpenClassrooms,
         options: {
+          darkModeSelector: 'system',
           cssLayer: {
             name: 'primeng',
             order: 'tailwind-base, primeng, tailwind-utilities',

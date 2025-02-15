@@ -13,7 +13,6 @@ module.exports = {
         xl: '1140px',
       },
     }),
-    require('daisyui'),
     require('tailwindcss-primeui'),
     require('@tailwindcss/typography'),
   ],
