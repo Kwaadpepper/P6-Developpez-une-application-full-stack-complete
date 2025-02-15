@@ -6,8 +6,7 @@ import { ButtonModule } from 'primeng/button'
 import TopicCardViewModel, { TopicCard } from './topic-card.viewmodel'
 
 @Component({
-  // eslint-disable-next-line @angular-eslint/component-selector
-  selector: 'div[app-topic-card]',
+  selector: 'app-topic-card',
   imports: [
     TitleCasePipe, SlicePipe,
     NgIf, ButtonModule,

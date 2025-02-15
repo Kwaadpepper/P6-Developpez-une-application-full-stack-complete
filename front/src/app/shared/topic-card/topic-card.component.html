@@ -1,15 +1,23 @@
-<div class="bg-gray-100 dark:bg-gray-800 m-4 p-4 rounded-lg h-52 md:h-56 flex flex-col">
-  <span class="h4 block font-bold">{{
-    (viewModel.topic().name)? (viewModel.topic().name| slice:0:61)+'...':(viewModel.topic().name) | titlecase
-    }}</span>
-  <div class="row mb-3 h-28">
+<div class="container-fluid bg-gray-100 dark:bg-gray-800 rounded-lg py-4 topic-card">
+  <div class="row mb-3">
     <div class="col">
-      <div class="prose dark:text-gray-100 leading-[1.06rem] table-cell align-middle">{{
-        (viewModel.topic().description.length>220)? (viewModel.topic().description |
-        slice:0:221)+'...':(viewModel.topic().description)
-        }}</div>
+      <span class="h3 font-extrabold">{{
+        (viewModel.topic().name)? (viewModel.topic().name| slice:0:61)+'...':(viewModel.topic().name) | titlecase
+        }}</span>
     </div>
   </div>
+
+  <div class="row mb-6 topic-card-content">
+    <div class="col-12 mt-4">
+      <div class="flex justify-center items-center h-full">
+        <div class="h-fit w-fit prose dark:text-gray-100 leading-[1.3rem]">{{
+          (viewModel.topic().description.length>220)? (viewModel.topic().description |
+          slice:0:221)+'...':(viewModel.topic().description)
+          }}</div>
+      </div>
+    </div>
+  </div>
+
   <div class="row">
     <div class="col text-center">
       <p-button *ngIf="viewModel.canSubscribe()" styleClass="mx-4 my-4" severity="primary" title="S'abonner à ce theme"

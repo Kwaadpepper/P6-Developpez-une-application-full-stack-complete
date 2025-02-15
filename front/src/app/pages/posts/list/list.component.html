@@ -28,7 +28,7 @@
         Pas d'article pour l'instant
       </div>
       <div class="col-12 md:col-6 lg:col-4 py-4" *ngFor="let post of viewModel.posts()">
-        <app-post-card [post]="post" classList="my-4"></app-post-card>
+        <app-post-card [post]="post"></app-post-card>
       </div>
       <div class="col-12 text-center pb-28">
         <app-progress-spinner [visible]="viewModel.loading()"></app-progress-spinner>

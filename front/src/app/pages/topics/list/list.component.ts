@@ -2,13 +2,14 @@ import { NgFor, NgIf } from '@angular/common'
 import { Component, OnInit } from '@angular/core'
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll'
 import { ButtonModule } from 'primeng/button'
-import { IconFieldModule } from 'primeng/iconfield'
-import { InputIconModule } from 'primeng/inputicon'
+import { InputGroupModule } from 'primeng/inputgroup'
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon'
+import { InputTextModule } from 'primeng/inputtext'
 import { ProgressSpinnerModule } from 'primeng/progressspinner'
+import { debounceTime, distinctUntilChanged, tap } from 'rxjs'
 
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { BackButtonComponent, ProgressSpinnerComponent, TopicCardComponent } from '@shared/index'
-import { debounceTime, distinctUntilChanged, tap } from 'rxjs'
 import ListViewModel from './list.viewmodel'
 
 @Component({
@@ -17,12 +18,13 @@ import ListViewModel from './list.viewmodel'
     NgIf, NgFor,
     ReactiveFormsModule,
     ButtonModule,
-    IconFieldModule,
-    InputIconModule,
     TopicCardComponent,
     InfiniteScrollDirective,
     ProgressSpinnerModule,
     BackButtonComponent,
+    InputGroupModule,
+    InputGroupAddonModule,
+    InputTextModule,
     ProgressSpinnerComponent,
   ],
   providers: [
@@ -66,6 +68,5 @@ export class ListComponent implements OnInit {
 
   onClearSearch(): void {
     this.searchTerm.setValue('')
-    this.viewModel.reloadTopics()
   }
 }

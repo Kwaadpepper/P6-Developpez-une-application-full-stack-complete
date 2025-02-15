@@ -1,18 +1,17 @@
 <div class="container">
-  <div class="row mb-3 sticky top-0 bg-base-100 z-10">
-    <div class="col relative mb-10 py-2">
+  <div class="row my-3 sticky top-0 bg-surface-0 dark:bg-surface-900 z-10">
+    <div class="col relative py-4">
       <app-back-button backUrl="/" />
       <h1 class="hidden" aria-hidden="true">Sujets</h1>
-      <div class="join join-horizontal mx-20">
-        <p-iconfield styleClass="relative">
-          <p-inputicon styleClass="join-item top-4 start-2">
-            <button pButton type="button" class="btn btn-sm btn-ghost z-10 w-6" title="Effacer la barre de rechercher"
-              (click)="onClearSearch()"><i class="pi pi-eraser"></i></button>
-          </p-inputicon>
-          <input type="text" [formControl]="searchTerm" pInputText class="input input-primary ps-10"
-            placeholder="Rechercher un sujet" />
-          <p-inputicon *ngIf="viewModel.loading()" styleClass="pi pi-spin pi-spinner" />
-        </p-iconfield>
+      <div class="mx-20 inline-block">
+        <p-inputgroup>
+          <p-button icon="pi pi-eraser" title="Effacer la barre de recherche" (click)="onClearSearch()"
+            severity="primary" variant="outlined" />
+          <input type="text" [formControl]="searchTerm" pInputText placeholder="Rechercher un sujet" />
+          <p-inputgroup-addon *ngIf="viewModel.loading()">
+            <i class="pi pi-spin pi-spinner"></i>
+          </p-inputgroup-addon>
+        </p-inputgroup>
       </div>
     </div>
   </div>
@@ -21,8 +20,9 @@
     <div *ngIf="!viewModel.topics().length && !viewModel.loading()" class="col">
       <div class="h1 text-center">Aucun sujet trouvé</div>
     </div>
-    <div class="col-12 md:col-6 lg:col-4" *ngFor="let topic of viewModel.topics()" app-topic-card
-      [topicCardElement]="topic"></div>
+    <div class="col-12 md:col-6 lg:col-4 py-4" *ngFor="let topic of viewModel.topics()">
+      <app-topic-card [topicCardElement]="topic"></app-topic-card>
+    </div>
     <div class="col-12 text-center pb-28">
       <app-progress-spinner [visible]="viewModel.loading()"></app-progress-spinner>
     </div>
