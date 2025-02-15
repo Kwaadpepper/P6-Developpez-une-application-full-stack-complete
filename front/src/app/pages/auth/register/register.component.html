@@ -49,13 +49,14 @@
           </small>
         </div>
 
-        <p-button class="my-6 block text-center" variant="outlined" severity="contrast"
-          [disabled]="!form.valid || viewModel.loading()" type="submit">
-          <span pButtonLabel>S'inscrire</span>
-          <span *ngIf="viewModel.loading()" pButtonLabel>
-            <i class="pi pi-spin pi-cog"></i>
-          </span>
-        </p-button>
+        <div class="flex flex-col mb-3">
+          <button pButton class="mx-auto my-4" [disabled]="!form.valid || viewModel.loading()" type="submit">
+            <span pButtonLabel>S'inscrire</span>
+            <span *ngIf="viewModel.loading()" pButtonLabel>
+              <i class="pi pi-spin pi-cog"></i>
+            </span>
+          </button>
+        </div>
       </form>
     </div>
   </div>
