@@ -1,28 +1,32 @@
-<div class="container">
+<div class="container max-w-2xl mx-auto relative">
   <div class="row mb-3">
     <div class="col">
       <app-back-button backUrl="/" />
 
-      <h1 class="ms-24">{{ viewModel.post$().title | titlecase }}</h1>
+      <h1 class="ms-24 break-words hyphens-auto line-clamp-2">{{ viewModel.post$().title | titlecase
+        }}</h1>
     </div>
   </div>
   <div class="row mb-5">
-    <div class="col">
+    <div class="col sm:col-4">
       <span>{{ (viewModel.post$().updated_at ?? viewModel.post$().created_at) | nicedate }}</span>
     </div>
-    <div class="col">
+    <div class="col-12 sm:col-4">
       <span>{{
         (viewModel.post$().author_name.length > 60) ?
         (viewModel.post$().author_name | slice:0:61) + '...' :
         (viewModel.post$().author_name) | titlecase
         }}</span>
     </div>
-    <div class="col">
+    <div class="col-12 md:col-4">
       <span>{{ viewModel.post$().topic_name | titlecase }}</span>
     </div>
   </div>
   <div class="row mb-10">
-    <div class="col prose" markdown ngPreserveWhitespaces>{{ viewModel.post$().content }}</div>
+    <div class="col prose dark:prose-invert py-6 md:px-8 w-full mx-auto" markdown ngPreserveWhitespaces>{{
+      viewModel.post$().content
+      }}
+    </div>
   </div>
   <hr class="mb-5">
   <div class="row">
