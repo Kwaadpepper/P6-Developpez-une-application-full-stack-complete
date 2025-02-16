@@ -1,1 +1,4 @@
-/* EMPTY */
+/* stylelint-disable-next-line selector-pseudo-element-no-unknown */
+::ng-deep .p-tablist-tab-list {
+  --p-tabs-tablist-border-width: 0;
+}

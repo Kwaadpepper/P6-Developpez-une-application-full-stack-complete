@@ -1,10 +1,14 @@
 <p-tabs value="editor">
-  <div class="sticky top-0 z-10 bg-base-300 p-2">
-    <p-tablist class="">
+  <div class="sticky top-0 z-10 bg-base-300 pb-2">
+    <p-tablist>
       <p-tab value="editor" title="Rédiger le contenu">{{ title() }}</p-tab>
       <p-tab value="preview" title="Prévisualiser le contenu">Prévisualiser</p-tab>
+      <div class="ms-auto">
+        <ng-content select="[right-pan]"></ng-content>
+      </div>
     </p-tablist>
-    <small *ngIf="textareaInput().dirty || textareaInput().touched" class="block text-error">
+    <small *ngIf="textareaInput().dirty || textareaInput().touched"
+      class="block bg-surface-0 dark:bg-surface-900 text-red-600 py-2">
       <span class="block" *ngIf="textareaInput().hasError('required')"> Obligatoire.</span>
       <span class="block" *ngIf="viewModel.errorMessage()">{{ viewModel.errorMessage() }}</span>
     </small>
