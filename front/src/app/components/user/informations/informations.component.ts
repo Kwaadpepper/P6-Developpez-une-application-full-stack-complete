@@ -8,6 +8,7 @@ import { MessageModule } from 'primeng/message'
 import { PasswordModule } from 'primeng/password'
 
 import { ToastService } from '@core/services'
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon'
 import InformationsViewModel from './informations.viewmodel'
 
 @Component({
@@ -15,6 +16,7 @@ import InformationsViewModel from './informations.viewmodel'
   imports: [
     InputTextModule, PasswordModule,
     ReactiveFormsModule, InputGroupModule,
+    InputGroupAddonModule,
     MessageModule, NgIf, ButtonModule,
   ],
   providers: [

@@ -33,10 +33,12 @@
           <p-inputgroup>
             <input pPassword id="password" formControlName="password" aria-describedby="password-help"
               [type]="maskPassword() ? 'password' : 'text'" autocomplete="off" [feedback]="false" />
-            <p-button (click)="onToggleMask()">
-              <span *ngIf="maskPassword()" class="pi pi-eye"></span>
-              <span *ngIf="!maskPassword()" class="pi pi-eye-slash"></span>
-            </p-button>
+            <p-inputgroup-addon>
+              <button pButton (click)="onToggleMask()" class="h-10" type="button">
+                <i pButtonLabel *ngIf="maskPassword()" class="pi pi-eye"></i>
+                <i pButtonLabel *ngIf="!maskPassword()" class="pi pi-eye-slash"></i>
+              </button>
+            </p-inputgroup-addon>
           </p-inputgroup>
           <small id="password-help">
             <span class="block" *ngIf="form.controls.password.dirty || form.controls.password.touched">
