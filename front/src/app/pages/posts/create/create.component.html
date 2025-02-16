@@ -9,7 +9,7 @@
   <form class="row" [formGroup]="form" (ngSubmit)="onSubmit()">
 
     <div class="col-12">
-      <p-message styleClass="mb-3" *ngIf="viewModel.formErrorMessage()" severity="error">{{
+      <p-message icon="pi pi-times-circle" styleClass="mb-3" *ngIf="viewModel.formErrorMessage()" severity="error">{{
         viewModel.formErrorMessage()
         }}</p-message>
     </div>

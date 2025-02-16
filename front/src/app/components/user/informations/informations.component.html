@@ -3,7 +3,7 @@
     <div class="col">
       <form [formGroup]="form" class="mx-auto sm:max-w-80" (ngSubmit)="onSubmit()">
 
-        <p-message styleClass="mb-3" *ngIf="viewModel.formErrorMessage()" severity="error">{{
+        <p-message icon="pi pi-times-circle" styleClass="mb-3" *ngIf="viewModel.formErrorMessage()" severity="error">{{
           viewModel.formErrorMessage()
           }}</p-message>
 
