@@ -1,5 +1,5 @@
-<div class="container">
-  <div class="row mb-3 sticky top-0 z-10 py-3">
+<div class="container max-w-6xl mx-auto">
+  <div class="row mb-3 sticky top-0 bg-surface-0 dark:bg-surface-900 z-10">
     <div class="col text-center">
       <app-back-button backUrl="/" />
 
@@ -18,27 +18,27 @@
       <div class="mx-auto md:me-4 md:max-w-80 flex flex-col">
         <label for="topic-name" aria-hidden="true" class="hidden">Sélectionnez un thème</label>
         <!-- beautify ignore:start -->
-          <p-select
-            [options]="viewModel.topicNames()"
-            [filter]="true"
-            [lazy]="true"
-            [virtualScroll]="true"
-            [virtualScrollItemSize]="viewModel.topicsTotalItems()"
-            [virtualScrollOptions]="{ itemSize: viewModel.topicsPerPage }"
-            [loading]="viewModel.topicsAreLoading()"
-            [optionLabel]="selectOptions().label"
-            [optionValue]="selectOptions().value"
-            (onLazyLoad)="onLazyloadTopicsNames($event)"
-            (onFilter)="onFilterTopicsNames($event)"
-            (onChange)="onSelectTopic($event)"
-            placeholder="Sélectionnez un theme"
+        <p-select
+          [options]="viewModel.topicNames()"
+          [filter]="true"
+          [lazy]="true"
+          [virtualScroll]="true"
+          [virtualScrollItemSize]="viewModel.topicsTotalItems()"
+          [virtualScrollOptions]="{ itemSize: viewModel.topicsPerPage }"
+          [loading]="viewModel.topicsAreLoading()"
+          [optionLabel]="selectOptions().label"
+          [optionValue]="selectOptions().value"
+          (onLazyLoad)="onLazyloadTopicsNames($event)"
+          (onFilter)="onFilterTopicsNames($event)"
+          (onChange)="onSelectTopic($event)"
+          placeholder="Sélectionnez un theme"
 
-            id="topic-name"
-            class="w-75"
-            formControlName="topicName"
-            aria-describedby="topic-name-help"
-          />
-          <!-- beautify ignore:end -->
+          id="topic-name"
+          class="w-75"
+          formControlName="topicName"
+          aria-describedby="topic-name-help"
+        />
+        <!-- beautify ignore:end -->
         <small id="topic-name-help" *ngIf="form.controls.topicName.dirty || form.controls.topicName.touched"
           class="text-error">
           <span class="block" *ngIf="form.controls.topicName.hasError('required')"> Obligatoire.</span>
@@ -59,14 +59,15 @@
       </div>
     </div>
 
-    <div class="col md:col-10 lg:col-8 my-4 mx-auto">
+    <div class="col my-4 mx-auto">
       <label for="content" aria-hidden="true" class="hidden">Contenu de l'article</label>
       <app-markdown-editor title="Contenu de l'article" [textareaInput]="form.controls.content"
         [value]="viewModel.content()" [error]="viewModel.errors.content()"></app-markdown-editor>
     </div>
 
-    <div class="col-12 text-center my-6">
-      <p-button variant="outlined" severity="contrast" [disabled]="!form.valid || viewModel.loading()" type="submit">
+    <div class="col-12 text-center mt-3 mb-10">
+      <p-button variant="outlined" severity="contrast" [disabled]="!form.valid || viewModel.loading()"
+        title="Valider et créer ce nouvel article" type="submit">
         <span pButtonLabel>Créer</span>
         <span *ngIf="viewModel.loading()" pButtonLabel>
           <i class="pi pi-spin pi-cog"></i>
