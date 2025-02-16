@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core'
+import { computed, Injectable, signal } from '@angular/core'
 
 import { TopicName } from '@core/interfaces'
 import { errors, PostService, TopicService } from '@core/services'
@@ -23,10 +23,34 @@ export default class CreateViewModel {
 
   public readonly loading = signal(false)
 
-  public readonly topicNames = signal<TopicName[]>([])
-  public readonly topicsTotalItems = signal(0)
+  private readonly pagninatedTopicNames = signal<TopicName[]>([])
+  public readonly filteredTopicNames = signal<TopicName[]>([])
+
+  public readonly topicNames = computed<TopicName[]>(() => {
+    const filteredTopicNames = this.filteredTopicNames()
+
+    return filteredTopicNames.length ? this.filteredTopicNames() : this.pagninatedTopicNames()
+  })
+
+  private readonly pagninatedPage = signal<number>(1)
+  private readonly filteredPage = signal<number>(1)
+
+  public readonly topicsPage = computed<number>(() => {
+    const filteredTopicNames = this.filteredTopicNames()
+
+    return filteredTopicNames.length ? this.filteredPage() : this.pagninatedPage()
+  })
+
+  private readonly pagninatedTotalItems = signal<number>(0)
+  private readonly filteredTotalItems = signal<number>(0)
+
+  public readonly topicsTotalItems = computed<number>(() => {
+    const filteredTopicNames = this.filteredTopicNames()
+
+    return filteredTopicNames.length ? this.filteredTotalItems() : this.pagninatedTotalItems()
+  })
+
   public readonly topicsPerPage = 30
-  public readonly topicsPage = signal(1)
   public readonly topicsAreLoading = signal(false)
 
   constructor(
@@ -35,33 +59,19 @@ export default class CreateViewModel {
   ) {
   }
 
-  public getTopicNamesPage(page: number, searchLike = ''): void {
-    if (this.topicsAreLoading()) {
-      return
-    }
-
-    this.topicsAreLoading.set(false)
-    this.topicService.paginateTopicsNames(page, searchLike)
-      .subscribe({
-        next: (topics) => {
-          this.topicsTotalItems.set(topics.totalItems)
-          if (topics.list.length !== 0) {
-            this.topicsPage.set(topics.page)
-            this.topicNames.update((topicNames) => {
-              return [...topicNames, ...topics.list]
-            })
-          }
-        },
-        complete: () => {
-          this.topicsAreLoading.set(false)
-        },
-      })
+  public searchForTopicNames(page: number, searchLike: string): void {
+    this.filteredTopicNames.set([])
+    this.loadTopicNames(page, searchLike)
   }
 
-  public resetTopicNameList(): void {
-    this.topicNames.set([])
-    this.topicsPage.set(1)
-    this.topicsTotalItems.set(0)
+  public getTopicNamesPage(page: number): void {
+    this.loadTopicNames(page)
+  }
+
+  public resetTopicFilters(): void {
+    this.filteredTopicNames.set([])
+    this.filteredPage.set(1)
+    this.filteredTotalItems.set(0)
   }
 
   public setTopicNameByUUID(uuid: UUID): void {
@@ -113,5 +123,35 @@ export default class CreateViewModel {
     this.errors.content.set(errors.get('content') ?? '')
     this.errors.title.set(errors.get('title') ?? '')
     this.errors.topicName.set(errors.get('topicName') ?? '')
+  }
+
+  private loadTopicNames(page: number, searchLike = ''): void {
+    if (this.topicsAreLoading()) {
+      return
+    }
+
+    this.topicsAreLoading.set(false)
+    this.topicService.paginateTopicsNames(page, searchLike)
+      .subscribe({
+        next: (topics) => {
+          if (searchLike.length) {
+            this.filteredTotalItems.set(topics.totalItems)
+            this.filteredPage.set(topics.page)
+            this.filteredTopicNames.update((topicNames) => {
+              return [...topicNames, ...topics.list]
+            })
+            return
+          }
+
+          this.pagninatedTotalItems.set(topics.totalItems)
+          this.pagninatedPage.set(topics.page)
+          this.pagninatedTopicNames.update((topicNames) => {
+            return [...topicNames, ...topics.list]
+          })
+        },
+        complete: () => {
+          this.topicsAreLoading.set(false)
+        },
+      })
   }
 }

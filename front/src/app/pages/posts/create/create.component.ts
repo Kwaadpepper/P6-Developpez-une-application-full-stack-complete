@@ -81,15 +81,23 @@ export class CreateComponent implements OnInit {
       debounceTime(500),
       distinctUntilChanged(),
     ).subscribe((filter) => {
-      this.initFirstTopicPage(filter.length >= 2 ? filter : undefined)
+      this.viewModel.resetTopicFilters()
+
+      if (filter.length >= 2) {
+        this.viewModel.searchForTopicNames(1, filter)
+      }
     })
 
     // * Init topic names
-    this.initFirstTopicPage()
+    this.viewModel.getTopicNamesPage(1)
   }
 
   onFilterTopicsNames(event: SelectFilterEvent): void {
     this.searchTopicName$.next(event.filter)
+  }
+
+  onHideTopicsNamesFilter(): void {
+    this.searchTopicName$.next('')
   }
 
   onLazyloadTopicsNames(event: LazyLoadEvent): void {
@@ -100,10 +108,12 @@ export class CreateComponent implements OnInit {
       return
     }
 
-    this.viewModel.getTopicNamesPage(
-      nextPage,
-      this.topicSearch,
-    )
+    if (!this.topicSearch.length) {
+      this.viewModel.getTopicNamesPage(nextPage)
+      return
+    }
+
+    this.viewModel.searchForTopicNames(nextPage, this.topicSearch)
   }
 
   onSelectTopic(event: {
@@ -129,10 +139,5 @@ export class CreateComponent implements OnInit {
         })
       },
     })
-  }
-
-  private initFirstTopicPage(filter = ''): void {
-    this.viewModel.resetTopicNameList()
-    this.viewModel.getTopicNamesPage(1, filter)
   }
 }

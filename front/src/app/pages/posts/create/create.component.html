@@ -15,12 +15,13 @@
     </div>
 
     <div class="col-12 md:col-6 mb-3">
-      <div class="mx-auto md:me-4 md:max-w-80 flex flex-col">
+      <div class="mx-auto md:me-4 max-w-80 flex flex-col">
         <label for="topic-name" aria-hidden="true" class="hidden">Sélectionnez un thème</label>
         <!-- beautify ignore:start -->
         <p-select
           [options]="viewModel.topicNames()"
           [filter]="true"
+          [resetFilterOnHide]="true"
           [lazy]="true"
           [virtualScroll]="true"
           [virtualScrollItemSize]="viewModel.topicsTotalItems()"
@@ -31,7 +32,9 @@
           (onLazyLoad)="onLazyloadTopicsNames($event)"
           (onFilter)="onFilterTopicsNames($event)"
           (onChange)="onSelectTopic($event)"
+          (onHide)="onHideTopicsNamesFilter()"
           placeholder="Sélectionnez un theme"
+          emptyFilterMessage="Aucun thème trouvé"
 
           id="topic-name"
           class="w-75"
@@ -48,10 +51,10 @@
     </div>
 
     <div class="col-12 md:col-6 mb-3">
-      <div class="mx-auto md:ms-4 md:max-w-80 flex flex-col">
+      <div class="mx-auto md:ms-4 max-w-80 flex flex-col">
         <label for="title" aria-hidden="true" class="hidden">Titre de l'article</label>
         <input pInputText id="title" formControlName="title" aria-describedby="title-help" type="text"
-          placeholder="Titre de l'article" />
+          placeholder="Titre de l'article" autocomplete="off" name="" />
         <small id="title-help" *ngIf="form.controls.title" class="text-error">
           <span class="block" *ngIf="form.controls.title.hasError('required')"> Obligatoire.</span>
           <span class="block" *ngIf="viewModel.errors.title">{{ viewModel.errors.title() }}</span>
