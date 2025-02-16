@@ -1,5 +1,5 @@
 <p-tabs value="editor">
-  <div class="sticky top-0 z-10 bg-base-300 pb-2">
+  <div class="sticky top-0 z-10 pb-2">
     <p-tablist>
       <p-tab value="editor" title="Rédiger le contenu">{{ title() }}</p-tab>
       <p-tab value="preview" title="Prévisualiser le contenu">Prévisualiser</p-tab>
@@ -18,7 +18,7 @@
       <textarea [formControl]="textareaInput()" pTextarea [autoResize]="true" class="w-full min-h-44"></textarea>
     </p-tabpanel>
     <p-tabpanel value="preview" class="flex-grow flex flex-col">
-      <div markdown class="flex-grow prose" [data]="viewModel.value()" ngPreserveWhitespaces></div>
+      <div markdown class="flex-grow prose dark:prose-invert" [data]="viewModel.value()" ngPreserveWhitespaces></div>
     </p-tabpanel>
   </p-tabpanels>
 </p-tabs>

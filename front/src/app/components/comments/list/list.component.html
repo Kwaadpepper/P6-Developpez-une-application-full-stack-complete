@@ -1,6 +1,8 @@
 <div class="container-fluid">
-  <div class="row justify-center my-3" *ngFor="let comment of viewModel.comments$()">
-    <div class="col md:col-3">{{ comment.username }}</div>
-    <div class="col md:col-6 prose rounded p-2 bg-base-300" markdown ngPreserveWhitespaces>{{ comment.content }}</div>
+  <div class="row justify-center my-3 flex-col-reverse md:flex-row" *ngFor="let comment of viewModel.comments$()">
+    <div class="col md:col-3 text-end px-10 py-3 md:text-start">{{ comment.username }}</div>
+    <div class="col md:col-6 prose dark:prose-invert rounded p-4 bg-gray-100 dark:bg-gray-800" markdown
+      ngPreserveWhitespaces>{{
+      comment.content }}</div>
   </div>
 </div>
