@@ -8,8 +8,8 @@
         (click)="onRefresh()">
         <span pButtonLabel><i class="pi pi-sync"></i></span>
       </p-button>
-      <p-button class="mx-2 my-2" variant="text" severity="contrast" title="Trier par ordre de publication"
-        (click)="onClickFeedSorting()">
+      <p-button class="ms-auto min-[380px]:ms-2 me-2 my-2" variant="text" severity="contrast"
+        title="Trier par ordre de publication" (click)="onClickFeedSorting()">
         <span pButtonLabel class="font-bold">Trier par</span>
         <span *ngIf="!viewModel.sortAscending()" pButtonLabel class="pi pi-arrow-down"
           title="Du plus récent au plus ancien"></span>
