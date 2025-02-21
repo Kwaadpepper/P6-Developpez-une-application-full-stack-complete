@@ -3,8 +3,6 @@ package com.openclassrooms.mddapi.request.post;
 import java.util.UUID;
 
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document.OutputSettings;
-import org.jsoup.safety.Safelist;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -35,7 +33,8 @@ public class CreatePostRequest {
   }
 
   public String getContent() {
-    return Jsoup.clean(content, "", Safelist.relaxed(), (new OutputSettings()).prettyPrint(false));
+    // Don't sanitize content here, it will be done in the service layer
+    return content;
   }
 
   public UUID getTopic() {

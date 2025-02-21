@@ -54,18 +54,26 @@ public class ContentCleanerService {
                         StrikethroughExtension.create(),
                         TablesExtension.create(),
                         AutolinkExtension.create()))
-                .sanitizeUrls(true)
+                .escapeHtml(true)
+                .sanitizeUrls(false)
+                .percentEncodeUrls(true)
+                .softbreak("<br>")
                 .build();
         var options = new MutableDataSet();
+        options.set(FlexmarkHtmlConverter.MAX_BLANK_LINES, 1);
+        options.set(FlexmarkHtmlConverter.RENDER_COMMENTS, false);
+        options.set(FlexmarkHtmlConverter.MAX_TRAILING_BLANK_LINES, 1);
         var htmlToMarkDownConverter = FlexmarkHtmlConverter.builder(options).build();
 
         String htmlString = htmlRenderer.render(markdownDocument);
 
-        String sanitizedString = htmlToMarkDownConverter.convert(htmlString);
+        String sanitizedString = htmlToMarkDownConverter.convert(htmlString)
+                // Manually remove comments
+                .replaceAll("<!--.*?-->", "");
 
-        logger.info("Unsanitized markdown: {}", unsafeString);
-        logger.info("Sanitized html: {}", htmlString);
-        logger.info("Sanitized markdown: {}", sanitizedString);
+        logger.debug("Unsanitized markdown: {}", unsafeString);
+        logger.debug("Sanitized html: {}", htmlString);
+        logger.debug("Sanitized markdown: {}", sanitizedString);
 
         return sanitizedString;
     }

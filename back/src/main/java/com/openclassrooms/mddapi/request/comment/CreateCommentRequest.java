@@ -2,10 +2,6 @@ package com.openclassrooms.mddapi.request.comment;
 
 import java.util.UUID;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document.OutputSettings;
-import org.jsoup.safety.Safelist;
-
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -26,7 +22,8 @@ public class CreateCommentRequest {
     }
 
     public String getContent() {
-        return Jsoup.clean(content, "", Safelist.basic(), (new OutputSettings()).prettyPrint(false));
+        // Don't sanitize content here, it will be done in the service layer
+        return content;
     }
 
     public UUID getPost() {
