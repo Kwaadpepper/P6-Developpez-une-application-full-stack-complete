@@ -1,7 +1,6 @@
 import { Component, effect, Input, output, untracked } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { ButtonModule } from 'primeng/button'
-import { PanelModule } from 'primeng/panel'
 
 import { NgIf } from '@angular/common'
 import { UUID } from '@core/types'
@@ -16,7 +15,6 @@ import AddViewModel from './add.viewmodel'
     ReactiveFormsModule,
     ButtonModule,
     MessageModule,
-    PanelModule,
     MarkdownEditorComponent,
   ],
   providers: [

@@ -31,7 +31,7 @@ export class MarkdownEditorComponent implements OnInit {
     this.viewModel.resetError()
   }
 
-  readonly ariaLabel = input<string>('')
+  readonly ariaLabel = input.required<string>()
   readonly showCharCount = input<boolean>(false)
 
   @Input() set error(value: string) {
