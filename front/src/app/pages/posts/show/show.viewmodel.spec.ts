@@ -1,20 +1,37 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { TestBed } from '@angular/core/testing'
 
+import { ActivatedRoute } from '@angular/router'
+import { of } from 'rxjs'
 import ShowViewModel from './show.viewmodel'
 
-describe('ShowModel', () => {
+describe('ShowViewModel', () => {
   let viewModel: ShowViewModel
-  let fixture: ComponentFixture<ShowViewModel>
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ShowViewModel],
+      providers: [{
+        provide: ActivatedRoute,
+        useValue: {
+          snapshot: {
+            data: {
+              post: of({
+                uuid: '123',
+                slug: '123',
+                title: '123',
+                content: '123',
+                topic_uuid: '123',
+                topic_name: '123',
+                author_uuid: '123',
+                author_name: '123',
+                created_at: new Date(),
+              }),
+            },
+          },
+        },
+      }],
     })
-      .compileComponents()
 
-    fixture = TestBed.createComponent(ShowViewModel)
-    viewModel = fixture.componentInstance
-    fixture.detectChanges()
+    viewModel = TestBed.inject(ShowViewModel)
   })
 
   it('should create', () => {

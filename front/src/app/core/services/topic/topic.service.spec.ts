@@ -8,7 +8,12 @@ describe('TopicService', () => {
   let topicRepository: TopicRepository
 
   beforeEach(() => {
-    topicRepository = jasmine.createSpyObj('TopicRepository', [])
+    topicRepository = jasmine.createSpyObj('TopicRepository', [
+      'getTopics',
+      'getTopicNames',
+      'getUserSubscribedTopics',
+      'unsubscribeFrom',
+    ])
 
     TestBed.configureTestingModule({
       providers: [{

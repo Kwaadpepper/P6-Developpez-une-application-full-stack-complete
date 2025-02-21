@@ -8,7 +8,9 @@ describe('FeedService', () => {
   let postRepository: PostRepository
 
   beforeEach(() => {
-    postRepository = jasmine.createSpyObj('PostRepository', [])
+    postRepository = jasmine.createSpyObj('PostRepository', [
+      'getCurrentUserFeed',
+    ])
 
     TestBed.configureTestingModule({
       providers: [{

@@ -8,7 +8,10 @@ describe('ProfileService', () => {
   let userRepository: UserRepository
 
   beforeEach(() => {
-    userRepository = jasmine.createSpyObj('UserRepository', [])
+    userRepository = jasmine.createSpyObj('UserRepository', [
+      'getCurrentUserProfile',
+      'updateUserProfile',
+    ])
 
     TestBed.configureTestingModule({
       providers: [{

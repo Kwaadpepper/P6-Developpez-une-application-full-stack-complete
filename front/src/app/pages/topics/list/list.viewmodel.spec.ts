@@ -1,20 +1,23 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { TestBed } from '@angular/core/testing'
 
+import { TopicService } from '@core/services'
 import ListViewModel from './list.viewmodel'
 
 describe('ListViewModel', () => {
   let viewModel: ListViewModel
-  let fixture: ComponentFixture<ListViewModel>
+  let topicService: TopicService
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ListViewModel],
-    })
-      .compileComponents()
+    topicService = jasmine.createSpyObj('TopicService', ['paginateTopics'])
 
-    fixture = TestBed.createComponent(ListViewModel)
-    viewModel = fixture.componentInstance
-    fixture.detectChanges()
+    await TestBed.configureTestingModule({
+      providers: [{
+        provide: TopicService,
+        useValue: topicService,
+      }],
+    })
+
+    viewModel = TestBed.inject(ListViewModel)
   })
 
   it('should create', () => {

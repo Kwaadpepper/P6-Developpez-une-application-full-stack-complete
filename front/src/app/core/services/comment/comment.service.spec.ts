@@ -8,7 +8,10 @@ describe('CommentService', () => {
   let commentsRepository: CommentsRepository
 
   beforeEach(() => {
-    commentsRepository = jasmine.createSpyObj('CommentsRepository', ['getPostsComments', 'addComment'])
+    commentsRepository = jasmine.createSpyObj('CommentsRepository', [
+      'getPostsComments',
+      'addComment',
+    ])
 
     TestBed.configureTestingModule({
       providers: [{

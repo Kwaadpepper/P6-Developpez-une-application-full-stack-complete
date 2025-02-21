@@ -8,7 +8,10 @@ describe('PostService', () => {
   let postRepository: PostRepository
 
   beforeEach(() => {
-    postRepository = jasmine.createSpyObj('PostRepository', [])
+    postRepository = jasmine.createSpyObj('PostRepository', [
+      'createPost',
+      'findPostBySlug',
+    ])
 
     TestBed.configureTestingModule({
       providers: [{

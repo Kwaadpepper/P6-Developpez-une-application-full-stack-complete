@@ -1,20 +1,31 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { TestBed } from '@angular/core/testing'
 
+import { PostService, TopicService } from '@core/services'
 import CreateViewModel from './create.viewmodel'
 
 describe('CreateViewModel', () => {
   let viewModel: CreateViewModel
-  let fixture: ComponentFixture<CreateViewModel>
+  let postService: PostService
+  let topicService: TopicService
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [CreateViewModel],
-    })
-      .compileComponents()
+    postService = jasmine.createSpyObj('PostService', ['createPost'])
+    topicService = jasmine.createSpyObj('TopicService', ['getTopics'])
 
-    fixture = TestBed.createComponent(CreateViewModel)
-    viewModel = fixture.componentInstance
-    fixture.detectChanges()
+    await TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: PostService,
+          useValue: postService,
+        },
+        {
+          provide: TopicService,
+          useValue: topicService,
+        },
+      ],
+    })
+
+    viewModel = TestBed.inject(CreateViewModel)
   })
 
   it('should create', () => {
