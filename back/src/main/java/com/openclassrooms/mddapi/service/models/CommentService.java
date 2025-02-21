@@ -14,6 +14,7 @@ import com.openclassrooms.mddapi.repository.PostRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
 import com.openclassrooms.mddapi.repository.comments.CommentCommandRepository;
 import com.openclassrooms.mddapi.repository.comments.CommentQueryRepository;
+import com.openclassrooms.mddapi.service.ContentCleanerService;
 
 @Service
 public class CommentService {
@@ -21,16 +22,19 @@ public class CommentService {
     private final CommentCommandRepository commentRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final ContentCleanerService contentCleanerService;
 
     public CommentService(
             final CommentQueryRepository commentReadRepository,
             final CommentCommandRepository commentRepository,
             final PostRepository postRepository,
-            final UserRepository userRepository) {
+            final UserRepository userRepository,
+            final ContentCleanerService contentCleanerService) {
         this.commentReadRepository = commentReadRepository;
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.contentCleanerService = contentCleanerService;
     }
 
     /**
@@ -64,8 +68,9 @@ public class CommentService {
                 .orElseThrow(() -> ValidationException.of(ValidationError.of("author", "User not found")));
         var post = postRepository.findById(postUuid)
                 .orElseThrow(() -> ValidationException.of(ValidationError.of("post", "Post not found")));
+        var sanitizedContent = contentCleanerService.sanitizeMarkdown(content);
 
-        var comment = new Comment(content, post, author);
+        var comment = new Comment(sanitizedContent, post, author);
         commentRepository.save(comment);
     }
 }

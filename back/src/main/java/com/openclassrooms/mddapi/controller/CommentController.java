@@ -76,8 +76,8 @@ public class CommentController {
 
         commentService.createComment(
                 authUser.getUuid(),
-                request.post(),
-                request.content());
+                request.getPost(),
+                request.getContent());
 
         return new SimpleMessage("Comment created!");
     }

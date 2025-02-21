@@ -40,6 +40,11 @@ public class SessionService {
         this.jwtService = jwtService;
     }
 
+    /**
+     * Get the authenticated user
+     *
+     * @return {@link Optional} of {@link User}
+     */
     public Optional<User> getAuthenticatedUser() {
         final var securityContext = SecurityContextHolder.getContext();
         final var authentication = securityContext.getAuthentication();
@@ -58,25 +63,6 @@ public class SessionService {
     }
 
     /**
-     * Convert an {@link Authentication} to a {@link User}
-     *
-     * @param authentication The authentication to convert
-     * @return {@link User}
-     * @throws ServerErrorException If the principal is not a {@link User}
-     */
-    public User toUser(final Authentication authentication) throws ServerErrorException {
-        final var principal = authentication.getPrincipal();
-
-        if (!(principal instanceof Credential)) {
-            logger.debug("Given authentication principal is not a Credential instance.");
-            throw new ServerErrorException("Expected principal to be a '%s' instance given is '%s'"
-                    .formatted(Credential.class, principal.getClass()));
-        }
-
-        return ((Credential) principal).getUser();
-    }
-
-    /**
      * Refresh the session from the request
      *
      * @param request The current request
@@ -89,6 +75,9 @@ public class SessionService {
         final RefreshToken refreshToken = cookieService.getRefreshTokenUuidFromRequest(request)
                 .map(uuidToken -> refreshTokenService.findByToken(uuidToken).orElse(null))
                 .orElseThrow(() -> new JwtAuthenticationFailureException("Refresh token is missing from request"));
+
+        refreshTokenService.verifyExpiration(refreshToken);
+
         final var user = refreshToken.getUser();
         final var credential = credentialRepository.findByUserUuid(user.getUuid())
                 .orElseThrow(
@@ -97,10 +86,27 @@ public class SessionService {
         final var jwtToken = jwtService.generateToken(apiToken);
         final RefreshToken newRefreshToken;
 
-        newRefreshToken = refreshTokenService.getRefreshToken(user);
+        newRefreshToken = refreshTokenService.getExpandedRefreshToken(user);
 
         return List.of(
                 cookieService.generateRefreshJwtCookie(newRefreshToken),
+                cookieService.generateJwtCookie(jwtToken));
+    }
+
+    /**
+     * Create a session for the given user
+     *
+     * @param credential The user credential to which a session should be created
+     * @return {@link List} of {@link ResponseCookie}
+     */
+    public List<ResponseCookie> createSessionFor(Credential credential) {
+        final var user = credential.getUser();
+        final var apiToken = credential.getApiToken();
+        final var jwtToken = jwtService.generateToken(apiToken);
+        final var refreshToken = refreshTokenService.getExpandedRefreshToken(user);
+
+        return List.of(
+                cookieService.generateRefreshJwtCookie(refreshToken),
                 cookieService.generateJwtCookie(jwtToken));
     }
 
@@ -117,5 +123,24 @@ public class SessionService {
         return List.of(
                 cookieService.generateCookieRemoval(),
                 cookieService.generateRefreshJwtCookieRemoval());
+    }
+
+    /**
+     * Convert an {@link Authentication} to a {@link User}
+     *
+     * @param authentication The authentication to convert
+     * @return {@link User}
+     * @throws ServerErrorException If the principal is not a {@link User}
+     */
+    private User toUser(final Authentication authentication) throws ServerErrorException {
+        final var principal = authentication.getPrincipal();
+
+        if (!(principal instanceof Credential)) {
+            logger.debug("Given authentication principal is not a Credential instance.");
+            throw new ServerErrorException("Expected principal to be a '%s' instance given is '%s'"
+                    .formatted(Credential.class, principal.getClass()));
+        }
+
+        return ((Credential) principal).getUser();
     }
 }

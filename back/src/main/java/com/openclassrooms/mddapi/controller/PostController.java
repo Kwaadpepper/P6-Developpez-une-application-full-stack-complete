@@ -1,7 +1,5 @@
 package com.openclassrooms.mddapi.controller;
 
-import java.util.UUID;
-
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.openclassrooms.mddapi.dto.PostDto;
-import com.openclassrooms.mddapi.dto.SimpleMessage;
 import com.openclassrooms.mddapi.exception.exceptions.ResourceNotFoundException;
 import com.openclassrooms.mddapi.model.Credential;
 import com.openclassrooms.mddapi.presenter.PostPresenter;
 import com.openclassrooms.mddapi.request.post.CreatePostRequest;
 import com.openclassrooms.mddapi.service.models.PostService;
+import com.openclassrooms.mddapi.valueobject.Slug;
 
 import jakarta.validation.Valid;
 
@@ -38,18 +36,18 @@ public class PostController {
     /**
      * Fetch a post by its uuid
      *
-     * @param uuid {@link UUID} The post unique id.
+     * @param slug {@link Slug} The post unique id.
      * @return {@link PostDto}
      * @throws ResourceNotFoundException
      */
-    @GetMapping(value = "/{uuid}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public PostDto get(@PathVariable final UUID uuid)
+    @GetMapping(value = "/{slug}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public PostDto get(@PathVariable final Slug slug)
             throws ResourceNotFoundException {
 
-        final var rental = postService.getPost(uuid).orElseThrow(
-                () -> new ResourceNotFoundException("Post not found for this uuid :: " + uuid));
+        final var post = postService.getPostBySlug(slug).orElseThrow(
+                () -> new ResourceNotFoundException("Post not found for this slug :: " + slug));
 
-        return PostPresenter.present(rental);
+        return PostPresenter.present(post);
     }
 
     /**
@@ -57,23 +55,23 @@ public class PostController {
      *
      * @param authentication {@link Authentication}
      * @param request        {@link CreatePostRequest}
-     * @return {@link SimpleMessage} In case of success.
+     * @return {@link PostDto} In case of success.
      */
     @Transactional
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public SimpleMessage create(final Authentication authentication,
+    public PostDto create(final Authentication authentication,
             @Valid @RequestBody final CreatePostRequest request) {
 
         final var credential = (Credential) authentication.getPrincipal();
         final var authenticated = credential.getUser();
 
-        postService.createPost(
-                request.title(),
-                request.content(),
-                request.topic(),
+        final var post = postService.createPost(
+                request.getTitle(),
+                request.getContent(),
+                request.getTopic(),
                 authenticated.getUuid());
 
-        return new SimpleMessage("Post created !");
+        return PostPresenter.present(post);
     }
 
 }

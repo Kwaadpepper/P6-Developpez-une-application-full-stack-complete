@@ -90,7 +90,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     return new ResponseEntity<>(
         toValidationErrorDetails("Some fields could not be validated", errors, request),
-        HttpStatus.BAD_REQUEST);
+        HttpStatus.UNPROCESSABLE_ENTITY);
   }
 
   @Override
@@ -110,7 +110,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     return new ResponseEntity<>(
         toValidationErrorDetails("Some fields could not be validated", errors, request),
-        HttpStatus.BAD_REQUEST);
+        HttpStatus.UNPROCESSABLE_ENTITY);
   }
 
   @Nullable
@@ -128,7 +128,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     return new ResponseEntity<>(
         toValidationErrorDetails("Some fields could not be validated", errors, request),
-        HttpStatus.BAD_REQUEST);
+        HttpStatus.UNPROCESSABLE_ENTITY);
   }
 
   private String getRequestUri(final WebRequest request) {

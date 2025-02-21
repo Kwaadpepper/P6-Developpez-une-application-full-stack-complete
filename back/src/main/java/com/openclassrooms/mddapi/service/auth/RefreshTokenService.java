@@ -16,13 +16,13 @@ import com.openclassrooms.mddapi.repository.RefreshTokenRepository;
 
 @Service
 public class RefreshTokenService {
-    private final AppConfiguration appConfiguration;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final long refreshTokenDuration;
 
     RefreshTokenService(
             final AppConfiguration appConfiguration,
             final RefreshTokenRepository refreshTokenRepository) {
-        this.appConfiguration = appConfiguration;
+        this.refreshTokenDuration = appConfiguration.getJwtRefreshExpiration();
         this.refreshTokenRepository = refreshTokenRepository;
     }
 
@@ -42,13 +42,10 @@ public class RefreshTokenService {
      * @param user {@link User}
      * @return {@link RefreshToken}
      */
-    public RefreshToken getRefreshToken(User user) {
+    public RefreshToken getExpandedRefreshToken(User user) {
         final RefreshToken refreshToken;
         final var userUuid = user.getUuid();
-        final var refreshTokenDurationMs = appConfiguration.jwtRefreshExpirationMs;
-        final var expiryDate = ZonedDateTime.now();
-
-        expiryDate.plus(refreshTokenDurationMs, ChronoUnit.MILLIS);
+        final var expiryDate = ZonedDateTime.now().plus(refreshTokenDuration, ChronoUnit.MINUTES);
 
         refreshToken = refreshTokenRepository.findByUserUuid(userUuid)
                 .map(token -> {
@@ -68,7 +65,7 @@ public class RefreshTokenService {
      * @throws RefreshExpiredException If token is expired
      */
     public RefreshToken verifyExpiration(RefreshToken token) throws RefreshExpiredException {
-        if (token.getExpiryDate().compareTo(ZonedDateTime.now()) < 0) {
+        if (ZonedDateTime.now().compareTo(token.getExpiryDate()) >= 0) {
             refreshTokenRepository.delete(token);
             throw new RefreshExpiredException();
         }

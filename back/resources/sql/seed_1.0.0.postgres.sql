@@ -8,7 +8,7 @@ INSERT
     VALUES (
         '6b8c767f-aa9f-48d3-b6c4-03e1f6879061',
         'John Doe',
-        'user@example.net',
+        'johndoe@example.net',
         '2024-12-03 17:17:44',
         '2024-12-26 18:26:16'
     );
@@ -18,7 +18,7 @@ INSERT
     INTO "credentials" ("uuid", "password", "api_token", "user_uuid", "created_at", "updated_at")
     VALUES (
         '6b8c767f-aa9f-48d3-b6c4-03e1f6879062',
-        '$argon2id$v=19$m=16384,t=2,p=1$0WuqQhWcZPF/reE5xWZoaQ$tFZkGIuUdAEGvd22/qmek20sTOwNf+RKIHm/tTlGzW8',
+        '$argon2id$v=19$m=16384,t=2,p=1$tH0i+nnt6bhiSPf+bqfAog$7nmDmTGrSnMxxSZf/CK2xjTm8epWC+u3T3ao0b/lu9A',
         '6b8c767f-aa9f-48d3-b6c4-03e1f6879010',
         '6b8c767f-aa9f-48d3-b6c4-03e1f6879061',
         '2024-12-03 17:17:44',

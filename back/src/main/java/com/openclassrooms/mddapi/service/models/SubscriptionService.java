@@ -2,6 +2,8 @@ package com.openclassrooms.mddapi.service.models;
 
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.mddapi.exception.exceptions.ValidationException;
@@ -27,11 +29,25 @@ public class SubscriptionService {
         this.userRepository = userRepository;
     }
 
-    public Iterable<Subscription> getUserSubscriptions(final User user) {
+    /**
+     * Get all subscriptions of a user
+     *
+     * @param user The user
+     * @param page The page
+     * @return {@link Page} of {@link Subscription}
+     */
+    public Page<Subscription> getUserSubscriptions(final User user, PageRequest page) {
         var userUuid = user.getUuid();
-        return subscriptionRepository.findAllByUserUuid(userUuid);
+        return subscriptionRepository.findAllByUserUuidOrderByCreatedAtDesc(userUuid, page);
     }
 
+    /**
+     * Subscribe a user to a topic
+     *
+     * @param userUuid  The user UUID
+     * @param topicUuid The topic UUID
+     * @return void
+     */
     public void subscribeUserOnTopic(final UUID userUuid, final UUID topicUuid) {
         var alreadyExists = subscriptionRepository.existsByUserUuidAndTopicUuid(userUuid, topicUuid);
 
@@ -48,6 +64,13 @@ public class SubscriptionService {
         subscriptionRepository.save(subscription);
     }
 
+    /**
+     * Unsubscribe a user from a topic
+     *
+     * @param userUuid  The user UUID
+     * @param topicUuid The topic UUID
+     * @return void
+     */
     public void unSubscribeUserOnTopic(final UUID userUuid, final UUID topicUuid) {
         var subscription = subscriptionRepository.findByUserUuidAndTopicUuid(userUuid, topicUuid).orElse(null);
 

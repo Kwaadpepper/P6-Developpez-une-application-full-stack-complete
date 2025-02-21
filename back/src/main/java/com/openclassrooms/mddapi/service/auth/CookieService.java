@@ -17,17 +17,29 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class CookieService {
-    private final AppConfiguration appConfiguration;
+
+    private final String jwtCookieName;
+    private final String jwtRefreshCookieName;
 
     private final String jwtCookieNameSuffix = "-jwt";
     private final String jwtRefreshCookieNameSuffix = "-refresh";
 
+    private final Integer jwtCookieExpiration;
+    private final Integer jwtRefreshCookieExpiration;
+
     private final String jwtCookieHttpPath = "/api";
     private final String jwtRefreshCookieHttpPath = "/api/auth/refresh-token";
 
-    CookieService(
-            final AppConfiguration appConfiguration) {
-        this.appConfiguration = appConfiguration;
+    CookieService(final AppConfiguration appConfiguration) {
+        final var jwtCookieName = appConfiguration.getJwtCookieName();
+        final var jwtRefreshCookieName = appConfiguration.getJwtCookieName();
+        final var jwtCookieExpiration = appConfiguration.getJwtTokenExpiration();
+        final var jwtRefreshCookieExpiration = appConfiguration.getJwtRefreshExpiration();
+
+        this.jwtCookieName = jwtCookieName;
+        this.jwtRefreshCookieName = jwtRefreshCookieName;
+        this.jwtCookieExpiration = jwtCookieExpiration;
+        this.jwtRefreshCookieExpiration = jwtRefreshCookieExpiration;
     }
 
     /**
@@ -37,8 +49,11 @@ public class CookieService {
      * @return {@link ResponseCookie}
      */
     public ResponseCookie generateJwtCookie(final JwtToken jwtToken) {
-        final var jwtCookieName = appConfiguration.jwtCookieName;
-        return generateCookie(jwtCookieName + jwtCookieNameSuffix, jwtToken.value(), jwtCookieHttpPath);
+        return generateCookie(
+                jwtCookieName + jwtCookieNameSuffix,
+                jwtToken.value(),
+                jwtCookieHttpPath,
+                jwtCookieExpiration.intValue());
     }
 
     /**
@@ -47,7 +62,6 @@ public class CookieService {
      * @return {@link ResponseCookie}
      */
     public ResponseCookie generateCookieRemoval() {
-        final var jwtCookieName = appConfiguration.jwtCookieName;
         return generateCookie(
                 jwtCookieName + jwtCookieNameSuffix,
                 null,
@@ -61,12 +75,12 @@ public class CookieService {
      * @return {@link ResponseCookie}
      */
     public ResponseCookie generateRefreshJwtCookie(final RefreshToken refreshToken) {
-        final var jwtRefreshCookieName = appConfiguration.jwtCookieName;
-        final var refreshTokenUuid = refreshToken.getRefreshToken();
+        final var refreshTokenUuid = refreshToken.getToken();
         return generateCookie(
-                jwtRefreshCookieName + jwtRefreshCookieNameSuffix,
+                jwtCookieName + jwtRefreshCookieNameSuffix,
                 refreshTokenUuid.toString(),
-                jwtRefreshCookieHttpPath);
+                jwtRefreshCookieHttpPath,
+                jwtRefreshCookieExpiration.intValue());
     }
 
     /**
@@ -75,7 +89,6 @@ public class CookieService {
      * @return {@link ResponseCookie}
      */
     public ResponseCookie generateRefreshJwtCookieRemoval() {
-        final var jwtRefreshCookieName = appConfiguration.jwtCookieName;
         return generateCookie(
                 jwtRefreshCookieName + jwtRefreshCookieNameSuffix,
                 null,
@@ -90,7 +103,7 @@ public class CookieService {
      */
     public Optional<JwtToken> getJwtTokenFromRequest(final HttpServletRequest request) {
         return getCookieValueByName(
-                request, appConfiguration.jwtCookieName + "-jwt")
+                request, "%s-jwt".formatted(jwtCookieName))
                 .map(Cookie::getValue)
                 .filter(cookieValue -> cookieValue != null && !cookieValue.isBlank())
                 .map(JwtToken::of);
@@ -104,18 +117,29 @@ public class CookieService {
      */
     public Optional<UUID> getRefreshTokenUuidFromRequest(final HttpServletRequest request) {
         return getCookieValueByName(
-                request, appConfiguration.jwtCookieName + "-refresh")
+                request, "%s-refresh".formatted(jwtCookieName))
                 .map(Cookie::getValue)
                 .filter(cookieValue -> cookieValue != null && !cookieValue.isBlank())
                 .map(UUID::fromString);
     }
 
-    private ResponseCookie generateCookie(String name, @Nullable String value, String path) {
+    private ResponseCookie generateCookie(
+            String name,
+            @Nullable String value,
+            String path) {
+        return generateCookie(name, null, path, 0);
+    }
+
+    private ResponseCookie generateCookie(
+            String name,
+            @Nullable String value,
+            String path,
+            Integer expirationInMinutes) {
         ResponseCookie cookie = ResponseCookie
                 .from(name)
                 .value(value)
                 .path(path)
-                .maxAge(24 * 60 * 60)
+                .maxAge(expirationInMinutes * 60)
                 .httpOnly(true)
                 .build();
         return cookie;

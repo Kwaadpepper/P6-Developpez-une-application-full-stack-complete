@@ -63,8 +63,9 @@ public class ProfileController {
 
         userService.updateUser(
                 authUser.getUuid(),
-                request.getName(),
-                request.getEmail());
+                request.getUsername(),
+                request.getEmail(),
+                request.getPassword());
 
         userPresenter.present(authUser);
 

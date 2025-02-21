@@ -1,61 +1,51 @@
 package com.openclassrooms.mddapi.request.auth;
 
-import java.util.Objects;
+import org.jsoup.Jsoup;
 
 import com.openclassrooms.mddapi.request.Request;
 import com.openclassrooms.mddapi.valueobject.Email;
+import com.openclassrooms.mddapi.valueobject.Password;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-//@formatter:off
-public record RegisterRequest(
+public class RegisterRequest {
+    @NotNull
+    @NotEmpty
+    @Size(min = 4, max = 255)
+    private final String email;
 
     @NotNull
     @NotEmpty
     @Size(min = 4, max = 255)
-    String email,
+    private final String username;
 
     @NotNull
     @NotEmpty
-    @Size(min = 4, max = 255)
-    String username,
+    @Size(max = 255)
+    private final String password;
 
-    @Pattern(message = "password should be at least 8 chars "
-        + "long with mixed case, special and digits chars",
-        regexp = "^.*"
-            // At least 8 char long
-            + "(?=.{8,})"
-            // Contains letter char
-            + "(?=.*\\p{L})"
-            // Contains digit char
-            + "(?=.*\\p{N})"
-            // Contains mixed chars
-            + "(?=.*(?=(?=\\p{Ll}+.*\\p{Lu})|(?=\\p{Lu}+.*\\p{Ll})))"
-            // Contains special char
-            + "(?=.*[\\p{Z}|\\p{S}|\\p{P}])"
-            // Anything after
-            + ".*$")
-    @NotNull
-    @NotEmpty
-    @Size(min = 8, max = 255)
-    String password
-
-) {
+    public RegisterRequest(
+            String email,
+            String username,
+            String password) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+    }
 
     public Email getEmail() {
-        return Objects.requireNonNull(Request.validate("email", email,
-        email -> email != null ? Email.of(email.trim()) : null));
-
+        return Request.validate("email", email,
+                email -> Email.of(email));
     }
 
     public String getUsername() {
-        return username;
+        return Jsoup.parse(username).text();
     }
 
-    public String getPassword() {
-        return password;
+    public Password getPassword() {
+        return Request.validate("password", password,
+                password -> Password.of(password));
     }
 }

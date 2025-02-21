@@ -1,9 +1,9 @@
 package com.openclassrooms.mddapi.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +19,9 @@ import com.openclassrooms.mddapi.dto.PaginatedDto;
 import com.openclassrooms.mddapi.dto.SimpleMessage;
 import com.openclassrooms.mddapi.dto.TopicDto;
 import com.openclassrooms.mddapi.dto.TopicNameDto;
+import com.openclassrooms.mddapi.dto.TopicWithSubscriptionDto;
 import com.openclassrooms.mddapi.exception.exceptions.JwtAuthenticationFailureException;
+import com.openclassrooms.mddapi.model.Subscription;
 import com.openclassrooms.mddapi.model.Topic;
 import com.openclassrooms.mddapi.presenter.TopicPresenter;
 import com.openclassrooms.mddapi.request.topic.SubscriptionTopicRequest;
@@ -76,13 +78,22 @@ public class TopicController {
      * @return {@link PaginatedDto} of {@link TopicDto}
      */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public PaginatedDto<TopicDto> paginatedTopics(
+    public PaginatedDto<TopicWithSubscriptionDto> paginatedTopics(
+            @RequestParam(required = false) @Nullable @org.springframework.lang.Nullable final String name,
             @RequestParam(required = false, defaultValue = "1") @Min(value = 1) final Integer page) {
+
+        final var authUser = sessionService.getAuthenticatedUser().or(() -> {
+            throw new JwtAuthenticationFailureException("No user is authenticated.");
+        }).get();
+        final var userUuid = authUser.getUuid();
+
         var pageRequest = PageRequest.of(page - 1, 30);
 
-        final var topicList = topicService.getPaginatedTopics(pageRequest);
+        final var topicWitSubscriptionList = Optional.ofNullable(name)
+                .map(nameLike -> topicService.getPaginatedTopics(userUuid, pageRequest, nameLike))
+                .orElseGet(() -> topicService.getPaginatedTopics(userUuid, pageRequest));
 
-        return topicPresenter.presentModelPage(topicList, page);
+        return topicPresenter.presentModelWithSubscriptionPage(topicWitSubscriptionList, page);
     }
 
     /**
@@ -91,19 +102,23 @@ public class TopicController {
      * @return {@link List} of {@link TopicDto}
      */
     @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<TopicDto> getCurrentUserSubscribedTopic() {
+    public PaginatedDto<TopicDto> getCurrentUserSubscribedTopic(
+            @RequestParam(required = false, defaultValue = "1") @Min(value = 1) final Integer page) {
+
         final var authUser = sessionService.getAuthenticatedUser().or(() -> {
             throw new JwtAuthenticationFailureException("No user is authenticated.");
         }).get();
 
-        final var subscriptions = subscriptionService.getUserSubscriptions(authUser);
-        final List<Topic> topicList = new ArrayList<>();
-        subscriptions.forEach((subscription) -> {
-            final var topic = subscription.getTopic();
-            topicList.add(topic);
-        });
+        final var subscriptions = subscriptionService.getUserSubscriptions(authUser, PageRequest.of(page - 1, 30));
+        final var pageable = subscriptions.getPageable();
+        final List<Topic> topicList = subscriptions.getContent()
+                .stream()
+                .map(Subscription::getTopic)
+                .toList();
+        final var pageSize = subscriptions.getSize();
+        final var userSubscribedTopicsPage = new PageImpl<>(topicList, pageable, pageSize);
 
-        return topicPresenter.presentModelList(topicList);
+        return topicPresenter.presentModelPage(userSubscribedTopicsPage, page);
     }
 
     /**

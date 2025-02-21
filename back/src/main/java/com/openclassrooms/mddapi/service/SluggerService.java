@@ -3,6 +3,7 @@ package com.openclassrooms.mddapi.service;
 import org.springframework.stereotype.Service;
 
 import com.github.slugify.Slugify;
+import com.openclassrooms.mddapi.valueobject.Slug;
 
 @Service
 public class SluggerService {
@@ -17,7 +18,7 @@ public class SluggerService {
 
     }
 
-    public String slugify(final String value) throws IllegalArgumentException {
+    public Slug slugify(final String value) throws IllegalArgumentException {
         String sluggedValue;
 
         if (value.isBlank()) {
@@ -30,6 +31,6 @@ public class SluggerService {
             throw new IllegalArgumentException("Slugged value cannot be empty");
         }
 
-        return sluggedValue;
+        return Slug.of(sluggedValue);
     }
 }

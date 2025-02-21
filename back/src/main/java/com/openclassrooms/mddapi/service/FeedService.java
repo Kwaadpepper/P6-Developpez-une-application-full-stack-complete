@@ -28,7 +28,7 @@ public class FeedService {
     if (page.getPageSize() > 50) {
       throw new IllegalArgumentException("Page size must be less than or equal to 50");
     }
-    return postRepository.findAllByAuthorUuid(user.getUuid(), page);
+    return postRepository.getUserFeed(user, page);
   }
 
 }
