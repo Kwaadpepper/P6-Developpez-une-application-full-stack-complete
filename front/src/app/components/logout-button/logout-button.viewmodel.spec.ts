@@ -1,20 +1,23 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { TestBed } from '@angular/core/testing'
 
+import { AuthService } from '@core/services'
 import LogoutButtonViewModel from './logout-button.viewmodel'
 
 describe('LogoutButtonViewModel', () => {
   let viewModel: LogoutButtonViewModel
-  let fixture: ComponentFixture<LogoutButtonViewModel>
+  let authService: AuthService
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [LogoutButtonViewModel],
-    })
-      .compileComponents()
+    authService = jasmine.createSpyObj('AuthService', ['logout'])
 
-    fixture = TestBed.createComponent(LogoutButtonViewModel)
-    viewModel = fixture.componentInstance
-    fixture.detectChanges()
+    await TestBed.configureTestingModule({
+      providers: [{
+        provide: AuthService,
+        useValue: authService,
+      }],
+    })
+
+    viewModel = TestBed.inject(LogoutButtonViewModel)
   })
 
   it('should create', () => {

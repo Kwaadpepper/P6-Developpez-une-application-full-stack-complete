@@ -1,20 +1,23 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { TestBed } from '@angular/core/testing'
 
+import { MarkdownService } from 'ngx-markdown'
 import PostCardViewModel from './post-card.viewmodel'
 
-describe('ShowModel', () => {
+describe('PostCardViewModel', () => {
   let viewModel: PostCardViewModel
-  let fixture: ComponentFixture<PostCardViewModel>
+  let markdownService: MarkdownService
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [PostCardViewModel],
-    })
-      .compileComponents()
+    markdownService = jasmine.createSpyObj('MarkdownService', ['parse'])
 
-    fixture = TestBed.createComponent(PostCardViewModel)
-    viewModel = fixture.componentInstance
-    fixture.detectChanges()
+    await TestBed.configureTestingModule({
+      providers: [{
+        provide: MarkdownService,
+        useValue: markdownService,
+      }],
+    })
+
+    viewModel = TestBed.inject(PostCardViewModel)
   })
 
   it('should create', () => {

@@ -1,20 +1,23 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { TestBed } from '@angular/core/testing'
 
+import { CommentService } from '@core/services'
 import ListViewModel from './list.viewmodel'
 
 describe('ListViewModel', () => {
   let viewModel: ListViewModel
-  let fixture: ComponentFixture<ListViewModel>
+  let commentService: CommentService
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ListViewModel],
-    })
-      .compileComponents()
+    commentService = jasmine.createSpyObj('CommentService', ['paginatePostsComments'])
 
-    fixture = TestBed.createComponent(ListViewModel)
-    viewModel = fixture.componentInstance
-    fixture.detectChanges()
+    await TestBed.configureTestingModule({
+      providers: [{
+        provide: CommentService,
+        useValue: commentService,
+      }],
+    })
+
+    viewModel = TestBed.inject(ListViewModel)
   })
 
   it('should create', () => {

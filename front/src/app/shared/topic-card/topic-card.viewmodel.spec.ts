@@ -1,20 +1,37 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { TestBed } from '@angular/core/testing'
 
+import { FeedService, TopicService } from '@core/services'
+import { MarkdownService } from 'ngx-markdown'
 import TopicCardViewModel from './topic-card.viewmodel'
 
-describe('ShowModel', () => {
+describe('PostCardViewModel', () => {
   let viewModel: TopicCardViewModel
-  let fixture: ComponentFixture<TopicCardViewModel>
+  let feedService: FeedService
+  let topicService: TopicService
+  let markdownService: MarkdownService
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [TopicCardViewModel],
-    })
-      .compileComponents()
+    feedService = jasmine.createSpyObj('FeedService', ['getFeed'])
+    topicService = jasmine.createSpyObj('TopicService', ['getTopic'])
+    markdownService = jasmine.createSpyObj('MarkdownService', ['parse'])
 
-    fixture = TestBed.createComponent(TopicCardViewModel)
-    viewModel = fixture.componentInstance
-    fixture.detectChanges()
+    await TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: FeedService,
+          useValue: feedService,
+        },
+        {
+          provide: TopicService,
+          useValue: topicService,
+        },
+        {
+          provide: MarkdownService,
+          useValue: markdownService,
+        }],
+    })
+
+    viewModel = TestBed.inject(TopicCardViewModel)
   })
 
   it('should create', () => {

@@ -1,20 +1,36 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { provideHttpClient } from '@angular/common/http'
+import { provideHttpClientTesting } from '@angular/common/http/testing'
+import { TestBed } from '@angular/core/testing'
 
+import { ToastService } from '@core/services'
+import { ProfileService } from '@core/services/profile/profile.service'
 import TopicsViewModel from './topics.viewmodel'
 
 describe('TopicsViewModel', () => {
   let viewModel: TopicsViewModel
-  let fixture: ComponentFixture<TopicsViewModel>
+  let profileService: ProfileService
+  let toastService: ToastService
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [TopicsViewModel],
-    })
-      .compileComponents()
+    profileService = jasmine.createSpyObj('ProfileService', ['getProfile'])
+    toastService = jasmine.createSpyObj('ToastService', ['showError'])
 
-    fixture = TestBed.createComponent(TopicsViewModel)
-    viewModel = fixture.componentInstance
-    fixture.detectChanges()
+    await TestBed.configureTestingModule({
+
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        {
+          provide: ProfileService,
+          useValue: profileService,
+        },
+        {
+          provide: ToastService,
+          useValue: toastService,
+        }],
+    })
+
+    viewModel = TestBed.inject(TopicsViewModel)
   })
 
   it('should create', () => {
