@@ -66,6 +66,7 @@ export class AddComponent {
     this.viewModel.saveComment().subscribe({
       next: () => {
         this.submitComment.emit()
+        this.form.reset()
       },
     })
   }
