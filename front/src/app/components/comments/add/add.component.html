@@ -7,7 +7,7 @@
           }}</p-message>
 
         <app-markdown-editor title="Commentaire" [textareaInput]="form.controls.content" [value]="viewModel.content()"
-          [error]="viewModel.errors.content()">
+          [error]="viewModel.errors.content()" [showCharCount]="true">
           <slot right-pan>
             <p-button class="sticky top-0 mt-4 float-end z-10" variant="outlined" severity="contrast"
               [disabled]="!form.valid " type="submit">

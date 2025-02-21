@@ -31,6 +31,8 @@ export class MarkdownEditorComponent implements OnInit {
     this.viewModel.resetError()
   }
 
+  readonly showCharCount = input<boolean>(false)
+
   @Input() set error(value: string) {
     this.viewModel.setError(value)
   }

@@ -7,10 +7,12 @@
         <ng-content select="[right-pan]"></ng-content>
       </div>
     </p-tablist>
-    <small *ngIf="textareaInput().dirty || textareaInput().touched"
-      class="block bg-surface-0 dark:bg-surface-900 text-red-600 py-2">
+    <small class="block bg-surface-0 dark:bg-surface-900 py-2">
+      <small *ngIf="textareaInput().dirty || textareaInput().touched" class="text-red-600">
       <span class="block" *ngIf="textareaInput().hasError('required')"> Obligatoire.</span>
       <span class="block" *ngIf="viewModel.errorMessage()">{{ viewModel.errorMessage() }}</span>
+      </small>
+      <small class="block mx-20 text-end" *ngIf="showCharCount()">{{ textareaInput().value.length }} caratères</small>
     </small>
   </div>
   <p-tabpanels class="min-h-44 h-full flex flex-col">
