@@ -5,17 +5,17 @@
       <img class="img-fluid w-20 sm:w-28" src="/assets/pictures/logo_p6.png" [alt]="viewModel.appName()"
         [title]="'Logo ' + viewModel.appName()" />
     </a>
-    <a *ngIf="viewModel.loggedIn()" class="mx-2 text-lg link-primary" routerLink="/posts"
-      routerLinkActive="underline underline-offset-8 font-bold" title="Consulter les articles">
-      <span>Articles</span>
-    </a>
-    <a *ngIf="viewModel.loggedIn()" class="mx-2 sm:me-6 text-lg link-primary" routerLink="/topics"
-      routerLinkActive="underline underline-offset-8 font-bold" title="Consulter les themes">
-      <span>Thèmes</span>
-    </a>
-    <a *ngIf="viewModel.loggedIn()" class="mx-2 sm:me-6 btn-sm sm:btn-md btn-circle btn-accent" pButton variant="text"
-      routerLink="/account" routerLinkActive="border border-secondary" title="Accéder à mon compte">
-      <span pButtonLabel><i class="pi pi-user text-xl sm:text-2xl"></i></span>
-    </a>
+
+    <app-nav-menu *ngIf="!onMobile()"></app-nav-menu>
+
+    <button pButton *ngIf="onMobile()" (click)="onShowDrawer()" icon="pi pi-bars" text severity="contrast" class="me-4"
+      size="large" type="button" title="Afficher le menu"></button>
   </div>
 </div>
+
+
+<p-drawer [(visible)]="drawerVisible" position="right">
+  <ng-template #headless>
+    <app-nav-menu verticalDisplay (closedMenu)="onHideDrawer()"></app-nav-menu>
+  </ng-template>
+</p-drawer>
