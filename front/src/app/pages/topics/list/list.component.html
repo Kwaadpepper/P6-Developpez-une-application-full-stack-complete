@@ -5,9 +5,10 @@
       <h1 class="hidden" aria-hidden="true">Sujets</h1>
       <div class="mx-20 inline-block">
         <p-inputgroup>
-          <p-button icon="pi pi-eraser" title="Effacer la barre de recherche" (click)="onClearSearch()"
-            severity="primary" variant="outlined" />
-          <input type="text" [formControl]="searchTerm" pInputText placeholder="Rechercher un sujet" />
+          <button pButton icon="pi pi-eraser" title="Effacer la barre de recherche" (click)="onClearSearch()"
+            severity="primary" outlined type="button"></button>
+          <input type="text" [formControl]="searchTerm" pInputText placeholder="Rechercher un sujet"
+            aria-label="Rechercher un sujet" />
           <p-inputgroup-addon *ngIf="viewModel.loading()">
             <i class="pi pi-spin pi-spinner"></i>
           </p-inputgroup-addon>
