@@ -1,12 +1,21 @@
 import { TestBed } from '@angular/core/testing'
 
+import { TopicRepository } from '@core/repositories'
 import { TopicService } from './topic.service'
 
 describe('TopicService', () => {
   let service: TopicService
+  let topicRepository: TopicRepository
 
   beforeEach(() => {
-    TestBed.configureTestingModule({})
+    topicRepository = jasmine.createSpyObj('TopicRepository', [])
+
+    TestBed.configureTestingModule({
+      providers: [{
+        provide: TopicRepository,
+        useValue: topicRepository,
+      }],
+    })
     service = TestBed.inject(TopicService)
   })
 

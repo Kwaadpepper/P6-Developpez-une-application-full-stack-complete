@@ -1,12 +1,21 @@
 import { TestBed } from '@angular/core/testing'
 
+import { PostRepository } from '@core/repositories'
 import { PostService } from './post.service'
 
 describe('PostService', () => {
   let service: PostService
+  let postRepository: PostRepository
 
   beforeEach(() => {
-    TestBed.configureTestingModule({})
+    postRepository = jasmine.createSpyObj('PostRepository', [])
+
+    TestBed.configureTestingModule({
+      providers: [{
+        provide: PostRepository,
+        useValue: postRepository,
+      }],
+    })
     service = TestBed.inject(PostService)
   })
 
