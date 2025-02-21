@@ -4,7 +4,7 @@ import localeFr from '@angular/common/locales/fr'
 import { ApplicationConfig, LOCALE_ID, ErrorHandler as NgErrorHandler, provideZoneChangeDetection } from '@angular/core'
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
 import { provideRouter, RouteReuseStrategy, TitleStrategy } from '@angular/router'
-import { provideMarkdown } from 'ngx-markdown'
+import { MARKED_OPTIONS, provideMarkdown } from 'ngx-markdown'
 import { MessageService } from 'primeng/api'
 import { providePrimeNG } from 'primeng/config'
 
@@ -37,7 +37,17 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
       withInterceptorsFromDi(),
     ),
-    provideMarkdown(),
+    provideMarkdown({
+      markedOptions: {
+        provide: MARKED_OPTIONS,
+        useValue: {
+          gfm: true,
+          silent: true,
+          breaks: true,
+          pedantic: false,
+        },
+      },
+    }),
     { provide: TitleStrategy, useClass: DynamicTitleStrategy },
     { provide: MessageService, useClass: MessageService },
     { provide: NgErrorHandler, useClass: ErrorHandler },
