@@ -1,0 +1,34 @@
+<div class="container-fluid bg-gray-100 dark:bg-gray-800 rounded-lg py-4 post-card">
+  <div class="row mb-3">
+    <div class="col">
+      <span class="h3 font-extrabold break-all hyphens-auto line-clamp-1">{{
+        viewModel.post().title | titlecase
+        }}</span>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-12 md:col-6">{{ (viewModel.post().updated_at ?? viewModel.post().created_at) | nicedate }}</div>
+    <div class="col-12 md:col-6 text-end md:text-start break-all hyphens-auto line-clamp-1">{{
+      viewModel.post().author_name | titlecase }}</div>
+  </div>
+
+  <div class="row mb-6 post-card-content">
+    <div class="col-12 mt-4">
+      <div class="flex justify-center items-center h-full">
+        <div class="h-fit w-fit prose dark:prose-invert leading-[1.3rem] line-clamp-4">{{
+          (viewModel.post().content.length>220)? (viewModel.post().content |
+          slice:0:221)+'...':(viewModel.post().content)
+          }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col text-center">
+      <a pButton [routerLink]="['/posts', viewModel.post().slug]" title="Lire la suite de l'article">
+        <span pButtonLabel>Lire la suite</span>
+      </a>
+    </div>
+  </div>
+</div>

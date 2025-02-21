@@ -1,20 +1,40 @@
 {
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "ng serve",
-      "type": "pwa-chrome",
+      "name": "Debug with firefox",
+      "type": "firefox",
       "request": "launch",
+      "url": "http://localhost:4200",
       "preLaunchTask": "npm: start",
-      "url": "http://localhost:4200/"
+      "postDebugTask": "postdebugKill",
+      "reAttach": true,
+      "reloadOnAttach": true,
+      "clearConsoleOnReload": true,
+      "webRoot": "${workspaceFolder}",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "pathMappings": [
+        {
+          "url": "webpack:///",
+          "path": "${webRoot}/"
+        }
+      ]
     },
     {
-      "name": "ng test",
+      "name": "Debug with chrome",
       "type": "chrome",
       "request": "launch",
-      "preLaunchTask": "npm: test",
-      "url": "http://localhost:9876/debug.html"
+      "url": "http://localhost:4200",
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "npm: start",
+      "postDebugTask": "postdebugKill",
+      "sourceMaps": true,
+      "userDataDir": "${workspaceFolder}/.vscode/chrome",
+      "sourceMapPathOverrides": {
+        "webpack:/*": "${webRoot}/*"
+      }
     }
   ]
 }

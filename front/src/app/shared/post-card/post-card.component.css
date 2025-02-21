@@ -1,0 +1,13 @@
+:host {
+  display: contents;
+}
+
+.post-card {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+.post-card-content {
+  flex-grow: 1;
+}
