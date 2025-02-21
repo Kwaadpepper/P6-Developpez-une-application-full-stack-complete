@@ -16,7 +16,6 @@
 
     <div class="col-12 md:col-6 mb-3">
       <div class="mx-auto md:me-4 max-w-80 flex flex-col">
-        <label for="topic-name" aria-hidden="true" class="hidden">Sélectionnez un thème</label>
         <!-- beautify ignore:start -->
         <p-select
           [options]="viewModel.topicNames()"
@@ -36,8 +35,8 @@
           placeholder="Sélectionnez un theme"
           emptyFilterMessage="Aucun thème trouvé"
 
-          id="topic-name"
           class="w-75"
+          ariaLabel="Sélectionnez un thème"
           formControlName="topicName"
           aria-describedby="topic-name-help"
         />
@@ -52,7 +51,7 @@
 
     <div class="col-12 md:col-6 mb-3">
       <div class="mx-auto md:ms-4 max-w-80 flex flex-col">
-        <label for="title" aria-hidden="true" class="hidden">Titre de l'article</label>
+        <label for="title" aria-hidden="false" class="hidden">Titre de l'article</label>
         <input pInputText id="title" formControlName="title" aria-describedby="title-help" type="text"
           placeholder="Titre de l'article" autocomplete="off" name="" />
         <small id="title-help" *ngIf="form.controls.title" class="text-error">
@@ -63,9 +62,9 @@
     </div>
 
     <div class="col my-4 mx-auto">
-      <label for="content" aria-hidden="true" class="hidden">Contenu de l'article</label>
-      <app-markdown-editor title="Contenu de l'article" [textareaInput]="form.controls.content"
-        [value]="viewModel.content()" [error]="viewModel.errors.content()"></app-markdown-editor>
+      <app-markdown-editor ariaLabel="Contenu de l'article" title="Contenu de l'article"
+        [textareaInput]="form.controls.content" [value]="viewModel.content()"
+        [error]="viewModel.errors.content()"></app-markdown-editor>
     </div>
 
     <div class="col-12 text-center mt-3 mb-10">

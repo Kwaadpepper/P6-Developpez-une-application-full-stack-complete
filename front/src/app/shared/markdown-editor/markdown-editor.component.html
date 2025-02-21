@@ -1,4 +1,5 @@
-<p-tabs value="editor">
+<p-tabs value="editor"
+  [style]="{'--p-tabs-tablist-border-width': 0, '--p-tabs-tab-active-background': 'var(--p-highlight-background)', '--p-tabs-tab-active-color': 'var(--p-highlight-color)'}">
   <div class="sticky top-0 z-10 pb-2">
     <p-tablist>
       <p-tab value="editor" title="Rédiger le contenu">{{ title() }}</p-tab>
@@ -9,15 +10,16 @@
     </p-tablist>
     <small class="block bg-surface-0 dark:bg-surface-900 py-2">
       <small *ngIf="textareaInput().dirty || textareaInput().touched" class="text-red-600">
-      <span class="block" *ngIf="textareaInput().hasError('required')"> Obligatoire.</span>
-      <span class="block" *ngIf="viewModel.errorMessage()">{{ viewModel.errorMessage() }}</span>
+        <span class="block" *ngIf="textareaInput().hasError('required')"> Obligatoire.</span>
+        <span class="block" *ngIf="viewModel.errorMessage()">{{ viewModel.errorMessage() }}</span>
       </small>
       <small class="block mx-20 text-end" *ngIf="showCharCount()">{{ textareaInput().value.length }} caratères</small>
     </small>
   </div>
   <p-tabpanels class="min-h-44 h-full flex flex-col">
     <p-tabpanel value="editor">
-      <textarea [formControl]="textareaInput()" pTextarea [autoResize]="true" class="w-full min-h-44"></textarea>
+      <textarea [ariaLabel]="ariaLabel()" [formControl]="textareaInput()" pTextarea [autoResize]="true"
+        class="w-full min-h-44"></textarea>
     </p-tabpanel>
     <p-tabpanel value="preview" class="flex-grow flex flex-col">
       <div markdown class="flex-grow prose dark:prose-invert" [data]="viewModel.value()" ngPreserveWhitespaces></div>
