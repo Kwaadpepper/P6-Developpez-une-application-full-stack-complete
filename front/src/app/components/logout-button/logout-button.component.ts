@@ -26,12 +26,16 @@ export class LogoutButtonComponent {
   }
 
   public onLogout(): void {
-    this.viewModel.logout().then(() => {
-      this.toastService.info('Vous êtes déconnecté')
-      this.router.navigateByUrl(this.redirectUrl())
-    }).catch((error) => {
-      console.error('Error:', error)
-      this.toastService.error('Erreur lors de la déconnexion')
-    })
+    this.viewModel.logout()
+      .subscribe({
+        next: () => {
+          this.toastService.info('Vous êtes déconnecté')
+          this.router.navigateByUrl(this.redirectUrl())
+        },
+        error: (error) => {
+          console.error('Error:', error)
+          this.toastService.error('Erreur lors de la déconnexion')
+        },
+      })
   }
 }

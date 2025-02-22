@@ -22,7 +22,7 @@
         class="w-full min-h-44"></textarea>
     </p-tabpanel>
     <p-tabpanel value="preview" class="flex-grow flex flex-col">
-      <div markdown class="flex-grow prose dark:prose-invert" [data]="viewModel.value()" ngPreserveWhitespaces></div>
+      <div markdown class="flex-grow prose dark:prose-invert" ngPreserveWhitespaces>{{ viewModel.value() }}</div>
     </p-tabpanel>
   </p-tabpanels>
 </p-tabs>

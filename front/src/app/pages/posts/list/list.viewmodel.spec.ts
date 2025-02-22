@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing'
 import { FeedService } from '@core/services'
 import ListViewModel from './list.viewmodel'
 
-describe('ListViewModel', () => {
+describe('ListPostsViewModel', () => {
   let viewModel: ListViewModel
   let feedService: FeedService
 

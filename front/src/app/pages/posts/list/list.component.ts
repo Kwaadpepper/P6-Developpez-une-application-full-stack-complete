@@ -1,5 +1,5 @@
 import { NgFor, NgIf } from '@angular/common'
-import { Component, OnDestroy, OnInit } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { NavigationEnd, Router, RouterModule } from '@angular/router'
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll'
 import { NgxPullToRefreshModule } from 'ngx-pull-to-refresh'
@@ -10,7 +10,7 @@ import { PostCardComponent, ProgressSpinnerComponent } from '@shared/index'
 import ListViewModel from './list.viewmodel'
 
 @Component({
-  selector: 'app-list',
+  selector: 'app-list-posts',
   imports: [
     NgFor, NgIf,
     PostCardComponent,
@@ -23,7 +23,7 @@ import ListViewModel from './list.viewmodel'
   templateUrl: './list.component.html',
   styleUrl: './list.component.css',
 })
-export class ListComponent implements OnInit, OnDestroy {
+export class ListComponent implements OnInit {
   public readonly throttle = 1000
   public readonly scrollDistance = 1
 
@@ -53,10 +53,6 @@ export class ListComponent implements OnInit, OnDestroy {
         this.viewModel.reloadPosts()
       },
     })
-  }
-
-  ngOnDestroy(): void {
-    throw new Error('Method not implemented.')
   }
 
   onRefresh(): void {

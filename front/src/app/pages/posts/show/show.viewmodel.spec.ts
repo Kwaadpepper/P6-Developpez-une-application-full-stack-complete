@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router'
 import { of } from 'rxjs'
 import ShowViewModel from './show.viewmodel'
 
-describe('ShowViewModel', () => {
+describe('ShowPostViewModel', () => {
   let viewModel: ShowViewModel
 
   beforeEach(async () => {

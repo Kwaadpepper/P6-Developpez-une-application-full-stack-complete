@@ -6,7 +6,7 @@ import { ToastService } from '@core/services'
 import { ProfileService } from '@core/services/profile/profile.service'
 import TopicsViewModel from './topics.viewmodel'
 
-describe('TopicsViewModel', () => {
+describe('UserTopicsViewModel', () => {
   let viewModel: TopicsViewModel
   let profileService: ProfileService
   let toastService: ToastService

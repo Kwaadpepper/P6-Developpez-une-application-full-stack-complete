@@ -13,7 +13,7 @@ import { BackButtonComponent, ProgressSpinnerComponent, TopicCardComponent } fro
 import ListViewModel from './list.viewmodel'
 
 @Component({
-  selector: 'app-list',
+  selector: 'app-list-topics',
   imports: [
     NgIf, NgFor,
     ReactiveFormsModule,
@@ -27,9 +27,7 @@ import ListViewModel from './list.viewmodel'
     InputTextModule,
     ProgressSpinnerComponent,
   ],
-  providers: [
-    ListViewModel,
-  ],
+  providers: [ListViewModel],
   templateUrl: './list.component.html',
   styleUrl: './list.component.css',
 })

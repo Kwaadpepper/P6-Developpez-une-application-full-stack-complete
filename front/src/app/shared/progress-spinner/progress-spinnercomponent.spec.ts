@@ -13,6 +13,7 @@ describe('ProgressSpinnerComponent', () => {
       .compileComponents()
 
     fixture = TestBed.createComponent(ProgressSpinnerComponent)
+    fixture.componentRef.setInput('visible', true)
     component = fixture.componentInstance
     fixture.detectChanges()
   })

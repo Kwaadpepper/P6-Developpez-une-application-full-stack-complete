@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 
+import { signal } from '@angular/core'
 import { provideRouter } from '@angular/router'
 import { HomeComponent } from './home.component'
 import HomeViewModel from './home.viewmodel'
@@ -11,7 +12,7 @@ describe('HomeComponent', () => {
 
   beforeEach(async () => {
     viewModel = jasmine.createSpyObj('HomeViewModel', {}, {
-      appName: 'Test',
+      appName: signal(''),
     })
 
     await TestBed.configureTestingModule({
@@ -23,6 +24,16 @@ describe('HomeComponent', () => {
           useValue: viewModel,
         }],
     })
+      .overrideComponent(HomeComponent, {
+        set: {
+          providers: [
+            {
+              provide: HomeViewModel,
+              useValue: viewModel,
+            },
+          ],
+        },
+      })
       .compileComponents()
 
     fixture = TestBed.createComponent(HomeComponent)

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core'
 import { AuthService } from '@core/services'
+import { map, Observable } from 'rxjs'
 
 @Injectable({
   providedIn: 'root',
@@ -11,16 +12,9 @@ export default class LogoutButtonViewModel {
   ) {
   }
 
-  public logout(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.authService.logout().subscribe({
-        complete: () => {
-          resolve()
-        },
-        error: (error) => {
-          reject(error)
-        },
-      })
-    })
+  public logout(): Observable<void> {
+    return this.authService.logout().pipe(
+      map(() => undefined),
+    )
   }
 }

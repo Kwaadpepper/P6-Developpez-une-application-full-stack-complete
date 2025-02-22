@@ -4,7 +4,7 @@ import { ToastService } from '@core/services'
 import { ProfileService } from '@core/services/profile/profile.service'
 import InformationsViewModel from './informations.viewmodel'
 
-describe('InformationsViewModel', () => {
+describe('UserInformationsViewModel', () => {
   let viewModel: InformationsViewModel
   let profileService: ProfileService
   let toastService: ToastService

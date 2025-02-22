@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing'
 import { CommentService } from '@core/services'
 import AddViewModel from './add.viewmodel'
 
-describe('AddViewModel', () => {
+describe('AddCommentViewModel', () => {
   let viewModel: AddViewModel
   let commentService: CommentService
 

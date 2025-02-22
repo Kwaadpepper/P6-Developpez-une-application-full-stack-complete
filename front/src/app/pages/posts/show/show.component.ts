@@ -7,7 +7,7 @@ import { MarkdownModule } from 'ngx-markdown'
 import ShowViewModel from './show.viewmodel'
 
 @Component({
-  selector: 'app-show',
+  selector: 'app-show-post',
   imports: [
     SlicePipe, TitleCasePipe,
     BackButtonComponent, NiceDate,

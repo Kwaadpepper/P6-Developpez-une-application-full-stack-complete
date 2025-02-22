@@ -13,16 +13,16 @@ interface Comment {
   deps: [CommentService],
 })
 export default class ListViewModel {
-  private readonly comments = signal<Comment[]>([])
+  private readonly _comments = signal<Comment[]>([])
 
-  public readonly comments$ = computed(() => this.comments())
+  public readonly comments = computed(() => this._comments())
 
   constructor(
     private CommentService: CommentService,
   ) {
   }
 
-  public reloadComments(postUuid: UUID): void {
+  public fetchComments(postUuid: UUID): void {
     this.CommentService.paginatePostsComments(postUuid, 1).subscribe((comments) => {
       const commentsPage = comments.list.map(comment => ({
         uuid: comment.uuid,
@@ -30,7 +30,7 @@ export default class ListViewModel {
         content: comment.content,
       }))
 
-      this.comments.set(commentsPage)
+      this._comments.set(commentsPage)
     })
   }
 }

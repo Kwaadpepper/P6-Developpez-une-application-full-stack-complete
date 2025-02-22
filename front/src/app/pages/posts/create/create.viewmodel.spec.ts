@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing'
 import { PostService, TopicService } from '@core/services'
 import CreateViewModel from './create.viewmodel'
 
-describe('CreateViewModel', () => {
+describe('CreatePostViewModel', () => {
   let viewModel: CreateViewModel
   let postService: PostService
   let topicService: TopicService

@@ -17,9 +17,7 @@ import AddViewModel from './add.viewmodel'
     MessageModule,
     MarkdownEditorComponent,
   ],
-  providers: [
-    AddViewModel,
-  ],
+  providers: [AddViewModel],
   templateUrl: './add.component.html',
   styleUrl: './add.component.css',
 })

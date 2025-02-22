@@ -1,8 +1,7 @@
 import { NgFor } from '@angular/common'
-import { Component, EventEmitter, input, Input, OnDestroy, OnInit } from '@angular/core'
+import { Component, effect, EventEmitter, input, OnInit } from '@angular/core'
 import { UUID } from '@core/types'
 import { MarkdownModule } from 'ngx-markdown'
-import { Subscription } from 'rxjs'
 import ListViewModel from './list.viewmodel'
 
 @Component({
@@ -11,31 +10,25 @@ import ListViewModel from './list.viewmodel'
     NgFor,
     MarkdownModule,
   ],
+  providers: [ListViewModel],
   templateUrl: './list.component.html',
   styleUrl: './list.component.css',
 })
-export class ListComponent implements OnInit, OnDestroy {
+export class ListComponent implements OnInit {
   postUuid = input.required<UUID>()
-
-  @Input({ required: true })
-  reloadComments!: EventEmitter<void>
-
-  private reloadSubscription!: Subscription
+  reloadComments = input.required<EventEmitter<void>>()
 
   constructor(
     public readonly viewModel: ListViewModel,
   ) {
-  }
-
-  ngOnInit(): void {
-    this.viewModel.reloadComments(this.postUuid())
-
-    this.reloadSubscription = this.reloadComments.subscribe(() => {
-      this.viewModel.reloadComments(this.postUuid())
+    effect(() => {
+      this.reloadComments().subscribe(() => {
+        this.viewModel.fetchComments(this.postUuid())
+      })
     })
   }
 
-  ngOnDestroy(): void {
-    this.reloadSubscription.unsubscribe()
+  ngOnInit(): void {
+    this.viewModel.fetchComments(this.postUuid())
   }
 }
