@@ -37,6 +37,6 @@
   </div>
   <div class="row mb-5">
     <div class="col pb-20">
-      <app-add-comment [forPost]="viewModel.post().uuid" (submitComment)="onCommentSubmitted()"></app-add-comment>
+      <app-add-comment [forPost]="viewModel.post().uuid" (commentAdded)="onCommentSubmitted($event)"></app-add-comment>
     </div>
   </div>

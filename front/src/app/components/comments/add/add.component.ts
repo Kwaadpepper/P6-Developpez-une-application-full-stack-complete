@@ -1,5 +1,6 @@
 import { Component, effect, Input, output, untracked } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
+import { ToastService } from '@core/services'
 import { ButtonModule } from 'primeng/button'
 
 import { NgIf } from '@angular/common'
@@ -26,7 +27,7 @@ export class AddComponent {
     this.viewModel.setPostUuid(value)
   }
 
-  submitComment = output<void>()
+  commentAdded = output<UUID>()
 
   public readonly form = new FormGroup({
     content: new FormControl('', {
@@ -39,6 +40,7 @@ export class AddComponent {
 
   constructor(
     public readonly viewModel: AddViewModel,
+    private readonly toastService: ToastService,
   ) {
     this.form.valueChanges.subscribe((value) => {
       this.viewModel.content.set(value.content ?? '')
@@ -60,9 +62,10 @@ export class AddComponent {
     }
 
     this.viewModel.saveComment().subscribe({
-      next: () => {
-        this.submitComment.emit()
+      next: (commentUuid) => {
+        this.commentAdded.emit(commentUuid)
         this.form.reset()
+        this.toastService.success('Commentaire ajouté avec succès')
       },
     })
   }

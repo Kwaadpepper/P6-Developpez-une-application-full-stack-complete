@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core'
-import { catchError, EMPTY, finalize, map, Observable } from 'rxjs'
+import { catchError, EMPTY, finalize, map, Observable, tap } from 'rxjs'
 
 import { CommentService, errors } from '@core/services'
 import { UUID } from '@core/types'
@@ -42,7 +42,7 @@ export default class AddViewModel {
     this.formErrorMessage.set('')
   }
 
-  public saveComment(): Observable<void> {
+  public saveComment(): Observable<UUID> {
     this.resetErrors()
     this.setErrorMessage('')
 
@@ -56,7 +56,8 @@ export default class AddViewModel {
     return this.commentService
       .createComment(this.postUuid(), this.content())
       .pipe(
-        map(this.reset.bind(this)),
+        tap(this.reset.bind(this)),
+        map(v => v.uuid),
         catchError((error) => {
           if (error instanceof errors.ValidationError) {
             this.formErrorMessage.set('Des champ n\'ont pas pu être validés')

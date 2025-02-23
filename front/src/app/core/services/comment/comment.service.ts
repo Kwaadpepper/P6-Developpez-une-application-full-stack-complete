@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core'
 import { Comment } from '@core/interfaces'
 import { CommentsRepository } from '@core/repositories'
 import { PageOf, UUID } from '@core/types'
-import { map, Observable } from 'rxjs'
+import { Observable } from 'rxjs'
 
 @Injectable({
   providedIn: 'root',
@@ -36,10 +36,7 @@ export class CommentService {
    * @param content The comment to add.
    * @returns An observable of the added comment.
    */
-  public createComment(postUuid: UUID, content: string): Observable<void> {
+  public createComment(postUuid: UUID, content: string): Observable<Comment> {
     return this.commentsRepository.addComment(postUuid, content)
-      .pipe(
-        map(() => { return }),
-      )
   }
 }

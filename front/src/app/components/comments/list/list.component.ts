@@ -19,15 +19,23 @@ import ListViewModel from './list.viewmodel'
 })
 export class ListComponent implements OnInit {
   readonly postUuid = input.required<UUID>()
-  readonly reloadComments = input.required<EventEmitter<void>>()
+  readonly reloadComments = input.required<EventEmitter<UUID | void>>()
 
   constructor(
     public readonly viewModel: ListViewModel,
   ) {
     effect(() => {
       this.reloadComments().subscribe({
-        next: () => {
-          this.loadFirstPageComments()
+        next: (newCommentUuid: UUID) => {
+          this.loadFirstPageComments().then(() => {
+            setTimeout(() => {
+              console.log(document.getElementById(`comment-${newCommentUuid}`))
+              document.getElementById(`comment-${newCommentUuid}`)?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+              })
+            })
+          })
         },
       })
     })
@@ -42,7 +50,7 @@ export class ListComponent implements OnInit {
     this.viewModel.fetchComments(this.postUuid(), (event.page ?? 0) + 1, event.rows ?? this.viewModel.perPage())
   }
 
-  private loadFirstPageComments(): void {
-    this.viewModel.fetchComments(this.postUuid(), 1, this.viewModel.perPage())
+  private loadFirstPageComments(): Promise<void> {
+    return this.viewModel.fetchComments(this.postUuid(), 1, this.viewModel.perPage())
   }
 }

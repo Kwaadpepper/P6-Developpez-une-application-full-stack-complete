@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
 
-import { commentSchema, pageOf, simpleMessageSchema, SimpleMessageZod } from '@core/api/schemas'
+import { commentSchema, CommentZod, pageOf } from '@core/api/schemas'
 import { Comment } from '@core/interfaces'
 import { checkServerReponse } from '@core/tools/checkServerReponse'
 import { verifyResponseType } from '@core/tools/verifyReponseType'
@@ -53,8 +53,8 @@ export default class CommentsRepository {
    * @param content The comment to add.
    * @returns An observable of the added comment.
    */
-  public addComment(postUuid: string, content: string): Observable<SimpleMessageZod> {
-    return this.http.post<SimpleMessageZod>(
+  public addComment(postUuid: string, content: string): Observable<Comment> {
+    return this.http.post<CommentZod>(
       this.commentsUrl, {
         post: postUuid,
         content,
@@ -62,7 +62,7 @@ export default class CommentsRepository {
         withCredentials: true,
       }).pipe(
       checkServerReponse(),
-      verifyResponseType(simpleMessageSchema),
+      verifyResponseType(commentSchema),
       retryMultipleTimes(),
     )
   }

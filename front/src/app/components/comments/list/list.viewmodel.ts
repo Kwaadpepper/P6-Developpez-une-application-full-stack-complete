@@ -31,22 +31,29 @@ export default class ListViewModel {
   ) {
   }
 
-  public fetchComments(postUuid: UUID, page: number, perPage: number): void {
+  public fetchComments(postUuid: UUID, page: number, perPage: number): Promise<void> {
     this._perPage.set(perPage)
 
-    this.CommentService.paginatePostsComments(postUuid, page, perPage)
-      .subscribe({
-        next: (comments) => {
-          const commentsPage = comments.list.map(comment => ({
-            uuid: comment.uuid,
-            username: comment.author_name,
-            content: comment.content,
-          }))
+    return new Promise<void>((resolve, reject) => {
+      this.CommentService.paginatePostsComments(postUuid, page, perPage)
+        .subscribe({
+          next: (comments) => {
+            const commentsPage = comments.list.map(comment => ({
+              uuid: comment.uuid,
+              username: comment.author_name,
+              content: comment.content,
+            }))
 
-          this._comments.set(commentsPage)
-          this._totalItems.set(comments.totalItems)
-          this._page.set(comments.page)
-        },
-      })
+            this._comments.set(commentsPage)
+            this._totalItems.set(comments.totalItems)
+            this._page.set(comments.page)
+            resolve()
+          },
+          error: (error) => {
+            console.error(error)
+            reject(error)
+          },
+        })
+    })
   }
 }
