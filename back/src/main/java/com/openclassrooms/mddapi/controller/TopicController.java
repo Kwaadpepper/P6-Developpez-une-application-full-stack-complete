@@ -31,6 +31,7 @@ import com.openclassrooms.mddapi.service.models.TopicService;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
 @RestController
@@ -61,8 +62,9 @@ public class TopicController {
     @GetMapping(path = "names", produces = MediaType.APPLICATION_JSON_VALUE)
     public PaginatedDto<TopicNameDto> paginatedTopicTitles(
             @RequestParam(required = false) @Nullable @org.springframework.lang.Nullable final String name,
-            @RequestParam(required = false, defaultValue = "1") @Min(value = 1) final Integer page) {
-        var pageRequest = PageRequest.of(page - 1, 30);
+            @RequestParam(required = false, defaultValue = "1") @Min(value = 1) final Integer page,
+            @RequestParam(required = false, defaultValue = "30", name = "per-page") @Min(value = 1) @Max(value = 30) final Integer perPage) {
+        var pageRequest = PageRequest.of(page - 1, perPage);
 
         final var topicList = Optional.ofNullable(name)
                 .map(nameLike -> topicService.getPaginatedTopicsNamesWhere(pageRequest, nameLike))
@@ -80,14 +82,15 @@ public class TopicController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public PaginatedDto<TopicWithSubscriptionDto> paginatedTopics(
             @RequestParam(required = false) @Nullable @org.springframework.lang.Nullable final String name,
-            @RequestParam(required = false, defaultValue = "1") @Min(value = 1) final Integer page) {
+            @RequestParam(required = false, defaultValue = "1") @Min(value = 1) final Integer page,
+            @RequestParam(required = false, defaultValue = "30", name = "per-page") @Min(value = 1) @Max(value = 30) final Integer perPage) {
 
         final var authUser = sessionService.getAuthenticatedUser().or(() -> {
             throw new JwtAuthenticationFailureException("No user is authenticated.");
         }).get();
         final var userUuid = authUser.getUuid();
 
-        var pageRequest = PageRequest.of(page - 1, 30);
+        var pageRequest = PageRequest.of(page - 1, perPage);
 
         final var topicWitSubscriptionList = Optional.ofNullable(name)
                 .map(nameLike -> topicService.getPaginatedTopics(userUuid, pageRequest, nameLike))
@@ -103,13 +106,14 @@ public class TopicController {
      */
     @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
     public PaginatedDto<TopicDto> getCurrentUserSubscribedTopic(
-            @RequestParam(required = false, defaultValue = "1") @Min(value = 1) final Integer page) {
+            @RequestParam(required = false, defaultValue = "1") @Min(value = 1) final Integer page,
+            @RequestParam(required = false, defaultValue = "30", name = "per-page") @Min(value = 1) @Max(value = 30) final Integer perPage) {
 
         final var authUser = sessionService.getAuthenticatedUser().or(() -> {
             throw new JwtAuthenticationFailureException("No user is authenticated.");
         }).get();
 
-        final var subscriptions = subscriptionService.getUserSubscriptions(authUser, PageRequest.of(page - 1, 30));
+        final var subscriptions = subscriptionService.getUserSubscriptions(authUser, PageRequest.of(page - 1, perPage));
         final var pageable = subscriptions.getPageable();
         final List<Topic> topicList = subscriptions.getContent()
                 .stream()

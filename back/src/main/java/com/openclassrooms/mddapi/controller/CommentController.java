@@ -23,6 +23,7 @@ import com.openclassrooms.mddapi.service.auth.SessionService;
 import com.openclassrooms.mddapi.service.models.CommentService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
 @RestController
@@ -51,9 +52,10 @@ public class CommentController {
     @GetMapping(value = "/posts/{postUuid}/comments", produces = MediaType.APPLICATION_JSON_VALUE)
     public PaginatedDto<CommentDto> getCommentsForPost(
             @RequestParam(required = false, defaultValue = "1") @Min(value = 1) final Integer page,
+            @RequestParam(required = false, defaultValue = "30", name = "per-page") @Min(value = 1) @Max(value = 30) final Integer perPage,
             @PathVariable final UUID postUuid) {
 
-        var pageRequest = PageRequest.of(page - 1, 30);
+        var pageRequest = PageRequest.of(page - 1, perPage);
 
         final var commentReadPage = commentService.getPostComments(postUuid, pageRequest);
 
