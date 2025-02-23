@@ -21,7 +21,7 @@
         <div class="flex flex-col mb-3">
           <label for="login">Email ou nom d'utilisateur</label>
           <input pInputText id="login" formControlName="login" aria-describedby="login-help" />
-          <small id="login-help" *ngIf="form.controls.login.dirty || form.controls.login.touched" class="text-error">
+          <small id="login-help" *ngIf="form.controls.login.dirty || form.controls.login.touched" class="text-red-600">
             <span class="block" *ngIf="form.controls.login.hasError('required')"> Obligatoire.</span>
           </small>
         </div>
@@ -29,7 +29,7 @@
         <div class="flex flex-col mb-3">
           <label for="password">Mot de passe</label>
           <input pInputText id="password" formControlName="password" aria-describedby="password-help" type="password" />
-          <small id="login-help" *ngIf="form.controls.login.dirty || form.controls.login.touched" class="text-error">
+          <small id="login-help" *ngIf="form.controls.login.dirty || form.controls.login.touched" class="text-red-600">
             <span class="block" *ngIf="form.controls.login.hasError('required')"> Obligatoire.</span>
           </small>
         </div>
