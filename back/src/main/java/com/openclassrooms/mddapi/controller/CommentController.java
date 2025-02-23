@@ -46,6 +46,7 @@ public class CommentController {
      * Fetch comments for a post
      *
      * @param page     {@link Integer} The page number
+     * @param perPage  {@link Integer} The number of items per page
      * @param postUuid {@link UUID} The post unique id.
      * @return {@link PaginatedDto} of {@link CommentDto}
      */

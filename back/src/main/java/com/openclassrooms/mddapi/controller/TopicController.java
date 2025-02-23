@@ -56,7 +56,9 @@ public class TopicController {
     /**
      * This may be used to fetch and search paginated topics names
      *
-     * @param page {@link Integer} The page number
+     * @param name    {@link String} The topic name
+     * @param page    {@link Integer} The page number
+     * @param perPage {@link Integer} The number of items per page
      * @return {@link PaginatedDto} of {@link TopicDto}
      */
     @GetMapping(path = "names", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -76,7 +78,9 @@ public class TopicController {
     /**
      * This may be used to fetch paginated topics
      *
-     * @param page {@link Integer} The page number
+     * @param name    {@link String} The topic name
+     * @param page    {@link Integer} The page number
+     * @param perPage {@link Integer} The number of items per page
      * @return {@link PaginatedDto} of {@link TopicDto}
      */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -102,6 +106,8 @@ public class TopicController {
     /**
      * This may be used to fetch the topics that the current user is subscribed to
      *
+     * @param page    {@link Integer} The page number
+     * @param perPage {@link Integer} The number of items per page
      * @return {@link List} of {@link TopicDto}
      */
     @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
