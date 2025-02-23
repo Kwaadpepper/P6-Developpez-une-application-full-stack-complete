@@ -1,10 +1,25 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { signal } from '@angular/core'
+import { Component, input, signal } from '@angular/core'
 import { FormControl } from '@angular/forms'
 import { MarkdownComponent } from 'ngx-markdown'
 import { MarkdownEditorComponent } from './markdown-editor.component'
 import MarkdownEditorViewModel from './markdown-editor.viewmodel'
+
+@Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
+  selector: 'markdown',
+  template: `<span>markdown</span>`,
+  providers: [
+    {
+      provide: MarkdownComponent,
+      useClass: MockMarkdownComponent,
+    },
+  ],
+})
+class MockMarkdownComponent {
+  data = input<string>('')
+}
 
 describe('MarkdownEditorComponent', () => {
   let component: MarkdownEditorComponent
@@ -35,6 +50,18 @@ describe('MarkdownEditorComponent', () => {
       ],
     })
       .overrideComponent(MarkdownEditorComponent, {
+        add: {
+          imports: [
+            MockMarkdownComponent,
+          ],
+        },
+        remove: {
+          imports: [
+            MarkdownComponent,
+          ],
+        },
+      })
+      .overrideComponent(MarkdownEditorComponent, {
         set: {
           providers: [
             {
@@ -42,12 +69,6 @@ describe('MarkdownEditorComponent', () => {
               useValue: viewModel,
             },
           ],
-        },
-      })
-      .overrideComponent(MarkdownComponent, {
-        set: {
-          selector: 'markdown',
-          template: `<span>markdown</span>`,
         },
       })
       .compileComponents()

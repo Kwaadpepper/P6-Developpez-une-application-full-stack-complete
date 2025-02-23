@@ -4,7 +4,7 @@ import { CommentAddComponent, CommentsListComponent } from '@components/index'
 import { UUID } from '@core/types'
 import { NiceDate } from '@pipes/NiceDate'
 import { BackButtonComponent } from '@shared/index'
-import { MarkdownModule } from 'ngx-markdown'
+import { MarkdownComponent } from 'ngx-markdown'
 import ShowViewModel from './show.viewmodel'
 
 @Component({
@@ -12,7 +12,7 @@ import ShowViewModel from './show.viewmodel'
   imports: [
     SlicePipe, TitleCasePipe,
     BackButtonComponent, NiceDate,
-    MarkdownModule,
+    MarkdownComponent,
     CommentsListComponent,
     CommentAddComponent,
   ],

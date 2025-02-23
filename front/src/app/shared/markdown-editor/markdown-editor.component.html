@@ -22,9 +22,9 @@
         class="w-full min-h-48 prose dark:prose-invert text-base" placeholder="Contenu de l'article"></textarea>
     </p-tabpanel>
     <p-tabpanel value="preview" class="p-0">
-      <div markdown
-        class="w-full min-h-48 prose dark:prose-invert text-base border border-neutral-200 dark:border-neutral-800 rounded-lg p-3"
-        [data]="viewModel.value()" ngPreserveWhitespaces>
+      <div
+        class="w-full min-h-48 prose dark:prose-invert text-base border border-neutral-200 dark:border-neutral-800 rounded-lg p-3">
+        <markdown [data]="viewModel.value()" />
       </div>
     </p-tabpanel>
   </p-tabpanels>

@@ -1,7 +1,7 @@
 import { NgIf } from '@angular/common'
 import { Component, input, Input, OnInit, output } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
-import { MarkdownModule } from 'ngx-markdown'
+import { MarkdownComponent } from 'ngx-markdown'
 import { TabsModule } from 'primeng/tabs'
 import { TextareaModule } from 'primeng/textarea'
 import { debounceTime } from 'rxjs'
@@ -13,7 +13,7 @@ import MarkdownEditorViewModel from './markdown-editor.viewmodel'
     NgIf,
     TextareaModule,
     TabsModule,
-    MarkdownModule,
+    MarkdownComponent,
     ReactiveFormsModule,
   ],
   providers: [MarkdownEditorViewModel],

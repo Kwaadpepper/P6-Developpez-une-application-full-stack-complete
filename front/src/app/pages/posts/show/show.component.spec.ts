@@ -38,6 +38,21 @@ class MockCommentAddComponent {
   forPost = input<string>('')
 }
 
+@Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
+  selector: 'markdown',
+  template: `<span>markdown</span>`,
+  providers: [
+    {
+      provide: MarkdownComponent,
+      useClass: MockMarkdownComponent,
+    },
+  ],
+})
+class MockMarkdownComponent {
+  data = input<string>('')
+}
+
 describe('ShowPostComponent', () => {
   let component: ShowComponent
   let fixture: ComponentFixture<ShowComponent>
@@ -69,17 +84,12 @@ describe('ShowPostComponent', () => {
         },
       ],
     })
-      .overrideComponent(MarkdownComponent, {
-        set: {
-          selector: 'markdown',
-          template: `<span>markdown</span>`,
-        },
-      })
       .overrideComponent(ShowComponent, {
         remove: {
           imports: [
             CommentsListComponent,
             CommentAddComponent,
+            MarkdownComponent,
           ],
           providers: [ShowViewModel],
         },
@@ -87,6 +97,7 @@ describe('ShowPostComponent', () => {
           imports: [
             MockCommentsListComponent,
             MockCommentAddComponent,
+            MockMarkdownComponent,
           ],
           providers: [
             {

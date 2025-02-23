@@ -15,6 +15,10 @@ describe('ListCommentsComponent', () => {
   beforeEach(async () => {
     viewModel = jasmine.createSpyObj('ListCommentsViewModel', ['fetchComments'], {
       comments: signal<Comment[]>([]),
+      perPage: signal<number>(1),
+      perPages: signal<[number]>([10]),
+      firstItemIndex: signal<number>(1),
+      totalItems: signal<number>(1),
     })
 
     await TestBed.configureTestingModule({

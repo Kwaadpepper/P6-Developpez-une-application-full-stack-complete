@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { ToastService } from '@core/services'
 
 import { MarkdownEditorComponent } from '@shared/index'
 import { AddComponent } from './add.component'
@@ -7,9 +8,11 @@ import AddViewModel from './add.viewmodel'
 describe('AddCommentComponent', () => {
   let component: AddComponent
   let fixture: ComponentFixture<AddComponent>
+  let toastService: ToastService
   let viewModel: AddViewModel
 
   beforeEach(async () => {
+    toastService = jasmine.createSpyObj('ToastService', ['showErrorToast'])
     viewModel = jasmine.createSpyObj('AddViewModel', {
       content: '',
       formErrorMessage: '',
@@ -33,6 +36,7 @@ describe('AddCommentComponent', () => {
         set: {
           providers: [
             { provide: AddViewModel, useValue: viewModel },
+            { provide: ToastService, useValue: toastService },
           ],
         },
       })
