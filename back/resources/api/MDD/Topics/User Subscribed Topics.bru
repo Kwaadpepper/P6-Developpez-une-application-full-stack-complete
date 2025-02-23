@@ -5,7 +5,12 @@ meta {
 }
 
 get {
-  url: http://localhost:3001/api/topics/me
+  url: http://localhost:3001/api/topics/me?page=1&per-page=10
   body: none
   auth: inherit
+}
+
+params:query {
+  page: 1
+  per-page: 10
 }

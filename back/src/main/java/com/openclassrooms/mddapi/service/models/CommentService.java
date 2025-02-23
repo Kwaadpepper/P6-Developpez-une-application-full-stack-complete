@@ -63,7 +63,7 @@ public class CommentService {
      * @param postUuid   The post to comment
      * @param content    The content of the comment
      */
-    public void createComment(UUID authorUuid, UUID postUuid, String content) {
+    public Comment createComment(UUID authorUuid, UUID postUuid, String content) {
         var author = userRepository.findById(authorUuid)
                 .orElseThrow(() -> ValidationException.of(ValidationError.of("author", "User not found")));
         var post = postRepository.findById(postUuid)
@@ -71,6 +71,7 @@ public class CommentService {
         var sanitizedContent = contentCleanerService.sanitizeMarkdown(content);
 
         var comment = new Comment(sanitizedContent, post, author);
-        commentRepository.save(comment);
+
+        return commentRepository.save(comment);
     }
 }
