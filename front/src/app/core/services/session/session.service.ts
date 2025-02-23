@@ -21,11 +21,18 @@ export class SessionService {
     }
   }
 
+  /**
+   * Set the logged in user.
+   * @param user The user to set as logged in.
+   */
   public setLoggedIn(user: User): void {
     this.user.set(user)
     this.persistLoggedIsStatus()
   }
 
+  /**
+   * Set the logged out user.
+   */
   public setLoggedOut(): void {
     this.user.set(null)
     this.removeLoggedInStatus()

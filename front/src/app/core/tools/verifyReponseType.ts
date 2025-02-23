@@ -3,6 +3,11 @@ import { z, ZodError } from 'zod'
 
 import BadResponseFromServerError from '@core/errors/BadResponseFromServerError'
 
+/**
+ * Verify the response type.
+ * @param zodObj  The zod object to verify the response.
+ * @returns The observable.
+ */
 export function verifyResponseType<T extends z.ZodTypeAny>(zodObj: T): UnaryFunction<Observable<unknown>, Observable<z.infer<T>>> {
   return pipe(
     map((response) => {

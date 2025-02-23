@@ -10,6 +10,11 @@ export class ToastService {
     private messageService: MessageService,
   ) { }
 
+  /**
+   * Show a toast message.
+   * @param message The message to show.
+   * @param summary The summary of the message.
+   */
   public success(message: string, summary?: string): void {
     this.messageService.add({
       severity: 'success',
@@ -18,6 +23,11 @@ export class ToastService {
     })
   }
 
+  /**
+   * Show a toast message.
+   * @param message The message to show.
+   * @param summary The summary of the message.
+   */
   public info(message: string, summary?: string): void {
     this.messageService.add({
       severity: 'info',
@@ -26,6 +36,11 @@ export class ToastService {
     })
   }
 
+  /**
+   * Show a toast message.
+   * @param message The message to show.
+   * @param summary The summary of the message.
+   */
   public warning(message: string, summary?: string): void {
     this.messageService.add({
       severity: 'warn',
@@ -34,6 +49,11 @@ export class ToastService {
     })
   }
 
+  /**
+   * Show a toast message.
+   * @param message The message to show.
+   * @param summary The summary of the message.
+   */
   public error(message: string, summary?: string): void {
     this.messageService.add({
       severity: 'error',

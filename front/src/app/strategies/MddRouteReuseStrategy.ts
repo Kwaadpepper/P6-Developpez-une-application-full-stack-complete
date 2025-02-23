@@ -86,7 +86,6 @@ export class MddRouteReuseStrategy implements RouteReuseStrategy {
     }
 
     /** returns handle when the route.routeConfig.path is already stored */
-
     return routeconfig.handle
   }
 

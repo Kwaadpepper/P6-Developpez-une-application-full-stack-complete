@@ -17,6 +17,12 @@ export class FeedService {
     private postRepository: PostRepository,
   ) { }
 
+  /**
+   * Get the user feed page.
+   * @param pageNumber The page number to get. The first page is 1.
+   * @param ascending If true, the oldest post will be the first.
+   * @returns The user feed page.
+   */
   getUserFeedPage(pageNumber: number, ascending = false): Observable<PageOf<Post>> {
     const page = Math.max(1, pageNumber)
     this._feedInvalidated.set(false)
@@ -24,6 +30,9 @@ export class FeedService {
     return this.postRepository.getCurrentUserFeed(page, ascending)
   }
 
+  /**
+   * Invalidate the feed so that it will be reloaded.
+   */
   invalidateFeed(): void {
     this._feedInvalidated.set(true)
   }
