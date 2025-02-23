@@ -36,6 +36,12 @@ export default class UserRepository {
     )
   }
 
+  /**
+   * Update the user profile.
+   *
+   * @param request  The request to update the user profile.
+   * @returns  A message indicating the success of the operation.
+   */
   public updateUserProfile(request: UpdateProfileRequest): Observable<SimpleMessageZod> {
     return this.http.put<SimpleMessageZod>(this.profileUrl, request, {
       withCredentials: true,

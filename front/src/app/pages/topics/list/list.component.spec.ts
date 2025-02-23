@@ -1,15 +1,36 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 
+import { signal } from '@angular/core'
+import { Topic } from '@core/interfaces'
 import { ListComponent } from './list.component'
+import ListViewModel from './list.viewmodel'
 
-describe('ListComponent', () => {
+describe('ListTopicsComponent', () => {
   let component: ListComponent
   let fixture: ComponentFixture<ListComponent>
+  let viewModel: ListViewModel
 
   beforeEach(async () => {
+    viewModel = jasmine.createSpyObj('ListTopicsViewModel', ['reloadTopics'], {
+      loading: signal(false),
+      topics: signal<Topic[]>([]),
+    })
+
     await TestBed.configureTestingModule({
       imports: [ListComponent],
+      providers: [{
+        provide: ListViewModel,
+        useValue: viewModel,
+      }],
     })
+      .overrideComponent(ListComponent, {
+        set: {
+          providers: [{
+            provide: ListViewModel,
+            useValue: viewModel,
+          }],
+        },
+      })
       .compileComponents()
 
     fixture = TestBed.createComponent(ListComponent)

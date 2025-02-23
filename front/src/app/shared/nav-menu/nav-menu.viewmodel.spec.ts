@@ -1,20 +1,23 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { TestBed } from '@angular/core/testing'
 
+import { SessionService } from '@core/services'
 import NavMenuViewModel from './nav-menu.viewmodel'
 
 describe('NavMenuViewModel', () => {
   let viewModel: NavMenuViewModel
-  let fixture: ComponentFixture<NavMenuViewModel>
+  let sessionService: SessionService
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [NavMenuViewModel],
-    })
-      .compileComponents()
+    sessionService = jasmine.createSpyObj('SessionService', ['isAuthenticated'])
 
-    fixture = TestBed.createComponent(NavMenuViewModel)
-    viewModel = fixture.componentInstance
-    fixture.detectChanges()
+    await TestBed.configureTestingModule({
+      providers: [{
+        provide: SessionService,
+        useValue: sessionService,
+      }],
+    })
+
+    viewModel = TestBed.inject(NavMenuViewModel)
   })
 
   it('should create', () => {

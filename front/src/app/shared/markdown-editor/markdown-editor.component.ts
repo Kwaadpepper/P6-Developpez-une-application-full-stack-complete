@@ -1,8 +1,7 @@
 import { NgIf } from '@angular/common'
 import { Component, input, Input, OnInit, output } from '@angular/core'
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
-import { MarkdownModule } from 'ngx-markdown'
-import { PanelModule } from 'primeng/panel'
+import { MarkdownComponent } from 'ngx-markdown'
 import { TabsModule } from 'primeng/tabs'
 import { TextareaModule } from 'primeng/textarea'
 import { debounceTime } from 'rxjs'
@@ -14,8 +13,7 @@ import MarkdownEditorViewModel from './markdown-editor.viewmodel'
     NgIf,
     TextareaModule,
     TabsModule,
-    MarkdownModule,
-    PanelModule,
+    MarkdownComponent,
     ReactiveFormsModule,
   ],
   providers: [MarkdownEditorViewModel],
@@ -23,22 +21,22 @@ import MarkdownEditorViewModel from './markdown-editor.viewmodel'
   styleUrl: './markdown-editor.component.css',
 })
 export class MarkdownEditorComponent implements OnInit {
-  public readonly title = input.required<string>()
-  public readonly textareaInput = input.required<FormControl>()
+  readonly title = input.required<string>()
+  readonly textareaInput = input.required<FormControl>()
+  readonly ariaLabel = input.required<string>()
+  readonly showCharCount = input<boolean>(false)
+  readonly classList = input<string>('')
+
+  readonly contentChanged = output<string>()
 
   @Input({ required: true }) set value(value: string) {
     this.viewModel.setValue(value)
     this.viewModel.resetError()
   }
 
-  readonly ariaLabel = input.required<string>()
-  readonly showCharCount = input<boolean>(false)
-
   @Input() set error(value: string) {
-    this.viewModel.setError(value)
+    this.viewModel.setErrorMessage(value)
   }
-
-  public readonly contentChanged = output<string>()
 
   constructor(
     public readonly viewModel: MarkdownEditorViewModel,

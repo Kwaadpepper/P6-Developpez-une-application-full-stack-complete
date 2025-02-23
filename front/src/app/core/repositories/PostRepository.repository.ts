@@ -63,6 +63,12 @@ export default class PostRepository {
     )
   }
 
+  /**
+   * Find a post by its slug.
+   *
+   * @param slug The slug of the post to find.
+   * @returns The post with the given slug.
+   */
   public findPostBySlug(slug: string): Observable<Post> {
     return this.http.get<PostZod>(
       `${this.postsUrl}/${slug}`,

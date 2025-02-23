@@ -1,20 +1,31 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { TestBed } from '@angular/core/testing'
 
+import { AuthService, ToastService } from '@core/services'
 import RegisterViewModel from './register.viewmodel'
 
 describe('RegisterViewModel', () => {
   let viewModel: RegisterViewModel
-  let fixture: ComponentFixture<RegisterViewModel>
+  let authService: AuthService
+  let toastService: ToastService
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [RegisterViewModel],
-    })
-      .compileComponents()
+    authService = jasmine.createSpyObj('AuthService', ['register'])
+    toastService = jasmine.createSpyObj('ToastService', ['success'])
 
-    fixture = TestBed.createComponent(RegisterViewModel)
-    viewModel = fixture.componentInstance
-    fixture.detectChanges()
+    await TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: AuthService,
+          useValue: authService,
+        },
+        {
+          provide: ToastService,
+          useValue: toastService,
+        },
+      ],
+    })
+
+    viewModel = TestBed.inject(RegisterViewModel)
   })
 
   it('should create', () => {

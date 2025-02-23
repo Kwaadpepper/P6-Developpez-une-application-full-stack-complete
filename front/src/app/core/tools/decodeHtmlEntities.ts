@@ -1,3 +1,8 @@
+/**
+ * Decodes HTML entities in a string.
+ * @param value The value to decode.
+ * @returns The decoded value.
+ */
 export function decodeHTmlEntities(value: string): string {
   const element = document.createElement('div')
 

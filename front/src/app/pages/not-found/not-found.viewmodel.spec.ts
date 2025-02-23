@@ -1,15 +1,15 @@
 import { TestBed } from '@angular/core/testing'
 
-import HomeViewModel from './home.viewmodel'
+import NotFoundViewModel from './not-found.viewmodel'
 
-describe('HomeViewModel', () => {
-  let viewModel: HomeViewModel
+describe('NotFoundViewModel', () => {
+  let viewModel: NotFoundViewModel
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
     })
 
-    viewModel = TestBed.inject(HomeViewModel)
+    viewModel = TestBed.inject(NotFoundViewModel)
   })
 
   it('should create', () => {

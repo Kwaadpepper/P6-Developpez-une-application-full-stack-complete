@@ -1,20 +1,37 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { TestBed } from '@angular/core/testing'
 
+import { Router } from '@angular/router'
+import { SessionService } from '@core/services'
+import { of } from 'rxjs'
 import HeaderViewModel from './header.viewmodel'
 
 describe('HeaderModel', () => {
   let viewModel: HeaderViewModel
-  let fixture: ComponentFixture<HeaderViewModel>
+  let router: Router
+  let sessionService: SessionService
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [HeaderViewModel],
+    router = jasmine.createSpyObj('Router', ['navigate'], {
+      events: {
+        pipe: () => of(),
+      },
     })
-      .compileComponents()
+    sessionService = jasmine.createSpyObj('SessionService', ['isAuthenticated'])
 
-    fixture = TestBed.createComponent(HeaderViewModel)
-    viewModel = fixture.componentInstance
-    fixture.detectChanges()
+    await TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: Router,
+          useValue: router,
+        },
+        {
+          provide: SessionService,
+          useValue: sessionService,
+        },
+      ],
+    })
+
+    viewModel = TestBed.inject(HeaderViewModel)
   })
 
   it('should create', () => {

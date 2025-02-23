@@ -14,9 +14,7 @@ import PostCardViewModel from './post-card.viewmodel'
     NiceDate, RouterLink,
     ButtonModule,
   ],
-  providers: [
-    PostCardViewModel,
-  ],
+  providers: [PostCardViewModel],
   templateUrl: './post-card.component.html',
   styleUrl: './post-card.component.css',
 })

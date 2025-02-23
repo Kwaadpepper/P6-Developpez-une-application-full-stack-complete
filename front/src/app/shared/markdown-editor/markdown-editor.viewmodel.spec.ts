@@ -1,20 +1,14 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { TestBed } from '@angular/core/testing'
 
 import MarkdownEditorViewModel from './markdown-editor.viewmodel'
 
 describe('MarkdownEditorViewModel', () => {
   let viewModel: MarkdownEditorViewModel
-  let fixture: ComponentFixture<MarkdownEditorViewModel>
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MarkdownEditorViewModel],
-    })
-      .compileComponents()
+    await TestBed.configureTestingModule({})
 
-    fixture = TestBed.createComponent(MarkdownEditorViewModel)
-    viewModel = fixture.componentInstance
-    fixture.detectChanges()
+    viewModel = TestBed.inject(MarkdownEditorViewModel)
   })
 
   it('should create', () => {

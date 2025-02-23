@@ -1,7 +1,10 @@
 import { Injectable, signal } from '@angular/core'
 import { AuthService, errors, ToastService } from '@core/services'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+  deps: [AuthService, ToastService],
+})
 export default class LoginViewModel {
   public readonly formErrorMessage = signal('')
   public readonly login = signal('login')

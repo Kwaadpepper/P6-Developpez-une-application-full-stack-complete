@@ -19,9 +19,7 @@ import InformationsViewModel from './informations.viewmodel'
     InputGroupAddonModule,
     MessageModule, NgIf, ButtonModule,
   ],
-  providers: [
-    InformationsViewModel,
-  ],
+  providers: [InformationsViewModel],
   templateUrl: './informations.component.html',
   styleUrl: './informations.component.css',
 })

@@ -1,15 +1,15 @@
 import { TestBed } from '@angular/core/testing'
 
-import HomeViewModel from './home.viewmodel'
+import ScrollTopViewModel from './scroll-top.viewmodel'
 
-describe('HomeViewModel', () => {
-  let viewModel: HomeViewModel
+describe('ScrollTopViewModel', () => {
+  let viewModel: ScrollTopViewModel
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
     })
 
-    viewModel = TestBed.inject(HomeViewModel)
+    viewModel = TestBed.inject(ScrollTopViewModel)
   })
 
   it('should create', () => {

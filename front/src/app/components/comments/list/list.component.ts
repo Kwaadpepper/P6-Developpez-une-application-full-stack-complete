@@ -1,41 +1,56 @@
-import { NgFor } from '@angular/common'
-import { Component, EventEmitter, input, Input, OnDestroy, OnInit } from '@angular/core'
-import { UUID } from '@core/types'
+import { NgFor, NgIf } from '@angular/common'
+import { Component, effect, EventEmitter, input, OnInit } from '@angular/core'
 import { MarkdownModule } from 'ngx-markdown'
-import { Subscription } from 'rxjs'
+import { PaginatorModule, PaginatorState } from 'primeng/paginator'
+
+import { UUID } from '@core/types'
 import ListViewModel from './list.viewmodel'
 
 @Component({
   selector: 'app-list-comments',
   imports: [
-    NgFor,
+    NgFor, NgIf,
     MarkdownModule,
+    PaginatorModule,
   ],
+  providers: [ListViewModel],
   templateUrl: './list.component.html',
   styleUrl: './list.component.css',
 })
-export class ListComponent implements OnInit, OnDestroy {
-  postUuid = input.required<UUID>()
-
-  @Input({ required: true })
-  reloadComments!: EventEmitter<void>
-
-  private reloadSubscription!: Subscription
+export class ListComponent implements OnInit {
+  readonly postUuid = input.required<UUID>()
+  readonly reloadComments = input.required<EventEmitter<UUID | void>>()
 
   constructor(
     public readonly viewModel: ListViewModel,
   ) {
-  }
-
-  ngOnInit(): void {
-    this.viewModel.reloadComments(this.postUuid())
-
-    this.reloadSubscription = this.reloadComments.subscribe(() => {
-      this.viewModel.reloadComments(this.postUuid())
+    effect(() => {
+      this.reloadComments().subscribe({
+        next: (newCommentUuid: UUID) => {
+          this.loadFirstPageComments().then(() => {
+            setTimeout(() => {
+              console.log(document.getElementById(`comment-${newCommentUuid}`))
+              document.getElementById(`comment-${newCommentUuid}`)?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+              })
+            })
+          })
+        },
+      })
     })
   }
 
-  ngOnDestroy(): void {
-    this.reloadSubscription.unsubscribe()
+  ngOnInit(): void {
+    this.loadFirstPageComments()
+  }
+
+  onPageChange(event: PaginatorState): void {
+    console.log(event)
+    this.viewModel.fetchComments(this.postUuid(), (event.page ?? 0) + 1, event.rows ?? this.viewModel.perPage())
+  }
+
+  private loadFirstPageComments(): Promise<void> {
+    return this.viewModel.fetchComments(this.postUuid(), 1, this.viewModel.perPage())
   }
 }

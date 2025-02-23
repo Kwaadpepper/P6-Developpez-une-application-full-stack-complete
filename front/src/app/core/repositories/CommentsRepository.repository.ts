@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
 
-import { commentSchema, pageOf, simpleMessageSchema, SimpleMessageZod } from '@core/api/schemas'
+import { commentSchema, CommentZod, pageOf } from '@core/api/schemas'
 import { Comment } from '@core/interfaces'
 import { checkServerReponse } from '@core/tools/checkServerReponse'
 import { verifyResponseType } from '@core/tools/verifyReponseType'
@@ -28,11 +28,16 @@ export default class CommentsRepository {
    * Paginates the comments for a post
    * @param postUuid The UUID of the post to get the comments for.
    * @param page The page number to get. The first page is 1.
+   * @param perPage The number of comments per page. Default is 30.
    * @returns An observable of the paginated comments.
    */
-  public getPostsComments(postUuid: string, page: number): Observable<PageOf<Comment>> {
+  public getPostsComments(postUuid: string, page: number, perPage?: number): Observable<PageOf<Comment>> {
     const commentsUrl = new URL(this.getPostsCommentsUrl(postUuid))
     commentsUrl.searchParams.append('page', String(page))
+
+    if (perPage) {
+      commentsUrl.searchParams.append('per-page', String(perPage))
+    }
 
     return this.http.get<PageOf<Comment>>(commentsUrl.toString(), {
       withCredentials: true,
@@ -48,8 +53,8 @@ export default class CommentsRepository {
    * @param content The comment to add.
    * @returns An observable of the added comment.
    */
-  public addComment(postUuid: string, content: string): Observable<SimpleMessageZod> {
-    return this.http.post<SimpleMessageZod>(
+  public addComment(postUuid: string, content: string): Observable<Comment> {
+    return this.http.post<CommentZod>(
       this.commentsUrl, {
         post: postUuid,
         content,
@@ -57,7 +62,7 @@ export default class CommentsRepository {
         withCredentials: true,
       }).pipe(
       checkServerReponse(),
-      verifyResponseType(simpleMessageSchema),
+      verifyResponseType(commentSchema),
       retryMultipleTimes(),
     )
   }

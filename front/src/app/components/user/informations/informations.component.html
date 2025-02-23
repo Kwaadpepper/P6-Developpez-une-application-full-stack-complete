@@ -10,7 +10,7 @@
         <div class="flex flex-col mb-3">
           <label for="username" class="mb-0">Nom d'utilisateur</label>
           <input pInputText id="username" formControlName="username" aria-describedby="username-help" />
-          <small id="username-help" class="text-error"
+          <small id="username-help" class="text-red-600"
             *ngIf="form.controls.username.dirty || form.controls.username.touched">
             <span class="block" *ngIf="form.controls.username.hasError('required')"> Obligatoire.</span>
             <span class="block" *ngIf="viewModel.errors.username()">{{ viewModel.errors.username() }}</span>
@@ -20,7 +20,7 @@
         <div class="flex flex-col mb-3">
           <label for="email">Adresse e-mail</label>
           <input pInputText id="email" formControlName="email" aria-describedby="email-help" />
-          <small id="email-help" class="text-error" *ngIf="form.controls.email.dirty || form.controls.email.touched">
+          <small id="email-help" class="text-red-600" *ngIf="form.controls.email.dirty || form.controls.email.touched">
             <span class="block" *ngIf="form.controls.email.hasError('required')"> Obligatoire.</span>
             <span class="block" *ngIf="form.controls.email.hasError('email')"> Doit être une addresse e-mail
               valide.</span>
@@ -42,8 +42,8 @@
           </p-inputgroup>
           <small id="password-help">
             <span class="block" *ngIf="form.controls.password.dirty || form.controls.password.touched">
-              <span class="block text-error" *ngIf="form.controls.password.hasError('required')"> Obligatoire.</span>
-              <span class="block text-error" *ngIf="viewModel.errors.password()">{{ viewModel.errors.password()
+              <span class="block text-red-600" *ngIf="form.controls.password.hasError('required')"> Obligatoire.</span>
+              <span class="block text-red-600" *ngIf="viewModel.errors.password()">{{ viewModel.errors.password()
                 }}</span>
             </span>
             <span class="block mt-2">Doit être long d'au moins 8 caratères</span>

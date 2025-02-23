@@ -14,9 +14,7 @@ import TopicsViewModel from './topics.viewmodel'
     InfiniteScrollDirective,
     ProgressSpinnerComponent,
   ],
-  providers: [
-    TopicsViewModel,
-  ],
+  providers: [TopicsViewModel],
   templateUrl: './topics.component.html',
   styleUrl: './topics.component.css',
 })

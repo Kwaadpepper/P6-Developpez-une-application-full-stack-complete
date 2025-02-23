@@ -3,13 +3,16 @@ import { ActivatedRoute } from '@angular/router'
 
 import { Comment, Post } from '@core/interfaces'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+  deps: [ActivatedRoute],
+})
 export default class ShowViewModel {
-  private post: WritableSignal<Post>
-  private comments: WritableSignal<Comment[]> = signal([])
+  private readonly _post: WritableSignal<Post>
+  private readonly _comments: WritableSignal<Comment[]> = signal([])
 
-  public readonly post$ = computed(() => this.post())
-  public readonly comments$ = computed(() => this.comments())
+  public readonly post = computed(() => this._post())
+  public readonly comments = computed(() => this._comments())
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -17,6 +20,6 @@ export default class ShowViewModel {
     const activateRouteSnapshot = this.activatedRoute.snapshot
     const currentRoutePost = activateRouteSnapshot.data['post']
 
-    this.post = signal(currentRoutePost)
+    this._post = signal(currentRoutePost)
   }
 }

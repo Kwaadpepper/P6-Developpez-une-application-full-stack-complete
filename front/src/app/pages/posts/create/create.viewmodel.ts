@@ -5,7 +5,10 @@ import { errors, PostService, TopicService } from '@core/services'
 import { UUID } from '@core/types'
 import { catchError, EMPTY, finalize, map, Observable } from 'rxjs'
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+  deps: [PostService, TopicService],
+})
 export default class CreateViewModel {
   public readonly formErrorMessage = signal('')
   public readonly errors = {
