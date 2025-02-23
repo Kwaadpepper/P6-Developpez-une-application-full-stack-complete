@@ -30,8 +30,10 @@ export default class ListViewModel {
       .subscribe({
         next: (newPage) => {
           this._postList.update(posts => [...posts, ...newPage.list])
+          this.loading.set(false)
         },
-        complete: () => {
+        error: (error) => {
+          console.error('Error fetching user feed:', error)
           this.loading.set(false)
         },
       })

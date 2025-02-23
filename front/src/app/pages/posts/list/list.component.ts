@@ -35,7 +35,7 @@ export class ListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.viewModel.feedUserWithMorePosts()
+    this.viewModel.reloadPosts()
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
     ).subscribe({

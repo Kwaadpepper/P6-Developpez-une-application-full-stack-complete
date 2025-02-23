@@ -96,6 +96,14 @@ export class MddRouteReuseStrategy implements RouteReuseStrategy {
      * @returns boolean basically indicating true if the user intends to leave the current route
      */
   shouldReuseRoute(future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean {
+    const routeConfigPath = future.routeConfig?.path
+    const routeconfig = routeConfigPath ? this.storedRoutes.get(routeConfigPath) : undefined
+
+    // return null if the path does not have a routerConfig OR if there is no stored route for that routerConfig
+    if (routeconfig === undefined) {
+      return false
+    }
+
     return curr.routeConfig?.data?.['reuse'] === true
   }
 
