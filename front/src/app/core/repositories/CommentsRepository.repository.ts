@@ -28,11 +28,16 @@ export default class CommentsRepository {
    * Paginates the comments for a post
    * @param postUuid The UUID of the post to get the comments for.
    * @param page The page number to get. The first page is 1.
+   * @param perPage The number of comments per page. Default is 30.
    * @returns An observable of the paginated comments.
    */
-  public getPostsComments(postUuid: string, page: number): Observable<PageOf<Comment>> {
+  public getPostsComments(postUuid: string, page: number, perPage?: number): Observable<PageOf<Comment>> {
     const commentsUrl = new URL(this.getPostsCommentsUrl(postUuid))
     commentsUrl.searchParams.append('page', String(page))
+
+    if (perPage) {
+      commentsUrl.searchParams.append('per-page', String(perPage))
+    }
 
     return this.http.get<PageOf<Comment>>(commentsUrl.toString(), {
       withCredentials: true,
