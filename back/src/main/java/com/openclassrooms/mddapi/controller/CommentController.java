@@ -71,18 +71,18 @@ public class CommentController {
      */
     @Transactional
     @PostMapping(value = "/comments", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public SimpleMessage createComment(@Valid @RequestBody final CreateCommentRequest request) {
+    public CommentDto createComment(@Valid @RequestBody final CreateCommentRequest request) {
 
         var authUser = sessionService.getAuthenticatedUser().or(() -> {
             throw new JwtAuthenticationFailureException("No user is authenticated.");
         }).get();
 
-        commentService.createComment(
+        var comment = commentService.createComment(
                 authUser.getUuid(),
                 request.getPost(),
                 request.getContent());
 
-        return new SimpleMessage("Comment created!");
+        return commentPresenter.present(comment, authUser);
     }
 
 }
