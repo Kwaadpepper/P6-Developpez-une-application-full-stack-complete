@@ -1,6 +1,7 @@
 import { computed, Injectable, signal } from '@angular/core'
 import { CommentService } from '@core/services/comment/comment.service'
 import { UUID } from '@core/types'
+import { catchError, Observable, of, tap } from 'rxjs'
 
 interface Comment {
   uuid: UUID
@@ -31,29 +32,25 @@ export default class ListViewModel {
   ) {
   }
 
-  public fetchComments(postUuid: UUID, page: number, perPage: number): Promise<void> {
+  public fetchComments(postUuid: UUID, page: number, perPage: number): Observable<void> {
     this._perPage.set(perPage)
 
-    return new Promise<void>((resolve, reject) => {
-      this.CommentService.paginatePostsComments(postUuid, page, perPage)
-        .subscribe({
-          next: (comments) => {
-            const commentsPage = comments.list.map(comment => ({
-              uuid: comment.uuid,
-              username: comment.author_name,
-              content: comment.content,
-            }))
+    return this.CommentService.paginatePostsComments(postUuid, page, perPage).pipe(
+      tap((comments) => {
+        const commentsPage = comments.list.map(comment => ({
+          uuid: comment.uuid,
+          username: comment.author_name,
+          content: comment.content,
+        }))
 
-            this._comments.set(commentsPage)
-            this._totalItems.set(comments.totalItems)
-            this._page.set(comments.page)
-            resolve()
-          },
-          error: (error) => {
-            console.error(error)
-            reject(error)
-          },
-        })
-    })
+        this._comments.set(commentsPage)
+        this._totalItems.set(comments.totalItems)
+        this._page.set(comments.page)
+      }),
+      catchError((error) => {
+        console.error(error)
+        return of(error)
+      }),
+    )
   }
 }

@@ -1,6 +1,7 @@
-import { Component, input } from '@angular/core'
+import { Component, input, OnDestroy } from '@angular/core'
 import { Router } from '@angular/router'
 import { Button, ButtonModule } from 'primeng/button'
+import { SubscriptionLike } from 'rxjs'
 
 import { ToastService } from '@core/services'
 import LogoutButtonViewModel from './logout-button.viewmodel'
@@ -12,11 +13,13 @@ import LogoutButtonViewModel from './logout-button.viewmodel'
   templateUrl: './logout-button.component.html',
   styleUrl: './logout-button.component.css',
 })
-export class LogoutButtonComponent {
+export class LogoutButtonComponent implements OnDestroy {
   public redirectUrl = input.required<string>()
   public variant = input<Button['variant']>('outlined')
   public severity = input<Button['severity']>('contrast')
   public title = input<string>()
+
+  private logoutSubscription: SubscriptionLike | null = null
 
   constructor(
     public viewModel: LogoutButtonViewModel,
@@ -25,8 +28,14 @@ export class LogoutButtonComponent {
   ) {
   }
 
+  ngOnDestroy(): void {
+    if (this.logoutSubscription) {
+      this.logoutSubscription.unsubscribe()
+    }
+  }
+
   public onLogout(): void {
-    this.viewModel.logout()
+    this.logoutSubscription = this.viewModel.logout()
       .subscribe({
         next: () => {
           this.toastService.info('Vous êtes déconnecté')

@@ -14,7 +14,9 @@ describe('UserInformationsComponent', () => {
 
   beforeEach(async () => {
     toastService = jasmine.createSpyObj('ToastService', ['showSuccess', 'showError'])
-    viewModel = jasmine.createSpyObj('InformationsViewModel', ['refreshUserInformation'], {
+    viewModel = jasmine.createSpyObj('InformationsViewModel', {
+      refreshUserInformation: of(),
+    }, {
       formErrorMessage: signal(''),
       loading: signal(false),
       informations: signal([]),

@@ -13,7 +13,10 @@ describe('ListCommentsComponent', () => {
   let viewModel: ListViewModel
 
   beforeEach(async () => {
-    viewModel = jasmine.createSpyObj('ListCommentsViewModel', ['fetchComments'], {
+    viewModel = jasmine.createSpyObj('ListCommentsViewModel', {
+      fetchComments: of(),
+      loadFirstPageComments: of(),
+    }, {
       comments: signal<Comment[]>([]),
       perPage: signal<number>(1),
       perPages: signal<[number]>([10]),

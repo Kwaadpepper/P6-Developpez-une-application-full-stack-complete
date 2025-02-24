@@ -1,7 +1,8 @@
 import { NgFor, NgIf } from '@angular/common'
-import { Component, effect, EventEmitter, input, OnInit } from '@angular/core'
+import { Component, EventEmitter, input, OnDestroy, OnInit } from '@angular/core'
 import { MarkdownModule } from 'ngx-markdown'
 import { PaginatorModule, PaginatorState } from 'primeng/paginator'
+import { Observable, Subject, takeUntil } from 'rxjs'
 
 import { UUID } from '@core/types'
 import ListViewModel from './list.viewmodel'
@@ -17,38 +18,53 @@ import ListViewModel from './list.viewmodel'
   templateUrl: './list.component.html',
   styleUrl: './list.component.css',
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
   readonly postUuid = input.required<UUID>()
   readonly reloadComments = input.required<EventEmitter<UUID | void>>()
+
+  private readonly endObservables = new Subject<true>()
 
   constructor(
     public readonly viewModel: ListViewModel,
   ) {
-    effect(() => {
-      this.reloadComments().subscribe({
-        next: (newCommentUuid: UUID) => {
-          this.loadFirstPageComments().then(() => {
-            setTimeout(() => {
-              document.getElementById(`comment-${newCommentUuid}`)?.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center',
-              })
-            })
-          })
-        },
-      })
-    })
   }
 
   ngOnInit(): void {
     this.loadFirstPageComments()
+      .pipe(takeUntil(this.endObservables))
+      .subscribe()
+
+    this.reloadComments()
+      .pipe(takeUntil(this.endObservables))
+      .subscribe({
+        next: (newCommentUuid) => {
+          this.loadFirstPageComments()
+            .pipe(takeUntil(this.endObservables))
+            .subscribe()
+            .add(() => {
+              setTimeout(() => {
+                document.getElementById(`comment-${newCommentUuid}`)?.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'center',
+                })
+              })
+            })
+        },
+      })
+  }
+
+  ngOnDestroy(): void {
+    this.endObservables.next(true)
+    this.endObservables.complete()
   }
 
   onPageChange(event: PaginatorState): void {
     this.viewModel.fetchComments(this.postUuid(), (event.page ?? 0) + 1, event.rows ?? this.viewModel.perPage())
+      .pipe(takeUntil(this.endObservables))
+      .subscribe()
   }
 
-  private loadFirstPageComments(): Promise<void> {
+  private loadFirstPageComments(): Observable<void> {
     return this.viewModel.fetchComments(this.postUuid(), 1, this.viewModel.perPage())
   }
 }

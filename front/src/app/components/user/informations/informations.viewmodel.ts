@@ -1,8 +1,7 @@
 import { Injectable, signal } from '@angular/core'
+import { catchError, EMPTY, finalize, map, Observable, ObservableInput, of, Subject, switchMap } from 'rxjs'
 
-import { AuthService, errors, ToastService } from '@core/services'
-import { ProfileService } from '@core/services/profile/profile.service'
-import { catchError, EMPTY, finalize, map, Observable, ObservableInput, Subject } from 'rxjs'
+import { AuthService, errors, ProfileService, ToastService } from '@core/services'
 
 @Injectable({
   providedIn: 'root',
@@ -29,22 +28,28 @@ export default class InformationsViewModel {
   ) {
   }
 
-  public refreshUserInformation(): void {
-    this.hasRefreshedData.next(true)
-    this.profileService.getCurrentUserProfile().subscribe({
-      next: (profile) => {
-        this.username.set(profile.name)
-        this.email.set(profile.email)
-        this.password.set('')
-      },
-      error: (error) => {
-        this.toastService.error('Erreur lors de la récupération des informations')
-        console.error('Error:', error)
-      },
-      complete: () => {
-        this.hasRefreshedData.next(true)
-      },
-    })
+  public refreshUserInformation(): Observable<void> {
+    this.loading.set(true)
+    this.resetErrors()
+
+    return this.profileService.getCurrentUserProfile()
+      .pipe(
+        map((profile) => {
+          this.username.set(profile.name)
+          this.email.set(profile.email)
+          this.password.set('')
+          this.hasRefreshedData.next(true)
+          this.loading.set(false)
+        }),
+        catchError((error): ObservableInput<void> => {
+          this.toastService.error('Erreur lors de la récupération des informations')
+          console.error('Error:', error)
+          return of(error)
+        }),
+        finalize(() => {
+          this.loading.set(false)
+        }),
+      )
   }
 
   public updateUserInformation(): Observable<void> {
@@ -64,9 +69,7 @@ export default class InformationsViewModel {
     }
 
     return this.profileService.updateUserProfile(profileUpdate).pipe(
-      map(() => {
-        this.refreshUserInformation()
-      }),
+      switchMap(() => this.refreshUserInformation()),
       catchError((error): ObservableInput<void> => {
         if (error instanceof errors.ValidationError) {
           this.formErrorMessage.set('Des champ n\'ont pas pu être validés')

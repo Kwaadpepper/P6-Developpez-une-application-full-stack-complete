@@ -1,12 +1,13 @@
-import { Component, effect, Input, output, untracked } from '@angular/core'
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
-import { ToastService } from '@core/services'
-import { ButtonModule } from 'primeng/button'
-
 import { NgIf } from '@angular/common'
-import { UUID } from '@core/types'
-import { MarkdownEditorComponent } from '@shared/markdown-editor/markdown-editor.component'
+import { Component, effect, Input, OnDestroy, output, untracked } from '@angular/core'
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
+import { ButtonModule } from 'primeng/button'
 import { MessageModule } from 'primeng/message'
+import { SubscriptionLike } from 'rxjs'
+
+import { ToastService } from '@core/services'
+import { UUID } from '@core/types'
+import { MarkdownEditorComponent } from '@shared/index'
 import AddViewModel from './add.viewmodel'
 
 @Component({
@@ -22,12 +23,14 @@ import AddViewModel from './add.viewmodel'
   templateUrl: './add.component.html',
   styleUrl: './add.component.css',
 })
-export class AddComponent {
+export class AddComponent implements OnDestroy {
   @Input({ required: true }) set forPost(value: UUID) {
     this.viewModel.setPostUuid(value)
   }
 
   commentAdded = output<UUID>()
+
+  private saveComment: SubscriptionLike | null = null
 
   public readonly form = new FormGroup({
     content: new FormControl('', {
@@ -55,18 +58,25 @@ export class AddComponent {
     })
   }
 
+  ngOnDestroy(): void {
+    if (this.saveComment) {
+      this.saveComment.unsubscribe()
+    }
+  }
+
   onSubmit(): void {
     if (this.form.invalid) {
       this.viewModel.setErrorMessage('Le contenu du commentaire n\'est pas valide')
       return
     }
 
-    this.viewModel.saveComment().subscribe({
-      next: (commentUuid) => {
-        this.commentAdded.emit(commentUuid)
-        this.form.reset()
-        this.toastService.success('Commentaire ajouté avec succès')
-      },
-    })
+    this.saveComment = this.viewModel.saveComment()
+      .subscribe({
+        next: (commentUuid) => {
+          this.commentAdded.emit(commentUuid)
+          this.form.reset()
+          this.toastService.success('Commentaire ajouté avec succès')
+        },
+      })
   }
 }

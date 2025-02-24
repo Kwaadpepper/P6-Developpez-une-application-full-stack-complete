@@ -1,11 +1,12 @@
 import { NgIf } from '@angular/common'
-import { Component, effect, OnInit, signal } from '@angular/core'
+import { Component, effect, OnDestroy, OnInit, signal } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { ButtonModule } from 'primeng/button'
 import { InputGroupModule } from 'primeng/inputgroup'
 import { InputTextModule } from 'primeng/inputtext'
 import { MessageModule } from 'primeng/message'
 import { PasswordModule } from 'primeng/password'
+import { Subject, takeUntil } from 'rxjs'
 
 import { ToastService } from '@core/services'
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon'
@@ -23,7 +24,7 @@ import InformationsViewModel from './informations.viewmodel'
   templateUrl: './informations.component.html',
   styleUrl: './informations.component.css',
 })
-export class InformationsComponent implements OnInit {
+export class InformationsComponent implements OnInit, OnDestroy {
   public readonly maskPassword = signal(true)
 
   public readonly form = new FormGroup({
@@ -45,6 +46,8 @@ export class InformationsComponent implements OnInit {
     }),
   })
 
+  private readonly endObservables = new Subject<true>()
+
   constructor(
     public readonly viewModel: InformationsViewModel,
     private readonly toastService: ToastService,
@@ -63,15 +66,17 @@ export class InformationsComponent implements OnInit {
       this.viewModel.errors.password.set('')
     })
 
-    this.viewModel.hasRefreshedData.subscribe({
-      next: () => {
-        this.form.patchValue({
-          email: this.viewModel.email(),
-          username: this.viewModel.username(),
-          password: this.viewModel.password(),
-        })
-      },
-    })
+    this.viewModel.hasRefreshedData
+      .pipe(takeUntil(this.endObservables))
+      .subscribe({
+        next: () => {
+          this.form.patchValue({
+            email: this.viewModel.email(),
+            username: this.viewModel.username(),
+            password: this.viewModel.password(),
+          })
+        },
+      })
 
     effect(() => {
       const emailError = this.viewModel.errors.email()
@@ -93,6 +98,13 @@ export class InformationsComponent implements OnInit {
 
   ngOnInit(): void {
     this.viewModel.refreshUserInformation()
+      .pipe(takeUntil(this.endObservables))
+      .subscribe()
+  }
+
+  ngOnDestroy(): void {
+    this.endObservables.next(true)
+    this.endObservables.complete()
   }
 
   onToggleMask(): void {
@@ -100,13 +112,15 @@ export class InformationsComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.viewModel.updateUserInformation().subscribe({
-      next: () => {
-        this.toastService.success('Votre profil a été mis à jour !')
-      },
-      error: () => {
-        this.toastService.error('Erreur lors de la mise à jour des informations')
-      },
-    })
+    this.viewModel.updateUserInformation()
+      .pipe(takeUntil(this.endObservables))
+      .subscribe({
+        next: () => {
+          this.toastService.success('Votre profil a été mis à jour !')
+        },
+        error: () => {
+          this.toastService.error('Erreur lors de la mise à jour des informations')
+        },
+      })
   }
 }
