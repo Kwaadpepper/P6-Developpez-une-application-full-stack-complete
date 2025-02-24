@@ -15,6 +15,7 @@ describe('ListPostsComponent', () => {
   beforeEach(async () => {
     viewModel = jasmine.createSpyObj('ListPostsViewModel', [
       'feedUserWithMorePosts',
+      'reloadPosts',
     ], {
       sortAscending: signal(false),
       loading: signal(false),
