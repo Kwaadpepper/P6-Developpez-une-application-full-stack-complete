@@ -51,7 +51,6 @@ export class HeaderComponent implements OnInit {
   }
 
   onHideDrawer(): void {
-    console.log('hide drawer')
     this.drawerVisible.set(false)
   }
 }

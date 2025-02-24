@@ -29,7 +29,6 @@ export class ListComponent implements OnInit {
         next: (newCommentUuid: UUID) => {
           this.loadFirstPageComments().then(() => {
             setTimeout(() => {
-              console.log(document.getElementById(`comment-${newCommentUuid}`))
               document.getElementById(`comment-${newCommentUuid}`)?.scrollIntoView({
                 behavior: 'smooth',
                 block: 'center',
@@ -46,7 +45,6 @@ export class ListComponent implements OnInit {
   }
 
   onPageChange(event: PaginatorState): void {
-    console.log(event)
     this.viewModel.fetchComments(this.postUuid(), (event.page ?? 0) + 1, event.rows ?? this.viewModel.perPage())
   }
 
