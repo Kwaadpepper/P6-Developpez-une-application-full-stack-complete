@@ -1,0 +1,17 @@
+meta {
+  name: List Topics Names
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:3001/api/topics/names?page=1&per-page=10
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 1
+  per-page: 10
+  ~name: 
+}

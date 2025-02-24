@@ -1,1 +1,11 @@
-<router-outlet></router-outlet>
+<header>
+  <app-header></app-header>
+  <p-toast position="top-left" showTransformOptions="translateX(-100%)" hideTransformOptions="translateX(-100%)"
+    showTransitionOptions="150ms" hideTransitionOptions="350ms"
+    [breakpoints]="{ '620px': { width: '90%', right: '0', left: '10' } }" />
+
+  <app-scroll-top></app-scroll-top>
+</header>
+<main>
+  <router-outlet (activate)="onActivate()" (attach)="onAttach()"></router-outlet>
+</main>
