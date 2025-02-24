@@ -1,0 +1,21 @@
+<div *ngIf="viewModel.displayHeader()" class="w-100 border-b-2 border-b-gray-400 sm:flex"
+  [class.hidden]="viewModel.isOnAuthPage()">
+  <div class="flex-grow flex flex-row justify-end items-center">
+    <a class="ms-3 mt-2 me-auto inline-block cursor-pointer" routerLink="" title="Retourner sur la page d'accueil">
+      <img class="img-fluid w-20 sm:w-28" src="/assets/pictures/logo_p6.png" [alt]="viewModel.appName()"
+        [title]="'Logo ' + viewModel.appName()" />
+    </a>
+
+    <app-nav-menu *ngIf="!onMobile()"></app-nav-menu>
+
+    <button pButton *ngIf="onMobile()" (click)="onShowDrawer()" icon="pi pi-bars" text severity="contrast" class="me-4"
+      size="large" type="button" title="Afficher le menu"></button>
+  </div>
+</div>
+
+
+<p-drawer [(visible)]="drawerVisible" position="right">
+  <ng-template #headless>
+    <app-nav-menu verticalDisplay (closedMenu)="onHideDrawer()"></app-nav-menu>
+  </ng-template>
+</p-drawer>

@@ -1,0 +1,39 @@
+<div class="container">
+  <div class="row mb-3 sticky top-0 bg-surface-0 dark:bg-surface-900 z-10 py-3">
+    <div class="col px-7 flex flex-wrap justify-between items-center">
+      <a class="btn btn-primary my-2" pButton routerLink="/posts/create" title="Créer un nouvel article">
+        <span pButtonLabel>Créer un article</span>
+      </a>
+      <button class="ms-auto me-2 my-2" text severity="contrast" title="Recharger les articles" (click)="onRefresh()"
+        type="button">
+        <span pButtonLabel><i class="pi pi-sync"></i></span>
+      </button>
+      <button pButton class="ms-auto min-[380px]:ms-2 me-2 my-2" text severity="contrast"
+        title="Trier par ordre de publication" (click)="onClickFeedSorting()" type="button">
+        <span pButtonLabel class="font-bold">Trier par</span>
+        <span *ngIf="!viewModel.sortAscending()" pButtonLabel class="pi pi-arrow-down"
+          title="Du plus récent au plus ancien"></span>
+        <span *ngIf="viewModel.sortAscending()" pButtonLabel class="pi pi-arrow-up"
+          title="Du plus ancien au plus récent"></span>
+      </button>
+    </div>
+  </div>
+
+  <ngx-pull-to-refresh customClass="container-fluid" [spinnerSize]="30" [distanceForRefresh]="40" [isEnable]="true"
+    (refresh)="onPullToRefresh($event)">
+
+    <div class="row" infiniteScroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollThrottle]="throttle"
+      (scrolled)="onScroll()">
+      <div *ngIf="!viewModel.posts().length && !viewModel.loading()" class="col">
+        Pas d'article pour l'instant
+      </div>
+      <div class="col-12 md:col-6 lg:col-4 py-4" *ngFor="let post of viewModel.posts()">
+        <app-post-card [post]="post"></app-post-card>
+      </div>
+      <div class="col-12 text-center pb-28">
+        <app-progress-spinner [visible]="viewModel.loading()"></app-progress-spinner>
+      </div>
+    </div>
+
+  </ngx-pull-to-refresh>
+</div>
