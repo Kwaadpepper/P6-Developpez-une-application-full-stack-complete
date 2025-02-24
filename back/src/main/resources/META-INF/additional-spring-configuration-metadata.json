@@ -1,0 +1,29 @@
+{
+  "properties": [
+    {
+      "name": "jwt.secret_key",
+      "type": "java.lang.String",
+      "description": "The key used to sign jwt tokens"
+    },
+    {
+      "name": "jwt.cookie.name",
+      "type": "java.lang.String",
+      "description": "The name used for the jwt cookie"
+    },
+    {
+      "name": "jwt.token.expiration",
+      "type": "java.lang.Long",
+      "description": "Expiration delay for jwt token in minutes"
+    },
+    {
+      "name": "jwt.refresh.expiration",
+      "type": "java.lang.Long",
+      "description": "Expiration delay for refresh token in minutes"
+    },
+    {
+      "name": "server.cors.allowed-origins",
+      "type": "java.lang.String",
+      "description": "Allowed origins for CORS"
+    }
+  ]
+}

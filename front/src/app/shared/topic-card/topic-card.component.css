@@ -1,0 +1,13 @@
+:host {
+  display: contents;
+}
+
+.topic-card {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+.topic-card-content {
+  flex-grow: 1;
+}

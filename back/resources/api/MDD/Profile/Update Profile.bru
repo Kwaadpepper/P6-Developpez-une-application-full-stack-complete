@@ -1,0 +1,18 @@
+meta {
+  name: Update Profile
+  type: http
+  seq: 2
+}
+
+put {
+  url: http://localhost:3001/api/profile
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+        "email": "johndoe@example.net",
+        "username": "John Doe"
+  }
+}

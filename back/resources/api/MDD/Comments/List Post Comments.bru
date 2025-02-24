@@ -1,0 +1,16 @@
+meta {
+  name: List Post Comments
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:3001/api/posts/6b8c767f-aa9f-48d3-b6c4-03e1f6872002/comments?page=1&per-page=10
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 1
+  per-page: 10
+}

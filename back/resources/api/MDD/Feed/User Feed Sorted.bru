@@ -1,0 +1,16 @@
+meta {
+  name: User Feed Sorted
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:3001/api/feed?page=1
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 1
+  ~ascending: true
+}

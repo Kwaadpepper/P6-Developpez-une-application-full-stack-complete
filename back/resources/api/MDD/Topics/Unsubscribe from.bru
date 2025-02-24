@@ -1,0 +1,17 @@
+meta {
+  name: Unsubscribe from
+  type: http
+  seq: 5
+}
+
+delete {
+  url: http://localhost:3001/api/topics/subscription
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "topic": "6b8c767f-aa9f-48d3-b6c4-03e1f6879000"
+  }
+}

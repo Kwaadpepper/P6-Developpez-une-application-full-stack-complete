@@ -1,0 +1,63 @@
+<div class="container-fluid min-h-full">
+  <div class="row mb-3">
+    <div class="col text-center">
+      <app-back-button backUrl="/" />
+
+      <div class="sm:hidden flex flex-row justify-center pt-10">
+        <img class="img-fluid " src="/assets/pictures/logo_p6.png" alt="Logo Monde de dèv" />
+      </div>
+
+      <h1>Inscription</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <form [formGroup]="form" class="mx-auto sm:max-w-80" (ngSubmit)="onSubmit()">
+
+        <p-message icon="pi pi-times-circle" styleClass="mb-3" *ngIf="viewModel.formErrorMessage()" severity="error">{{
+          viewModel.formErrorMessage()
+          }}</p-message>
+
+        <div class="flex flex-col mb-3">
+          <label for="username" class="mb-0">Nom d'utilisateur</label>
+          <input pInputText id="username" formControlName="username" aria-describedby="username-help" />
+          <small id="username-help" class="text-red-600"
+            *ngIf="form.controls.username.dirty || form.controls.username.touched">
+            <span class="block" *ngIf="form.controls.username.hasError('required')"> Obligatoire.</span>
+            <span class="block" *ngIf="viewModel.errors.username()">{{ viewModel.errors.username() }}</span>
+          </small>
+        </div>
+
+        <div class="flex flex-col mb-3">
+          <label for="email">Adresse e-mail</label>
+          <input pInputText id="email" formControlName="email" aria-describedby="email-help" />
+          <small id="email-help" class="text-red-600" *ngIf="form.controls.email.dirty || form.controls.email.touched">
+            <span class="block" *ngIf="form.controls.email.hasError('required')"> Obligatoire.</span>
+            <span class="block" *ngIf="form.controls.email.hasError('email')"> Doit être une addresse e-mail
+              valide.</span>
+            <span class="block" *ngIf="viewModel.errors.email()">{{ viewModel.errors.email() }}</span>
+          </small>
+        </div>
+
+        <div class="flex flex-col mb-3">
+          <label for="password">Mot de passe</label>
+          <input pInputText id="password" formControlName="password" aria-describedby="password-help" type="password" />
+          <small id="password-help" class="text-red-600"
+            *ngIf="form.controls.password.dirty || form.controls.password.touched">
+            <span class="block" *ngIf="form.controls.password.hasError('required')"> Obligatoire.</span>
+            <span class="block" *ngIf="viewModel.errors.password()">{{ viewModel.errors.password() }}</span>
+          </small>
+        </div>
+
+        <div class="flex flex-col mb-3">
+          <button pButton class="mx-auto my-4" [disabled]="!form.valid || viewModel.loading()" type="submit">
+            <span pButtonLabel>S'inscrire</span>
+            <span *ngIf="viewModel.loading()" pButtonLabel>
+              <i class="pi pi-spin pi-cog"></i>
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
