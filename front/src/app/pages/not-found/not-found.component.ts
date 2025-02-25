@@ -1,4 +1,5 @@
 import { Component } from '@angular/core'
+
 import NotFoundViewModel from './not-found.viewmodel'
 
 @Component({

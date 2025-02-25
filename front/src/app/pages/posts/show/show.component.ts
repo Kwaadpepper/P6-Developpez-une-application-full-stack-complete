@@ -1,10 +1,11 @@
 import { SlicePipe, TitleCasePipe } from '@angular/common'
 import { Component, EventEmitter } from '@angular/core'
+import { MarkdownComponent } from 'ngx-markdown'
+
 import { CommentAddComponent, CommentsListComponent } from '@components/index'
 import { UUID } from '@core/types'
 import { NiceDate } from '@pipes/NiceDate'
 import { BackButtonComponent } from '@shared/index'
-import { MarkdownComponent } from 'ngx-markdown'
 import ShowViewModel from './show.viewmodel'
 
 @Component({

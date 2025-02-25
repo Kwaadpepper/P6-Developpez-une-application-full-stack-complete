@@ -6,7 +6,7 @@
       <h1>Créer un nouvel article</h1>
     </div>
   </div>
-  <form class="row pt-6" [formGroup]="form" (ngSubmit)="onSubmit()">
+  <form class="row pt-6" [formGroup]="form" (ngSubmit)="onSubmit()" [inert]="viewModel.creatingTopicLoading()">
 
     <div class="col-12">
       <p-message icon="pi pi-times-circle" styleClass="mb-3" *ngIf="viewModel.formErrorMessage()" severity="error">{{
@@ -23,9 +23,9 @@
           [resetFilterOnHide]="true"
           [lazy]="true"
           [virtualScroll]="true"
-          [virtualScrollItemSize]="viewModel.topicsTotalItems()"
+          [virtualScrollItemSize]="viewModel.totalTopicNamesCount()"
           [virtualScrollOptions]="{ itemSize: viewModel.topicsPerPage }"
-          [loading]="viewModel.topicsAreLoading()"
+          [loading]="viewModel.topicsNamesAreLoading()"
           [optionLabel]="selectOptions().label"
           [optionValue]="selectOptions().value"
           (onLazyLoad)="onLazyloadTopicsNames($event)"
@@ -67,10 +67,10 @@
     </div>
 
     <div class="col-12 text-center mt-3 mb-10">
-      <button pButton outlined severity="contrast" [disabled]="!form.valid || viewModel.loading()"
+      <button pButton outlined severity="contrast" [disabled]="!form.valid || viewModel.creatingTopicLoading()"
         aria-label="Valider et créer ce nouvel article" type="submit">
         <span pButtonLabel>Créer</span>
-        <span *ngIf="viewModel.loading()" pButtonLabel>
+        <span *ngIf="viewModel.creatingTopicLoading()" pButtonLabel>
           <i class="pi pi-spin pi-cog"></i>
         </span>
       </button>

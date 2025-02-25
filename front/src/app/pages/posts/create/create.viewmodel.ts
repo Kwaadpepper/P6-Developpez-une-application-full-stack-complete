@@ -3,7 +3,7 @@ import { computed, Injectable, signal } from '@angular/core'
 import { TopicName } from '@core/interfaces'
 import { errors, PostService, TopicService } from '@core/services'
 import { UUID } from '@core/types'
-import { catchError, EMPTY, finalize, map, Observable } from 'rxjs'
+import { catchError, EMPTY, finalize, map, Observable, of, tap } from 'rxjs'
 
 @Injectable({
   providedIn: 'root',
@@ -24,37 +24,19 @@ export default class CreateViewModel {
     uuid: '',
   })
 
-  public readonly loading = signal(false)
+  private readonly _topicNames = signal<TopicName[]>([])
+  public readonly topicNames = computed<TopicName[]>(() => this._topicNames())
 
-  private readonly pagninatedTopicNames = signal<TopicName[]>([])
-  public readonly filteredTopicNames = signal<TopicName[]>([])
+  private readonly _currentPage = signal<number>(1)
+  public readonly currentPage = computed<number>(() => this._currentPage())
 
-  public readonly topicNames = computed<TopicName[]>(() => {
-    const filteredTopicNames = this.filteredTopicNames()
-
-    return filteredTopicNames.length ? this.filteredTopicNames() : this.pagninatedTopicNames()
-  })
-
-  private readonly pagninatedPage = signal<number>(1)
-  private readonly filteredPage = signal<number>(1)
-
-  public readonly topicsPage = computed<number>(() => {
-    const filteredTopicNames = this.filteredTopicNames()
-
-    return filteredTopicNames.length ? this.filteredPage() : this.pagninatedPage()
-  })
-
-  private readonly pagninatedTotalItems = signal<number>(0)
-  private readonly filteredTotalItems = signal<number>(0)
-
-  public readonly topicsTotalItems = computed<number>(() => {
-    const filteredTopicNames = this.filteredTopicNames()
-
-    return filteredTopicNames.length ? this.filteredTotalItems() : this.pagninatedTotalItems()
-  })
+  private readonly _totalTopicNamesCount = signal<number>(0)
+  public readonly totalTopicNamesCount = computed<number>(() => this._totalTopicNamesCount())
 
   public readonly topicsPerPage = 30
-  public readonly topicsAreLoading = signal(false)
+
+  public readonly creatingTopicLoading = signal(false)
+  public readonly topicsNamesAreLoading = signal(false)
 
   constructor(
     private postService: PostService,
@@ -62,19 +44,17 @@ export default class CreateViewModel {
   ) {
   }
 
-  public searchForTopicNames(page: number, searchLike: string): void {
-    this.filteredTopicNames.set([])
-    this.loadTopicNames(page, searchLike)
+  public searchForTopicNames(page: number, searchLike: string): Observable<void> {
+    this._topicNames.set([])
+    return this.loadTopicNames(page, searchLike)
   }
 
-  public getTopicNamesPage(page: number): void {
-    this.loadTopicNames(page)
+  public getTopicNamesPage(page: number): Observable<void> {
+    return this.loadTopicNames(page)
   }
 
   public resetTopicFilters(): void {
-    this.filteredTopicNames.set([])
-    this.filteredPage.set(1)
-    this.filteredTotalItems.set(0)
+    this._currentPage.set(1)
   }
 
   public setTopicNameByUUID(uuid: UUID): void {
@@ -88,7 +68,7 @@ export default class CreateViewModel {
   }
 
   public persistPost(): Observable<string> {
-    this.loading.set(true)
+    this.creatingTopicLoading.set(true)
     this.resetErrors()
 
     return this.postService.createPost(
@@ -97,6 +77,7 @@ export default class CreateViewModel {
       this.topicName(),
     ).pipe(
       map((newPostSlug) => {
+        this.creatingTopicLoading.set(false)
         this.formErrorMessage.set('')
         return newPostSlug
       }),
@@ -104,14 +85,14 @@ export default class CreateViewModel {
         if (error instanceof errors.ValidationError) {
           this.formErrorMessage.set('Des champ n\'ont pas pu être validés')
           this.setErrors(error.getErrors())
-          return EMPTY
+          return of(error)
         }
 
         this.formErrorMessage.set(error.message)
-        return EMPTY
+        return of(error)
       }),
       finalize(() => {
-        this.loading.set(false)
+        this.creatingTopicLoading.set(false)
       }),
     )
   }
@@ -128,33 +109,35 @@ export default class CreateViewModel {
     this.errors.topicName.set(errors.get('topicName') ?? '')
   }
 
-  private loadTopicNames(page: number, searchLike = ''): void {
-    if (this.topicsAreLoading()) {
-      return
+  private loadTopicNames(page: number, searchLike = ''): Observable<void> {
+    if (this.topicsNamesAreLoading()) {
+      return EMPTY
     }
 
-    this.topicsAreLoading.set(false)
-    this.topicService.paginateTopicsNames(page, searchLike)
-      .subscribe({
-        next: (topics) => {
+    this.topicsNamesAreLoading.set(false)
+    return this.topicService.paginateTopicsNames(page, searchLike)
+      .pipe(
+        tap((topics) => {
+          this.topicsNamesAreLoading.set(false)
           if (searchLike.length) {
-            this.filteredTotalItems.set(topics.totalItems)
-            this.filteredPage.set(topics.page)
-            this.filteredTopicNames.update((topicNames) => {
+            this._totalTopicNamesCount.set(topics.totalItems)
+            this._currentPage.set(topics.page)
+            this._topicNames.update((topicNames) => {
               return [...topicNames, ...topics.list]
             })
             return
           }
 
-          this.pagninatedTotalItems.set(topics.totalItems)
-          this.pagninatedPage.set(topics.page)
-          this.pagninatedTopicNames.update((topicNames) => {
+          this._totalTopicNamesCount.set(topics.totalItems)
+          this._currentPage.set(topics.page)
+          this._topicNames.update((topicNames) => {
             return [...topicNames, ...topics.list]
           })
-        },
-        complete: () => {
-          this.topicsAreLoading.set(false)
-        },
-      })
+        }),
+        map(() => { return }),
+        finalize(() => {
+          this.topicsNamesAreLoading.set(false)
+        }),
+      )
   }
 }

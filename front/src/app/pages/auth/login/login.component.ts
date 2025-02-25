@@ -1,10 +1,11 @@
 import { NgIf } from '@angular/common'
-import { Component } from '@angular/core'
+import { Component, OnDestroy } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { Router } from '@angular/router'
 import { ButtonModule } from 'primeng/button'
 import { InputTextModule } from 'primeng/inputtext'
 import { MessageModule } from 'primeng/message'
+import { Subject, takeUntil } from 'rxjs'
 
 import { ToastService } from '@core/services'
 import { redirectUrls } from '@routes'
@@ -22,7 +23,7 @@ import LoginViewModel from './login.viewmodel'
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent {
+export class LoginComponent implements OnDestroy {
   public form = new FormGroup({
     login: new FormControl('', {
       validators: [
@@ -38,6 +39,8 @@ export class LoginComponent {
     }),
   })
 
+  private readonly endObservables = new Subject<true>()
+
   constructor(
     private toastService: ToastService,
     public viewModel: LoginViewModel,
@@ -50,6 +53,11 @@ export class LoginComponent {
     })
   }
 
+  ngOnDestroy(): void {
+    this.endObservables.next(true)
+    this.endObservables.complete()
+  }
+
   public onSubmit(): void {
     const { login, password } = this.viewModel
     if (this.form.invalid) {
@@ -58,8 +66,12 @@ export class LoginComponent {
     }
 
     this.viewModel
-      .proceedToLogin(login(), password()).then(() => {
-        this.router.navigateByUrl(redirectUrls.posts)
+      .proceedToLogin(login(), password())
+      .pipe(takeUntil(this.endObservables))
+      .subscribe({
+        next: () => {
+          this.router.navigateByUrl(redirectUrls.posts)
+        },
       })
   }
 }

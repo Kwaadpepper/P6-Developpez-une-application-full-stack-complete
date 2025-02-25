@@ -1,12 +1,12 @@
 import { NgFor, NgIf } from '@angular/common'
-import { Component, OnInit } from '@angular/core'
+import { Component, OnDestroy, OnInit } from '@angular/core'
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll'
 import { ButtonModule } from 'primeng/button'
 import { InputGroupModule } from 'primeng/inputgroup'
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon'
 import { InputTextModule } from 'primeng/inputtext'
 import { ProgressSpinnerModule } from 'primeng/progressspinner'
-import { debounceTime, distinctUntilChanged, tap } from 'rxjs'
+import { debounceTime, distinctUntilChanged, Subject, switchMap, takeUntil, tap } from 'rxjs'
 
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { BackButtonComponent, ProgressSpinnerComponent, TopicCardComponent } from '@shared/index'
@@ -31,11 +31,13 @@ import ListViewModel from './list.viewmodel'
   templateUrl: './list.component.html',
   styleUrl: './list.component.css',
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
   public readonly throttle = 1000
   public readonly scrollDistance = 1
 
   public searchTerm = new FormControl('')
+
+  private readonly endObservables = new Subject<true>()
 
   constructor(
     public readonly viewModel: ListViewModel,
@@ -44,24 +46,36 @@ export class ListComponent implements OnInit {
 
   ngOnInit(): void {
     this.viewModel.reloadTopics()
+      .pipe(takeUntil(this.endObservables))
+      .subscribe()
+
     this.searchTerm.valueChanges.pipe(
+      takeUntil(this.endObservables),
       tap(() => this.viewModel.loading.set(true)),
       debounceTime(750),
       distinctUntilChanged(),
-    ).subscribe({
-      next: (value) => {
+      tap((value) => {
         this.viewModel.setSetTopicNameFilter(value ?? undefined)
-        this.viewModel.reloadTopics()
-      },
-    })
+      }),
+      switchMap(() => this.viewModel.reloadTopics()),
+    ).subscribe()
+  }
+
+  ngOnDestroy(): void {
+    this.endObservables.next(true)
+    this.endObservables.complete()
   }
 
   onScroll(): void {
     this.viewModel.loadMoreTopics()
+      .pipe(takeUntil(this.endObservables))
+      .subscribe()
   }
 
   onSearch(): void {
     this.viewModel.reloadTopics()
+      .pipe(takeUntil(this.endObservables))
+      .subscribe()
   }
 
   onClearSearch(): void {

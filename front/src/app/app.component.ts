@@ -25,11 +25,19 @@ export class AppComponent {
     this.scrollToTop()
   }
 
+  /**
+   * Scrolls the window to the top.
+   */
   private scrollToTop(): void {
-    window.scroll({
-      top: 0,
-      left: 0,
-    })
-    window.scrollTo(0, 0) // For Safari
+    if (window.scroll) {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      })
+    }
+    else {
+      window.scrollTo(0, 0) // For Safari
+    }
   }
 }

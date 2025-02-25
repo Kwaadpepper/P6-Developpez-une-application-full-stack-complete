@@ -1,4 +1,5 @@
 import { computed, Injectable, Signal, signal } from '@angular/core'
+import { finalize, map, Observable, tap } from 'rxjs'
 
 import { Post } from '@core/interfaces'
 import { FeedService } from '@core/services'
@@ -23,32 +24,30 @@ export default class ListViewModel {
     this.feedInvalidated = computed(() => feedService.feedInvalidated())
   }
 
-  public feedUserWithMorePosts(): void {
+  public feedUserWithMorePosts(): Observable<void> {
     this.loading.set(true)
     this._currentPage += 1
-    this.feedService.getUserFeedPage(this._currentPage, this.sortAscending())
-      .subscribe({
-        next: (newPage) => {
+    return this.feedService.getUserFeedPage(this._currentPage, this.sortAscending())
+      .pipe(
+        tap((newPage) => {
           this._postList.update(posts => [...posts, ...newPage.list])
           this.loading.set(false)
-        },
-        error: (error) => {
-          console.error('Error fetching user feed:', error)
+        }),
+        map(() => { return }),
+        finalize(() => {
           this.loading.set(false)
-        },
-      })
+        }),
+      )
   }
 
-  public reloadPosts(): void {
+  public reloadPosts(): Observable<void> {
     this._currentPage = 0
     this._postList.set([])
-    this.feedUserWithMorePosts()
+    return this.feedUserWithMorePosts()
   }
 
-  public togglePostsSorting(): void {
+  public togglePostsSorting(): Observable<void> {
     this.sortAscending.set(!this.sortAscending())
-    this._currentPage = 0
-    this._postList.set([])
-    this.feedUserWithMorePosts()
+    return this.reloadPosts()
   }
 }

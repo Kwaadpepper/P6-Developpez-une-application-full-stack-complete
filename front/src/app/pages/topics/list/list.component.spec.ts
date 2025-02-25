@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { of } from 'rxjs'
 
 import { signal } from '@angular/core'
 import { Topic } from '@core/interfaces'
@@ -11,7 +12,9 @@ describe('ListTopicsComponent', () => {
   let viewModel: ListViewModel
 
   beforeEach(async () => {
-    viewModel = jasmine.createSpyObj('ListTopicsViewModel', ['reloadTopics'], {
+    viewModel = jasmine.createSpyObj('ListTopicsViewModel', {
+      reloadTopics: of(),
+    }, {
       loading: signal(false),
       topics: signal<Topic[]>([]),
     })

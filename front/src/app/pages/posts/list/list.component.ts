@@ -1,10 +1,10 @@
 import { NgFor, NgIf } from '@angular/common'
-import { Component, OnInit } from '@angular/core'
+import { Component, OnDestroy, OnInit } from '@angular/core'
 import { NavigationEnd, Router, RouterModule } from '@angular/router'
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll'
 import { NgxPullToRefreshModule } from 'ngx-pull-to-refresh'
 import { ButtonModule } from 'primeng/button'
-import { filter, Subject } from 'rxjs'
+import { filter, Subject, switchMap, takeUntil } from 'rxjs'
 
 import { PostCardComponent, ProgressSpinnerComponent } from '@shared/index'
 import ListViewModel from './list.viewmodel'
@@ -23,9 +23,11 @@ import ListViewModel from './list.viewmodel'
   templateUrl: './list.component.html',
   styleUrl: './list.component.css',
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
   public readonly throttle = 1000
   public readonly scrollDistance = 1
+
+  private readonly endObservables = new Subject<true>()
 
   constructor(
     public readonly viewModel: ListViewModel,
@@ -36,27 +38,36 @@ export class ListComponent implements OnInit {
 
   ngOnInit(): void {
     this.viewModel.reloadPosts()
+      .pipe(takeUntil(this.endObservables))
+      .subscribe()
+
     this.router.events.pipe(
+      takeUntil(this.endObservables),
       filter(event => event instanceof NavigationEnd),
-    ).subscribe({
-      next: (event: NavigationEnd) => {
+      filter((event) => {
         const currentNavigation = this.router.getCurrentNavigation()
         const isPostListRoute = event.url === '/posts'
+        const hasAnyPost = this.viewModel.posts().length > 0
         const doRefresh = isPostListRoute
-          && (currentNavigation?.extras.state?.['refresh']
+          && (!hasAnyPost
+            || currentNavigation?.extras.state?.['refresh']
             || this.viewModel.feedInvalidated())
 
-        if (!doRefresh) {
-          return
-        }
+        return doRefresh
+      }),
+      switchMap(() => this.viewModel.reloadPosts()),
+    ).subscribe()
+  }
 
-        this.viewModel.reloadPosts()
-      },
-    })
+  ngOnDestroy(): void {
+    this.endObservables.next(true)
+    this.endObservables.complete()
   }
 
   onRefresh(): void {
     this.viewModel.reloadPosts()
+      .pipe(takeUntil(this.endObservables))
+      .subscribe()
   }
 
   onPullToRefresh(event: Subject<unknown>): void {
@@ -66,9 +77,13 @@ export class ListComponent implements OnInit {
 
   onScroll(): void {
     this.viewModel.feedUserWithMorePosts()
+      .pipe(takeUntil(this.endObservables))
+      .subscribe()
   }
 
   onClickFeedSorting(): void {
     this.viewModel.togglePostsSorting()
+      .pipe(takeUntil(this.endObservables))
+      .subscribe()
   }
 }

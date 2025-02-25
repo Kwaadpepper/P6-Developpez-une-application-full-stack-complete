@@ -1,4 +1,5 @@
 import { computed, Injectable, signal } from '@angular/core'
+import { finalize, map, Observable, tap } from 'rxjs'
 
 import { TopicService } from '@core/services'
 import { UUID } from '@core/types'
@@ -29,34 +30,32 @@ export default class ListViewModel {
   ) {
   }
 
-  public reloadTopics(): void {
+  public reloadTopics(): Observable<void> {
     this._currentPage = 1
     this.topicList.set([])
-    this.loadMoreTopics()
+    return this.loadMoreTopics()
   }
 
   public setSetTopicNameFilter(name: string | undefined): void {
     this._topicNameFilter = name
   }
 
-  public loadMoreTopics(): void {
+  public loadMoreTopics(): Observable<void> {
     this.loading.set(true)
-    this.topicService.paginateTopics(this._currentPage++, this._topicNameFilter)
-      .subscribe({
-        next: (newPage) => {
+    return this.topicService.paginateTopics(this._currentPage++, this._topicNameFilter)
+      .pipe(
+        tap((newPage) => {
           this.topicList.update(topics => [...topics, ...newPage.list.map(topic => ({
             uuid: topic.uuid,
             description: topic.description,
             name: topic.name,
             subscribed: topic.subscribed,
           }))])
-        },
-        error: () => {
+        }),
+        map(() => { return }),
+        finalize(() => {
           this.loading.set(false)
-        },
-        complete: () => {
-          this.loading.set(false)
-        },
-      })
+        }),
+      )
   }
 }

@@ -1,7 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing'
-
 import { signal } from '@angular/core'
+import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { provideRouter } from '@angular/router'
+import { of } from 'rxjs'
+
 import { Post } from '@core/interfaces'
 import { PostCardComponent } from '@shared/index'
 import { ListComponent } from './list.component'
@@ -13,9 +14,10 @@ describe('ListPostsComponent', () => {
   let viewModel: ListViewModel
 
   beforeEach(async () => {
-    viewModel = jasmine.createSpyObj('ListPostsViewModel', [
-      'feedUserWithMorePosts',
-    ], {
+    viewModel = jasmine.createSpyObj('ListPostsViewModel', {
+      feedUserWithMorePosts: of(),
+      reloadPosts: of(),
+    }, {
       sortAscending: signal(false),
       loading: signal(false),
       posts: signal<Post[]>([]),

@@ -1,4 +1,6 @@
 import { Injectable, signal } from '@angular/core'
+import { catchError, finalize, Observable, of, tap } from 'rxjs'
+
 import { AuthService, errors, ToastService } from '@core/services'
 
 @Injectable({
@@ -18,35 +20,29 @@ export default class LoginViewModel {
   ) {
   }
 
-  public proceedToLogin(
-    login: string, password: string,
-  ): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      // * Set loading
-      this.loading.set(true)
-      // * Login
-      this.authService.login(
-        { login, password },
-      ).subscribe({
-        complete: () => {
+  public proceedToLogin(login: string, password: string): Observable<boolean> {
+    this.loading.set(true)
+    return this.authService.login({ login, password })
+      .pipe(
+        tap(() => {
           this.loading.set(false)
           this.formErrorMessage.set('')
           this.toastService.success('Connexion réussie')
-          resolve(true)
-        },
-        error: (error) => {
-          this.loading.set(false)
+        }),
+        catchError((error) => {
           if (error instanceof errors.LoginFailure) {
             this.formErrorMessage.set('Identifiants incorrects')
-            return
+            return of(error)
           }
 
           this.toastService.error('Erreur lors de la connexion')
 
           console.error('Error:', error)
-          reject(error)
-        },
-      })
-    })
+          return of(error)
+        }),
+        finalize(() => {
+          this.loading.set(false)
+        }),
+      )
   }
 }

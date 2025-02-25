@@ -5,6 +5,7 @@ import { provideRouter } from '@angular/router'
 import { TopicName } from '@core/interfaces'
 import { ToastService } from '@core/services'
 import { MarkdownEditorComponent } from '@shared/index'
+import { of } from 'rxjs'
 import { CreateComponent } from './create.component'
 import CreateViewModel from './create.viewmodel'
 
@@ -15,14 +16,15 @@ describe('CreatePostComponent', () => {
   let toastService: ToastService
 
   beforeEach(async () => {
-    viewModel = jasmine.createSpyObj('CreateViewModel', [
-      'setTopicNameByUUID', 'getTopicNamesPage',
-    ], {
-      loading: signal(false),
+    viewModel = jasmine.createSpyObj('CreateViewModel', {
+      setTopicNameByUUID: of(),
+      getTopicNamesPage: of(),
+    }, {
+      creatingTopicLoading: signal(false),
+      topicsNamesAreLoading: signal(false),
       formErrorMessage: signal(''),
       topicNames: signal<TopicName[]>([]),
-      topicsTotalItems: signal(0),
-      topicsAreLoading: signal(false),
+      totalTopicNamesCount: signal(0),
       content: signal(''),
       errors: {
         title: signal(''),

@@ -1,10 +1,11 @@
 import { NgIf } from '@angular/common'
-import { Component, effect } from '@angular/core'
+import { Component, effect, OnDestroy } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { Router } from '@angular/router'
 import { ButtonModule } from 'primeng/button'
 import { InputTextModule } from 'primeng/inputtext'
 import { MessageModule } from 'primeng/message'
+import { SubscriptionLike } from 'rxjs'
 
 import { ToastService } from '@core/services'
 import { redirectUrls } from '@routes'
@@ -22,7 +23,7 @@ import RegisterViewModel from './register.viewmodel'
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnDestroy {
   public form = new FormGroup({
     username: new FormControl('', {
       validators: [
@@ -41,6 +42,8 @@ export class RegisterComponent {
       ],
     }),
   })
+
+  private registerSubscription: SubscriptionLike | null = null
 
   constructor(
     private readonly toastService: ToastService,
@@ -68,6 +71,12 @@ export class RegisterComponent {
     })
   }
 
+  ngOnDestroy(): void {
+    if (this.registerSubscription) {
+      this.registerSubscription.unsubscribe()
+    }
+  }
+
   public onSubmit(): void {
     const { email, username, password } = this.viewModel
     if (this.form.invalid) {
@@ -75,9 +84,12 @@ export class RegisterComponent {
       return
     }
 
-    this.viewModel
-      .proceedToRegister(email(), username(), password()).then(() => {
-        this.router.navigateByUrl(redirectUrls.posts)
+    this.registerSubscription = this.viewModel
+      .proceedToRegister(email(), username(), password())
+      .subscribe({
+        next: () => {
+          this.router.navigateByUrl(redirectUrls.posts)
+        },
       })
   }
 }

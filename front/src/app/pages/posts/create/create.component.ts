@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common'
-import { Component, OnInit, signal } from '@angular/core'
+import { Component, OnDestroy, OnInit, signal } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { Router } from '@angular/router'
 import { LazyLoadEvent } from 'primeng/api'
@@ -8,7 +8,7 @@ import { InputTextModule } from 'primeng/inputtext'
 import { MessageModule } from 'primeng/message'
 import { SelectFilterEvent, SelectModule } from 'primeng/select'
 import { TextareaModule } from 'primeng/textarea'
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs'
+import { debounceTime, distinctUntilChanged, Subject, switchMap, takeUntil } from 'rxjs'
 
 import { ToastService } from '@core/services'
 import { UUID } from '@core/types'
@@ -31,7 +31,7 @@ interface selectOptions {
   templateUrl: './create.component.html',
   styleUrl: './create.component.css',
 })
-export class CreateComponent implements OnInit {
+export class CreateComponent implements OnInit, OnDestroy {
   private readonly topicSearch = ''
   private readonly searchTopicName$ = new Subject<string>()
 
@@ -61,6 +61,8 @@ export class CreateComponent implements OnInit {
     }),
   })
 
+  private readonly endObservables = new Subject<true>()
+
   constructor(
     private router: Router,
     public viewModel: CreateViewModel,
@@ -78,18 +80,21 @@ export class CreateComponent implements OnInit {
   ngOnInit(): void {
     // * Debounce search topic names
     this.searchTopicName$.pipe(
+      takeUntil(this.endObservables),
       debounceTime(500),
       distinctUntilChanged(),
-    ).subscribe((filter) => {
-      this.viewModel.resetTopicFilters()
-
-      if (filter.length >= 2) {
-        this.viewModel.searchForTopicNames(1, filter)
-      }
-    })
+      switchMap(filter => this.viewModel.searchForTopicNames(1, filter)),
+    ).subscribe()
 
     // * Init topic names
     this.viewModel.getTopicNamesPage(1)
+      .pipe(takeUntil(this.endObservables))
+      .subscribe()
+  }
+
+  ngOnDestroy(): void {
+    this.endObservables.next(true)
+    this.endObservables.complete()
   }
 
   onFilterTopicsNames(event: SelectFilterEvent): void {
@@ -101,7 +106,7 @@ export class CreateComponent implements OnInit {
   }
 
   onLazyloadTopicsNames(event: LazyLoadEvent): void {
-    const currentPage = this.viewModel.topicsPage()
+    const currentPage = this.viewModel.currentPage()
     const nextPage = Math.floor((event.last ?? 0) / this.viewModel.topicsPerPage) + 1
 
     if (currentPage >= nextPage) {
@@ -110,10 +115,14 @@ export class CreateComponent implements OnInit {
 
     if (!this.topicSearch.length) {
       this.viewModel.getTopicNamesPage(nextPage)
+        .pipe(takeUntil(this.endObservables))
+        .subscribe()
       return
     }
 
     this.viewModel.searchForTopicNames(nextPage, this.topicSearch)
+      .pipe(takeUntil(this.endObservables))
+      .subscribe()
   }
 
   onSelectTopic(event: {
@@ -131,13 +140,15 @@ export class CreateComponent implements OnInit {
       return
     }
 
-    this.viewModel.persistPost().subscribe({
-      next: () => {
-        this.toastService.success('Post créé')
-        this.router.navigate(['posts'], {
-          state: { refresh: true },
-        })
-      },
-    })
+    this.viewModel.persistPost()
+      .pipe(takeUntil(this.endObservables))
+      .subscribe({
+        next: () => {
+          this.toastService.success('Post créé')
+          this.router.navigate(['posts'], {
+            state: { refresh: true },
+          })
+        },
+      })
   }
 }
