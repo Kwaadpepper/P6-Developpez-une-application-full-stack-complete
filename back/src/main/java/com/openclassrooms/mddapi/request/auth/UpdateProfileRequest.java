@@ -12,14 +12,24 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class UpdateProfileRequest {
+    @NotNull
+    @NotEmpty
+    @Size(min = 4, max = 255)
     private final String email;
+
+    @NotNull
+    @NotEmpty
+    @Size(min = 4, max = 255)
     private final String username;
+
+    @jakarta.annotation.Nullable
+    @Size(max = 255)
     private final String password;
 
     public UpdateProfileRequest(
-            @NotNull @NotEmpty @Size(min = 4, max = 255) String email,
-            @NotNull @NotEmpty @Size(min = 4, max = 255) String username,
-            @jakarta.annotation.Nullable @Size(max = 255) String password) {
+            String email,
+            String username,
+            String password) {
         this.email = email;
         this.username = username;
         this.password = password;
