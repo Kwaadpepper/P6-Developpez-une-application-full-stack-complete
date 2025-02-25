@@ -1,6 +1,6 @@
 import { computed, Injectable, signal } from '@angular/core'
 import { MarkdownService } from 'ngx-markdown'
-import { Subscription } from 'rxjs'
+import { catchError, Observable, of, tap } from 'rxjs'
 
 import { FeedService, TopicService } from '@core/services'
 import { decodeHTmlEntities } from '@core/tools/decodeHtmlEntities'
@@ -56,34 +56,36 @@ export default class TopicCardViewModel {
     })
   }
 
-  public subscribeTo(topicUuid: UUID): Subscription {
+  public subscribeTo(topicUuid: UUID): Observable<void> {
     return this.topicService.subcribeToTopic(topicUuid)
-      .subscribe({
-        next: () => {
+      .pipe(
+        tap(() => {
           this.feedService.invalidateFeed()
           this._topic.update((current) => {
             return { ...current, subscribed: true }
           })
-        },
-        error: (error) => {
+        }),
+        catchError((error) => {
           console.error('Error:', error)
-        },
-      })
+          return of(error)
+        }),
+      )
   }
 
-  public unsubscribeFrom(topicUuid: UUID): Subscription {
+  public unsubscribeFrom(topicUuid: UUID): Observable<void> {
     return this.topicService.unSubcribeFromTopic(topicUuid)
-      .subscribe({
-        next: () => {
+      .pipe(
+        tap(() => {
           this.feedService.invalidateFeed()
           this._topic.update((current) => {
             return { ...current, subscribed: false }
           })
-        },
-        error: (error) => {
+        }),
+        catchError((error) => {
           console.error('Error:', error)
-        },
-      })
+          return of(error)
+        }),
+      )
   }
 
   private async getPlainHtmlFromMarkdown(markdown: string): Promise<string> {

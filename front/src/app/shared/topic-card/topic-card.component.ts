@@ -1,8 +1,9 @@
 import { NgIf, SlicePipe, TitleCasePipe } from '@angular/common'
 import { Component, effect, input } from '@angular/core'
-import { ToastService } from '@core/services'
 import { ButtonModule } from 'primeng/button'
+import { Subject, takeUntil } from 'rxjs'
 
+import { ToastService } from '@core/services'
 import TopicCardViewModel, { TopicCard } from './topic-card.viewmodel'
 
 @Component({
@@ -16,7 +17,9 @@ import TopicCardViewModel, { TopicCard } from './topic-card.viewmodel'
   styleUrl: './topic-card.component.css',
 })
 export class TopicCardComponent {
-  topicCardElement = input.required<TopicCard>()
+  readonly topicCardElement = input.required<TopicCard>()
+
+  private readonly endObservables = new Subject<true>()
 
   constructor(
     private readonly toastService: ToastService,
@@ -29,14 +32,19 @@ export class TopicCardComponent {
 
   onSubscribeClick(topicName: string): void {
     this.viewModel.subscribeTo(this.viewModel.topic().uuid)
-      .add(() => {
+      .pipe(
+        takeUntil(this.endObservables),
+      ).subscribe(() => {
         this.toastService.success(`Vous suivez le thème ${topicName}`)
       })
   }
 
   onUnsubscribeClick(topicName: string): void {
     this.viewModel.unsubscribeFrom(this.viewModel.topic().uuid)
-      .add(() => {
+      .pipe(
+        takeUntil(this.endObservables),
+      )
+      .subscribe(() => {
         this.toastService.warning(`Vous ne suivez plus le thème ${topicName}`)
       })
   }
