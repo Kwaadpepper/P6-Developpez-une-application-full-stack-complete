@@ -2,7 +2,7 @@ import { NgFor, NgIf } from '@angular/common'
 import { Component, EventEmitter, input, OnDestroy, OnInit } from '@angular/core'
 import { MarkdownModule } from 'ngx-markdown'
 import { PaginatorModule, PaginatorState } from 'primeng/paginator'
-import { Observable, Subject, takeUntil } from 'rxjs'
+import { filter, map, Observable, Subject, switchMap, takeUntil } from 'rxjs'
 
 import { UUID } from '@core/types'
 import ListViewModel from './list.viewmodel'
@@ -35,20 +35,27 @@ export class ListComponent implements OnInit, OnDestroy {
       .subscribe()
 
     this.reloadComments()
-      .pipe(takeUntil(this.endObservables))
+      .pipe(
+        takeUntil(this.endObservables),
+        // * Reload comments when asked to
+        switchMap((newCommentUuid) => {
+          return this.loadFirstPageComments()
+            .pipe(
+              map(() => newCommentUuid),
+            )
+        }),
+        // * Only scroll to the new comment if it's a string
+        filter(newCommentUuid => typeof newCommentUuid === 'string'),
+      )
       .subscribe({
         next: (newCommentUuid) => {
-          this.loadFirstPageComments()
-            .pipe(takeUntil(this.endObservables))
-            .subscribe()
-            .add(() => {
-              setTimeout(() => {
-                document.getElementById(`comment-${newCommentUuid}`)?.scrollIntoView({
-                  behavior: 'smooth',
-                  block: 'center',
-                })
-              })
+          // * Scroll to the new comment
+          setTimeout(() => {
+            document.getElementById(`comment-${newCommentUuid}`)?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
             })
+          }, 300)
         },
       })
   }
@@ -59,8 +66,10 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   onPageChange(event: PaginatorState): void {
-    this.viewModel.fetchComments(this.postUuid(), (event.page ?? 0) + 1, event.rows ?? this.viewModel.perPage())
-      .pipe(takeUntil(this.endObservables))
+    this.viewModel.fetchComments(
+      this.postUuid(),
+      (event.page ?? 0) + 1, event.rows ?? this.viewModel.perPage(),
+    ).pipe(takeUntil(this.endObservables))
       .subscribe()
   }
 

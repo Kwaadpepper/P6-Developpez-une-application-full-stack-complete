@@ -28,20 +28,15 @@ export default class AddViewModel {
     this.postUuid.set(postUuid)
   }
 
-  public setComment(value: string): void {
-    this.content.set(value)
-  }
-
   public setErrorMessage(value: string): void {
     this.formErrorMessage.set(value)
   }
 
-  private reset(): void {
-    this.content.set('')
-    this.resetErrors()
-    this.formErrorMessage.set('')
-  }
-
+  /**
+   * Save the comment
+   *
+   * @return  {<Observable><UUID>} The new comment UUID
+   */
   public saveComment(): Observable<UUID> {
     this.resetErrors()
     this.setErrorMessage('')
@@ -72,6 +67,12 @@ export default class AddViewModel {
           this.loading.set(false)
         }),
       )
+  }
+
+  private reset(): void {
+    this.content.set('')
+    this.resetErrors()
+    this.formErrorMessage.set('')
   }
 
   private resetErrors(): void {

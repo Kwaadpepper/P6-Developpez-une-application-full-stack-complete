@@ -3,7 +3,7 @@ import { Component, effect, Input, OnDestroy, output, untracked } from '@angular
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { ButtonModule } from 'primeng/button'
 import { MessageModule } from 'primeng/message'
-import { SubscriptionLike } from 'rxjs'
+import { Subject, takeUntil } from 'rxjs'
 
 import { ToastService } from '@core/services'
 import { UUID } from '@core/types'
@@ -30,7 +30,7 @@ export class AddComponent implements OnDestroy {
 
   commentAdded = output<UUID>()
 
-  private saveComment: SubscriptionLike | null = null
+  private readonly endObservables = new Subject<true>()
 
   public readonly form = new FormGroup({
     content: new FormControl('', {
@@ -45,10 +45,16 @@ export class AddComponent implements OnDestroy {
     public readonly viewModel: AddViewModel,
     private readonly toastService: ToastService,
   ) {
-    this.form.valueChanges.subscribe((value) => {
-      this.viewModel.content.set(value.content ?? '')
-    })
+    this.form.valueChanges
+      .pipe(takeUntil(this.endObservables))
+      .subscribe((value) => {
+        this.viewModel.content.set(value.content ?? '')
+      })
 
+    /**
+     * Reset the comment form control when
+     * the view model content is updated
+     */
     effect(() => {
       const comment = this.viewModel.content()
 
@@ -59,9 +65,8 @@ export class AddComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.saveComment) {
-      this.saveComment.unsubscribe()
-    }
+    this.endObservables.next(true)
+    this.endObservables.complete()
   }
 
   onSubmit(): void {
@@ -70,7 +75,8 @@ export class AddComponent implements OnDestroy {
       return
     }
 
-    this.saveComment = this.viewModel.saveComment()
+    this.viewModel.saveComment()
+      .pipe(takeUntil(this.endObservables))
       .subscribe({
         next: (commentUuid) => {
           this.commentAdded.emit(commentUuid)

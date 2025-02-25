@@ -1,7 +1,7 @@
 import { computed, Injectable, signal } from '@angular/core'
 import { CommentService } from '@core/services/comment/comment.service'
 import { UUID } from '@core/types'
-import { catchError, Observable, of, tap } from 'rxjs'
+import { map, Observable, tap } from 'rxjs'
 
 interface Comment {
   uuid: UUID
@@ -47,10 +47,7 @@ export default class ListViewModel {
         this._totalItems.set(comments.totalItems)
         this._page.set(comments.page)
       }),
-      catchError((error) => {
-        console.error(error)
-        return of(error)
-      }),
+      map(() => { return }),
     )
   }
 }

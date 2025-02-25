@@ -1,9 +1,9 @@
 import { computed, Injectable, signal } from '@angular/core'
+import { catchError, EMPTY, finalize, map, Observable, of, tap } from 'rxjs'
 
 import { TopicName } from '@core/interfaces'
 import { errors, PostService, TopicService } from '@core/services'
 import { UUID } from '@core/types'
-import { catchError, EMPTY, finalize, map, Observable, of, tap } from 'rxjs'
 
 @Injectable({
   providedIn: 'root',
