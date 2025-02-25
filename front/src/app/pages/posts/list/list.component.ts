@@ -70,17 +70,29 @@ export class ListComponent implements OnInit, OnDestroy {
       .subscribe()
   }
 
+  /**
+   * Only on mobile whne the user pull down on the
+   * top of the page to refresh posts
+   */
   onPullToRefresh(event: Subject<unknown>): void {
     this.onRefresh()
     event.next(null)
   }
 
+  /**
+   * When the user scrolls to the bottom of the page
+   * we feed him with more posts
+   */
   onScroll(): void {
     this.viewModel.feedUserWithMorePosts()
       .pipe(takeUntil(this.endObservables))
       .subscribe()
   }
 
+  /**
+   * When the user clicks on the feed sorting button
+   * we toggle the posts sorting and reload the posts
+   */
   onClickFeedSorting(): void {
     this.viewModel.togglePostsSorting()
       .pipe(takeUntil(this.endObservables))

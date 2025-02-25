@@ -1,5 +1,5 @@
 import { NgIf, SlicePipe, TitleCasePipe } from '@angular/common'
-import { Component, effect, input } from '@angular/core'
+import { Component, effect, input, untracked } from '@angular/core'
 import { ButtonModule } from 'primeng/button'
 import { Subject, takeUntil } from 'rxjs'
 
@@ -26,7 +26,11 @@ export class TopicCardComponent {
     public readonly viewModel: TopicCardViewModel,
   ) {
     effect(() => {
-      this.viewModel.setTopic(this.topicCardElement())
+      const topicCard = this.topicCardElement()
+
+      untracked(() => {
+        this.viewModel.setTopic(topicCard)
+      })
     })
   }
 
@@ -43,8 +47,7 @@ export class TopicCardComponent {
     this.viewModel.unsubscribeFrom(this.viewModel.topic().uuid)
       .pipe(
         takeUntil(this.endObservables),
-      )
-      .subscribe(() => {
+      ).subscribe(() => {
         this.toastService.warning(`Vous ne suivez plus le thème ${topicName}`)
       })
   }

@@ -39,6 +39,12 @@ export default class TopicCardViewModel {
   ) {
   }
 
+  /**
+   * Set topic within the view model
+   *
+   * @param  {TopicCard} topic
+   * @return  {void}
+   */
   public setTopic(topic: TopicCard): void {
     const topicDecription = topic.description
 
@@ -56,6 +62,12 @@ export default class TopicCardViewModel {
     })
   }
 
+  /**
+   * Subscribe to a topic
+   *
+   * @param  {UUID} topicUuid
+   * @return  {Observable<void>}
+   */
   public subscribeTo(topicUuid: UUID): Observable<void> {
     return this.topicService.subcribeToTopic(topicUuid)
       .pipe(
@@ -72,6 +84,12 @@ export default class TopicCardViewModel {
       )
   }
 
+  /**
+   * Unsubscribe from a topic
+   *
+   * @param  {UUID} topicUuid
+   * @return  {Observable<void>}
+   */
   public unsubscribeFrom(topicUuid: UUID): Observable<void> {
     return this.topicService.unSubcribeFromTopic(topicUuid)
       .pipe(

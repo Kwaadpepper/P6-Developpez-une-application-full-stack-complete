@@ -46,6 +46,7 @@ export class MarkdownEditorComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // * Subscribe to the textarea value changes
     this.textAreaSubscription = this.textareaInput().valueChanges
       .pipe(
         debounceTime(500),

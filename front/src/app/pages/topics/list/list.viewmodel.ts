@@ -30,16 +30,33 @@ export default class ListViewModel {
   ) {
   }
 
+  /**
+   * Reload the topics
+   *
+   * @return  {Observable<void>}
+   */
   public reloadTopics(): Observable<void> {
     this._currentPage = 1
     this.topicList.set([])
     return this.loadMoreTopics()
   }
 
+  /**
+   * Set the topic name filter
+   * this is used to filter the topics by name
+   *
+   * @param  {string|undefined} name
+   * @return  {void}
+   */
   public setSetTopicNameFilter(name: string | undefined): void {
     this._topicNameFilter = name
   }
 
+  /**
+   * Load more topics
+   *
+   * @return  {Observable<void>}
+   */
   public loadMoreTopics(): Observable<void> {
     this.loading.set(true)
     return this.topicService.paginateTopics(this._currentPage++, this._topicNameFilter)

@@ -25,6 +25,12 @@ export default class PostCardViewModel {
   ) {
   }
 
+  /**
+   * Set post within the view model
+   *
+   * @param  {Post} post
+   * @return  {void}
+   */
   public setPost(post: Post): void {
     const postContent = post.content
 
@@ -42,12 +48,24 @@ export default class PostCardViewModel {
     })
   }
 
+  /**
+   * Get plain HTML from markdown
+   *
+   * @param  {string} markdown
+   * @return  {Promise<string>}
+   */
   private async getPlainHtmlFromMarkdown(markdown: string): Promise<string> {
     const parsed = this.markdownService.parse(markdown)
 
     return typeof parsed === 'string' ? parsed : (await parsed)
   }
 
+  /**
+   * Get plain text from HTML
+   *
+   * @param  {string} html
+   * @return  {string}
+   */
   private getPlainTextFromHtml(html: string): string {
     return decodeHTmlEntities(html.replace(/<\/?[^>]+(>|$)/g, ''))
   }

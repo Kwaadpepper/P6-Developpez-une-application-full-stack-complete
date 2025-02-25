@@ -24,6 +24,11 @@ export default class ListViewModel {
     this.feedInvalidated = computed(() => feedService.feedInvalidated())
   }
 
+  /**
+   * Feed the user with more posts
+   *
+   * @return  {Observable<void>}
+   */
   public feedUserWithMorePosts(): Observable<void> {
     this.loading.set(true)
     this._currentPage += 1
@@ -40,12 +45,22 @@ export default class ListViewModel {
       )
   }
 
+  /**
+   * Reload the posts
+   *
+   * @return  {Observable<void>}
+   */
   public reloadPosts(): Observable<void> {
     this._currentPage = 0
     this._postList.set([])
     return this.feedUserWithMorePosts()
   }
 
+  /**
+   * Toggle the posts sorting
+   *
+   * @return  {Observable<void>}
+   */
   public togglePostsSorting(): Observable<void> {
     this.sortAscending.set(!this.sortAscending())
     return this.reloadPosts()

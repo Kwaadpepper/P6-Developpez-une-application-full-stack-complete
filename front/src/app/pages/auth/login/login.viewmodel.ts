@@ -20,7 +20,12 @@ export default class LoginViewModel {
   ) {
   }
 
-  public proceedToLogin(login: string, password: string): Observable<boolean> {
+  /**
+   * Authenticate the user and set the session
+   *
+   * @return  {Observable<boolean>} Observable that emits true if the user is authenticated
+   */
+  public logginAndSetSession(login: string, password: string): Observable<boolean> {
     this.loading.set(true)
     return this.authService.login({ login, password })
       .pipe(

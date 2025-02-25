@@ -27,7 +27,12 @@ export default class RegisterViewModel {
   ) {
   }
 
-  public proceedToRegister(
+  /**
+   * Register the user and set the session
+   *
+   * @return  {[type]} {Observable<boolean>} Observable that emits true if the user is registered
+   */
+  public registerUserAndSetSession(
     email: string,
     username: string,
     password: string,

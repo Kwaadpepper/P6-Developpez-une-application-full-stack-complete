@@ -1,7 +1,7 @@
 import { computed, Injectable, signal, WritableSignal } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 
-import { Comment, Post } from '@core/interfaces'
+import { Post } from '@core/interfaces'
 
 @Injectable({
   providedIn: 'root',
@@ -9,10 +9,8 @@ import { Comment, Post } from '@core/interfaces'
 })
 export default class ShowViewModel {
   private readonly _post: WritableSignal<Post>
-  private readonly _comments: WritableSignal<Comment[]> = signal([])
 
   public readonly post = computed(() => this._post())
-  public readonly comments = computed(() => this._comments())
 
   constructor(
     private activatedRoute: ActivatedRoute,

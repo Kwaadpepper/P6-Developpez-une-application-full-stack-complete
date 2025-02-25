@@ -45,18 +45,24 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    // * Load the initial topics
     this.viewModel.reloadTopics()
       .pipe(takeUntil(this.endObservables))
       .subscribe()
 
+    // * Reload the topics when the search term changes
     this.searchTerm.valueChanges.pipe(
       takeUntil(this.endObservables),
       tap(() => this.viewModel.loading.set(true)),
+      // * Wait for the user to stop typing
       debounceTime(750),
+      // * Only emit when the value changes
       distinctUntilChanged(),
       tap((value) => {
+        // * Set the topic name filter
         this.viewModel.setSetTopicNameFilter(value ?? undefined)
       }),
+      // * Reload the topics
       switchMap(() => this.viewModel.reloadTopics()),
     ).subscribe()
   }
@@ -66,18 +72,21 @@ export class ListComponent implements OnInit, OnDestroy {
     this.endObservables.complete()
   }
 
+  /** Load more topics when the user scrolls to the bottom of the page */
   onScroll(): void {
     this.viewModel.loadMoreTopics()
       .pipe(takeUntil(this.endObservables))
       .subscribe()
   }
 
+  /** Reload the topics when the user clicks the search button */
   onSearch(): void {
     this.viewModel.reloadTopics()
       .pipe(takeUntil(this.endObservables))
       .subscribe()
   }
 
+  /** Clear the search term */
   onClearSearch(): void {
     this.searchTerm.setValue('')
   }

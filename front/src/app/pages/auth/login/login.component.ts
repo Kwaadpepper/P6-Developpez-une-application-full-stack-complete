@@ -66,7 +66,7 @@ export class LoginComponent implements OnDestroy {
     }
 
     this.viewModel
-      .proceedToLogin(login(), password())
+      .logginAndSetSession(login(), password())
       .pipe(takeUntil(this.endObservables))
       .subscribe({
         next: () => {

@@ -33,6 +33,8 @@ interface selectOptions {
 })
 export class CreateComponent implements OnInit, OnDestroy {
   private readonly topicSearch = ''
+
+  /** The subject for user topic names search */
   private readonly searchTopicName$ = new Subject<string>()
 
   public readonly selectOptions = signal<selectOptions>({
@@ -68,13 +70,15 @@ export class CreateComponent implements OnInit, OnDestroy {
     public viewModel: CreateViewModel,
     private toastService: ToastService,
   ) {
-    this.form.valueChanges.subscribe((value) => {
-      if (value.topicName) {
-        this.viewModel.setTopicNameByUUID(value.topicName ?? '')
-      }
-      this.viewModel.title.set(value.title ?? '')
-      this.viewModel.content.set(value.content ?? '')
-    })
+    this.form.valueChanges
+      .pipe(takeUntil(this.endObservables))
+      .subscribe((value) => {
+        if (value.topicName) {
+          this.viewModel.setTopicNameByUUID(value.topicName ?? '')
+        }
+        this.viewModel.title.set(value.title ?? '')
+        this.viewModel.content.set(value.content ?? '')
+      })
   }
 
   ngOnInit(): void {
@@ -83,6 +87,7 @@ export class CreateComponent implements OnInit, OnDestroy {
       takeUntil(this.endObservables),
       debounceTime(500),
       distinctUntilChanged(),
+      // * Search for topic names
       switchMap(filter => this.viewModel.searchForTopicNames(1, filter)),
     ).subscribe()
 
@@ -97,14 +102,17 @@ export class CreateComponent implements OnInit, OnDestroy {
     this.endObservables.complete()
   }
 
+  /** Filter topics names when the user types in the dropdown */
   onFilterTopicsNames(event: SelectFilterEvent): void {
     this.searchTopicName$.next(event.filter)
   }
 
+  /** Clear the topic name filter when the user hides the dropdown */
   onHideTopicsNamesFilter(): void {
     this.searchTopicName$.next('')
   }
 
+  /** Lazy load topics names when the user scrolls the dropdown */
   onLazyloadTopicsNames(event: LazyLoadEvent): void {
     const currentPage = this.viewModel.currentPage()
     const nextPage = Math.floor((event.last ?? 0) / this.viewModel.topicsPerPage) + 1
@@ -125,6 +133,7 @@ export class CreateComponent implements OnInit, OnDestroy {
       .subscribe()
   }
 
+  /** Select a topic name when the user clicks on it in the dropdown */
   onSelectTopic(event: {
     originalEvent: Event
     value: UUID
@@ -134,6 +143,7 @@ export class CreateComponent implements OnInit, OnDestroy {
     this.viewModel.setTopicNameByUUID(selectedTopicUuid)
   }
 
+  /** Create a post */
   onSubmit(): void {
     if (this.form.invalid) {
       this.toastService.error('Tous les champs sont obligatoires')

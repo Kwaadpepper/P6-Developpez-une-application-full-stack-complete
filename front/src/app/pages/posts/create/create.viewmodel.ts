@@ -44,19 +44,33 @@ export default class CreateViewModel {
   ) {
   }
 
+  /**
+   * Search for topic names
+   *
+   * @param  {number} page
+   * @param  {string} searchLike
+   * @return  {Observable<void>}
+   */
   public searchForTopicNames(page: number, searchLike: string): Observable<void> {
     this._topicNames.set([])
     return this.loadTopicNames(page, searchLike)
   }
 
+  /**
+   * Get topic names page
+   *
+   * @param  {number} page
+   * @return  {Observable<void>}
+   */
   public getTopicNamesPage(page: number): Observable<void> {
     return this.loadTopicNames(page)
   }
 
-  public resetTopicFilters(): void {
-    this._currentPage.set(1)
-  }
-
+  /**
+   * Set the topic name by its UUID
+   *
+   * @param  {UUID} uuid
+   */
   public setTopicNameByUUID(uuid: UUID): void {
     const topicName = this.topicNames().find(topicName => topicName.uuid === uuid)
 
@@ -67,6 +81,11 @@ export default class CreateViewModel {
     this.topicName.set(topicName)
   }
 
+  /**
+   * Submit the post form
+   *
+   * @return  {Observable<string>} Observable that emits the new post slug
+   */
   public persistPost(): Observable<string> {
     this.creatingTopicLoading.set(true)
     this.resetErrors()
@@ -109,6 +128,13 @@ export default class CreateViewModel {
     this.errors.topicName.set(errors.get('topicName') ?? '')
   }
 
+  /**
+   * Load topic names
+   *
+   * @param  {number} page
+   * @param  {string} searchLike
+   * @return  {Observable<void>}
+   */
   private loadTopicNames(page: number, searchLike = ''): Observable<void> {
     if (this.topicsNamesAreLoading()) {
       return EMPTY
