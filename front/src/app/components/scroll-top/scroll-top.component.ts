@@ -19,6 +19,11 @@ export class ScrollTopComponent {
   }
 
   @HostListener('window:scroll')
+  /**
+     * Show the scroll top button when the page is scrolled down
+     *
+     * @return  {<void>}
+     */
   onScroll(): void {
     if (window.scrollY > 250) {
       this.showButton.set(true)

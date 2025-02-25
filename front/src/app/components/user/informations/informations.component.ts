@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common'
-import { Component, effect, OnDestroy, OnInit, signal } from '@angular/core'
+import { Component, effect, OnDestroy, OnInit, signal, untracked } from '@angular/core'
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
 import { ButtonModule } from 'primeng/button'
 import { InputGroupModule } from 'primeng/inputgroup'
@@ -66,6 +66,7 @@ export class InformationsComponent implements OnInit, OnDestroy {
       this.viewModel.errors.password.set('')
     })
 
+    // * Update the form with the view model values
     this.viewModel.hasRefreshedData
       .pipe(takeUntil(this.endObservables))
       .subscribe({
@@ -83,16 +84,18 @@ export class InformationsComponent implements OnInit, OnDestroy {
       const usernameError = this.viewModel.errors.username()
       const passwordError = this.viewModel.errors.password()
 
-      // * Update the form with the view model errors
-      if (emailError) {
-        this.form.controls.email.setErrors({ emailError })
-      }
-      if (usernameError) {
-        this.form.controls.username.setErrors({ usernameError })
-      }
-      if (passwordError) {
-        this.form.controls.password.setErrors({ passwordError })
-      }
+      untracked(() => {
+        // * Update the form with the view model errors
+        if (emailError) {
+          this.form.controls.email.setErrors({ emailError })
+        }
+        if (usernameError) {
+          this.form.controls.username.setErrors({ usernameError })
+        }
+        if (passwordError) {
+          this.form.controls.password.setErrors({ passwordError })
+        }
+      })
     })
   }
 

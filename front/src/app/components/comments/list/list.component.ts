@@ -30,6 +30,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    // * Load the first page of comments
     this.loadFirstPageComments()
       .pipe(takeUntil(this.endObservables))
       .subscribe()

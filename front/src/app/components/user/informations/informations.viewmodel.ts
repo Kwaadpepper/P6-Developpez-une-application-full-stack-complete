@@ -28,6 +28,11 @@ export default class InformationsViewModel {
   ) {
   }
 
+  /**
+   * Refresh the user information
+   *
+   * @return  {Observable<void>}
+   */
   public refreshUserInformation(): Observable<void> {
     this.loading.set(true)
     this.resetErrors()
@@ -52,6 +57,11 @@ export default class InformationsViewModel {
       )
   }
 
+  /**
+   * Update the user information
+   *
+   * @return  {Observable<void>}
+   */
   public updateUserInformation(): Observable<void> {
     this.loading.set(true)
     this.resetErrors()
@@ -88,7 +98,7 @@ export default class InformationsViewModel {
     )
   }
 
-  public resetErrors(): void {
+  private resetErrors(): void {
     this.formErrorMessage.set('')
     Object.values(this.errors).forEach((error) => {
       error.set('')

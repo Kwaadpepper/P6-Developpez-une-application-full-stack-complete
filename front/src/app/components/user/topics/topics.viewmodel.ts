@@ -31,6 +31,7 @@ export default class TopicsViewModel {
     return this.loadUserTopics()
   }
 
+  /** Load the next user topics page */
   loadMoreUserTopics(): Observable<void> {
     this.currentPage.update(current => current + 1)
     return this.loadUserTopics()

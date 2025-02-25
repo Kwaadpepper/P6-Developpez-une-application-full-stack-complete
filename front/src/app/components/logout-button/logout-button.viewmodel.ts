@@ -14,7 +14,7 @@ export default class LogoutButtonViewModel {
 
   public logout(): Observable<void> {
     return this.authService.logout().pipe(
-      map(() => undefined),
+      map(() => { return }),
     )
   }
 }

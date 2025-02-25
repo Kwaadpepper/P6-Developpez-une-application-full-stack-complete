@@ -32,6 +32,11 @@ export default class ListViewModel {
   ) {
   }
 
+  /**
+   * Fetch the comments of a post as a paginated list
+   *
+   * @return  {Observable<void>}
+   */
   public fetchComments(postUuid: UUID, page: number, perPage: number): Observable<void> {
     this._perPage.set(perPage)
 

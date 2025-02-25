@@ -7,6 +7,7 @@ import { redirectUrls } from '@routes'
 @Injectable({
   providedIn: 'root',
 })
+/** This is used to make sure that a logged in user will stay within the protected routes */
 export class UnauthGuard implements CanActivate {
   private readonly redirectUrl = redirectUrls.posts
 
@@ -17,11 +18,14 @@ export class UnauthGuard implements CanActivate {
   }
 
   canActivate(): MaybeAsync<GuardResult> {
+    // * If the user is logged in, redirect to the posts page
     if (this.sessionService.isLoggedIn()) {
       const loginRoute = this.router.parseUrl(this.redirectUrl)
 
       return new RedirectCommand(loginRoute)
     }
+
+    // * If the user is not logged in, allow access
     return true
   }
 }

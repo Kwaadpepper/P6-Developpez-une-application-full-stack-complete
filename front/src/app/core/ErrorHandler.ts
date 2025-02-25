@@ -6,6 +6,9 @@ import SessionExpired from './errors/SessionExpired'
 import { ToastService } from './services/toast/toast.service'
 
 @Injectable()
+/**
+   * This allows to manage errors in a centralized way
+   */
 export class ErrorHandler implements NgErrorHanlder {
   constructor(
     private readonly toastService: ToastService,

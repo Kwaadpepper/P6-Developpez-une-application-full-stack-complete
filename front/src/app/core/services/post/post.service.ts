@@ -29,6 +29,11 @@ export class PostService {
     )
   }
 
+  /**
+   * Find a post by its slug.
+   * @param slug The slug of the post.
+   * @returns The post.
+   */
   public findPostBySlug(slug: string): Observable<Post> {
     return this.postRepository.findPostBySlug(slug)
   }

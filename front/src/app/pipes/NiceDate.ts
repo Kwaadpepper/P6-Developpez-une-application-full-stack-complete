@@ -4,6 +4,12 @@ import { Pipe, PipeTransform } from '@angular/core'
 @Pipe({
   name: 'nicedate',
 })
+/**
+ * Pipe to format a date in a human-friendly way.
+ * If the date is today, it will only display the time.
+ * If the date is not today, it will display the date.
+ * The date is formatted according to the user's locale.
+ */
 export class NiceDate implements PipeTransform {
   transform(value: Date): string {
     const datePipe = new DatePipe(this.getLocale())
