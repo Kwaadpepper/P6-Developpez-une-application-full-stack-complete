@@ -8,6 +8,9 @@ import java.util.UUID;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.openclassrooms.mddapi.valueobject.PasswordHash;
+
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -26,8 +29,8 @@ public class Credential implements UserDetails, Model {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID uuid;
 
-  @Column(nullable = false, length = 255)
-  private String password;
+  @AttributeOverride(name = "value", column = @Column(name = "password", nullable = false, length = 255))
+  private PasswordHash password;
 
   @Column(nullable = false, name = "api_token")
   private UUID apiToken;
@@ -43,7 +46,7 @@ public class Credential implements UserDetails, Model {
   private final ZonedDateTime updatedAt;
 
   public Credential(
-      final String password,
+      final PasswordHash password,
       final User user) {
     this.password = password;
     this.user = user;
@@ -79,7 +82,15 @@ public class Credential implements UserDetails, Model {
 
   @Override
   public String getPassword() {
+    return this.password.value();
+  }
+
+  public PasswordHash getRealPassword() {
     return this.password;
+  }
+
+  public void setPassword(final PasswordHash password) {
+    this.password = password;
   }
 
   @Override

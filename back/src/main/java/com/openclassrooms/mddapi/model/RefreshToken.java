@@ -54,7 +54,7 @@ public class RefreshToken {
         return user;
     }
 
-    public UUID getRefreshToken() {
+    public UUID getToken() {
         return token;
     }
 

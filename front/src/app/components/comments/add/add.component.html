@@ -1,0 +1,19 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <p-message icon="pi pi-times-circle" styleClass="mb-3 " *ngIf="viewModel.formErrorMessage()" severity="error">{{
+    viewModel.formErrorMessage()
+    }}</p-message>
+
+  <app-markdown-editor classList="mx-auto" title="Commentaire" [textareaInput]="form.controls.content"
+    [value]="viewModel.content()" [error]="viewModel.errors.content()" [showCharCount]="true"
+    ariaLabel="Contenu du commentaire">
+    <slot right-pan>
+      <button pButton title="Envoyer le commentaire" class="sticky top-0 mt-4 float-end z-10" outlined
+        severity="contrast" [disabled]="!form.valid " type="submit">
+        <span pButtonLabel>
+          <i class="pi pi-send"></i>
+        </span>
+      </button>
+    </slot>
+  </app-markdown-editor>
+  <input type="hidden" formControlName="content" />
+</form>

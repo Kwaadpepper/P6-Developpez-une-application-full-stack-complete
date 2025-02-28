@@ -3,6 +3,8 @@ package com.openclassrooms.mddapi.dto;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+import com.openclassrooms.mddapi.model.Comment;
+import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.query_dto.CommentWithAuthor;
 
 public record CommentDto(
@@ -24,5 +26,17 @@ public record CommentDto(
                 commentAuthor.getAuthorName(),
                 commentAuthor.getCreatedAt(),
                 commentAuthor.getUpdatedAt());
+    }
+
+    public static CommentDto of(
+            final Comment comment, User author) {
+        return new CommentDto(
+                comment.getUuid(),
+                comment.getContent(),
+                comment.getPostUuid(),
+                author.getUuid(),
+                author.getName(),
+                comment.getCreatedAt(),
+                comment.getUpdatedAt());
     }
 }

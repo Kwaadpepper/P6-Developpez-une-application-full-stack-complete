@@ -1,16 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core'
+import { RouterLink } from '@angular/router'
+import { ButtonModule } from 'primeng/button'
+
+import HomeViewModel from './home.viewmodel'
 
 @Component({
   selector: 'app-home',
+  imports: [
+    RouterLink,
+    ButtonModule,
+  ],
+  providers: [HomeViewModel],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
+  styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit {
-  constructor() {}
-
-  ngOnInit(): void {}
-
-  start() {
-    alert('Commencez par lire le README et à vous de jouer !');
-  }
+export class HomeComponent {
+  constructor(
+    public readonly viewModel: HomeViewModel,
+  ) {}
 }

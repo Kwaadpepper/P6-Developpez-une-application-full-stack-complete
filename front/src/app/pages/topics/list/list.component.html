@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="row my-3 sticky top-0 bg-surface-0 dark:bg-surface-900 z-10">
+    <div class="col relative py-4">
+      <app-back-button backUrl="/" />
+      <h1 class="hidden" aria-hidden="true">Sujets</h1>
+      <div class="mx-20 inline-block">
+        <p-inputgroup>
+          <button pButton icon="pi pi-eraser" title="Effacer la barre de recherche" (click)="onClearSearch()"
+            severity="primary" outlined type="button"></button>
+          <input type="text" [formControl]="searchTerm" pInputText placeholder="Rechercher un sujet"
+            aria-label="Rechercher un sujet" />
+          <p-inputgroup-addon *ngIf="viewModel.loading()">
+            <i class="pi pi-spin pi-spinner"></i>
+          </p-inputgroup-addon>
+        </p-inputgroup>
+      </div>
+    </div>
+  </div>
+  <div class="row" infiniteScroll [infiniteScrollDistance]="scrollDistance" [infiniteScrollThrottle]="throttle"
+    (scrolled)="onScroll()">
+    <div *ngIf="!viewModel.topics().length && !viewModel.loading()" class="col">
+      <div class="h1 text-center">Aucun sujet trouvé</div>
+    </div>
+    <div class="col-12 md:col-6 lg:col-4 py-4" *ngFor="let topic of viewModel.topics()">
+      <app-topic-card [topicCardElement]="topic"></app-topic-card>
+    </div>
+    <div class="col-12 text-center pb-28">
+      <app-progress-spinner [visible]="viewModel.loading()"></app-progress-spinner>
+    </div>
+  </div>
+</div>

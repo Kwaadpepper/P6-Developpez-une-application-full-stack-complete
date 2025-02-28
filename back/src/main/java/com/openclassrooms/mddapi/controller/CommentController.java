@@ -23,6 +23,7 @@ import com.openclassrooms.mddapi.service.auth.SessionService;
 import com.openclassrooms.mddapi.service.models.CommentService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
 @RestController
@@ -45,15 +46,17 @@ public class CommentController {
      * Fetch comments for a post
      *
      * @param page     {@link Integer} The page number
+     * @param perPage  {@link Integer} The number of items per page
      * @param postUuid {@link UUID} The post unique id.
      * @return {@link PaginatedDto} of {@link CommentDto}
      */
     @GetMapping(value = "/posts/{postUuid}/comments", produces = MediaType.APPLICATION_JSON_VALUE)
     public PaginatedDto<CommentDto> getCommentsForPost(
             @RequestParam(required = false, defaultValue = "1") @Min(value = 1) final Integer page,
+            @RequestParam(required = false, defaultValue = "30", name = "per-page") @Min(value = 1) @Max(value = 30) final Integer perPage,
             @PathVariable final UUID postUuid) {
 
-        var pageRequest = PageRequest.of(page - 1, 30);
+        var pageRequest = PageRequest.of(page - 1, perPage);
 
         final var commentReadPage = commentService.getPostComments(postUuid, pageRequest);
 
@@ -68,18 +71,18 @@ public class CommentController {
      */
     @Transactional
     @PostMapping(value = "/comments", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public SimpleMessage createComment(@Valid @RequestBody final CreateCommentRequest request) {
+    public CommentDto createComment(@Valid @RequestBody final CreateCommentRequest request) {
 
         var authUser = sessionService.getAuthenticatedUser().or(() -> {
             throw new JwtAuthenticationFailureException("No user is authenticated.");
         }).get();
 
-        commentService.createComment(
+        var comment = commentService.createComment(
                 authUser.getUuid(),
-                request.post(),
-                request.content());
+                request.getPost(),
+                request.getContent());
 
-        return new SimpleMessage("Comment created!");
+        return commentPresenter.present(comment, authUser);
     }
 
 }

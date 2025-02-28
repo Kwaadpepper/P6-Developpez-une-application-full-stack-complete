@@ -11,6 +11,7 @@ public record PostDto(
         String title,
         String content,
         UUID topic_uuid,
+        String topic_name,
         UUID author_uuid,
         String author_name,
         ZonedDateTime created_at,
@@ -19,10 +20,11 @@ public record PostDto(
     public static PostDto of(Post post) {
         return new PostDto(
                 post.getUuid(),
-                post.getSlug(),
+                post.getSlug().value(),
                 post.getTitle(),
                 post.getContent(),
                 post.getTopic().getUuid(),
+                post.getTopic().getName(),
                 post.getAuthor().getUuid(),
                 post.getAuthor().getName(),
                 post.getCreatedAt(),

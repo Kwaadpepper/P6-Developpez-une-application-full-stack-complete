@@ -1,0 +1,79 @@
+<div class="container max-w-6xl mx-auto">
+  <div class="row mb-3 sticky top-0 bg-surface-0 dark:bg-surface-900 z-10 py-3">
+    <div class="col text-center">
+      <app-back-button backUrl="/" />
+
+      <h1>Créer un nouvel article</h1>
+    </div>
+  </div>
+  <form class="row pt-6" [formGroup]="form" (ngSubmit)="onSubmit()" [inert]="viewModel.creatingTopicLoading()">
+
+    <div class="col-12">
+      <p-message icon="pi pi-times-circle" styleClass="mb-3" *ngIf="viewModel.formErrorMessage()" severity="error">{{
+        viewModel.formErrorMessage()
+        }}</p-message>
+    </div>
+
+    <div class="col-12 md:col-6 mb-3">
+      <div class="mx-auto md:me-4 max-w-80 flex flex-col">
+        <!-- beautify ignore:start -->
+        <p-select
+          [options]="viewModel.topicNames()"
+          [filter]="true"
+          [resetFilterOnHide]="true"
+          [lazy]="true"
+          [virtualScroll]="true"
+          [virtualScrollItemSize]="viewModel.totalTopicNamesCount()"
+          [virtualScrollOptions]="{ itemSize: viewModel.topicsPerPage }"
+          [loading]="viewModel.topicsNamesAreLoading()"
+          [optionLabel]="selectOptions().label"
+          [optionValue]="selectOptions().value"
+          (onLazyLoad)="onLazyloadTopicsNames($event)"
+          (onFilter)="onFilterTopicsNames($event)"
+          (onChange)="onSelectTopic($event)"
+          (onHide)="onHideTopicsNamesFilter()"
+          placeholder="Sélectionnez un theme"
+          emptyFilterMessage="Aucun thème trouvé"
+
+          class="w-75"
+          ariaLabel="Sélectionnez un thème"
+          formControlName="topicName"
+          aria-describedby="topic-name-help"
+        />
+        <!-- beautify ignore:end -->
+        <small id="topic-name-help" *ngIf="form.controls.topicName.dirty || form.controls.topicName.touched"
+          class="text-red-600">
+          <span class="block" *ngIf="form.controls.topicName.hasError('required')"> Obligatoire.</span>
+          <span class="block" *ngIf="viewModel.errors.topicName">{{ viewModel.errors.topicName() }}</span>
+        </small>
+      </div>
+    </div>
+
+    <div class="col-12 md:col-6 mb-3">
+      <div class="mx-auto md:ms-4 max-w-80 flex flex-col">
+        <label for="title" aria-hidden="false" class="hidden">Titre de l'article</label>
+        <input pInputText id="title" formControlName="title" aria-describedby="title-help" type="text"
+          placeholder="Titre de l'article" autocomplete="off" name="" />
+        <small id="title-help" *ngIf="form.controls.title.dirty || form.controls.title.touched" class="text-red-600">
+          <span class="block" *ngIf="form.controls.title.hasError('required')"> Obligatoire.</span>
+          <span class="block" *ngIf="viewModel.errors.title">{{ viewModel.errors.title() }}</span>
+        </small>
+      </div>
+    </div>
+
+    <div class="col my-4">
+      <app-markdown-editor classList="mx-auto" ariaLabel="Contenu de l'article" title="Contenu de l'article"
+        [textareaInput]="form.controls.content" [value]="viewModel.content()" [error]="viewModel.errors.content()" />
+    </div>
+
+    <div class="col-12 text-center mt-3 mb-10">
+      <button pButton outlined severity="contrast" [disabled]="!form.valid || viewModel.creatingTopicLoading()"
+        aria-label="Valider et créer ce nouvel article" type="submit">
+        <span pButtonLabel>Créer</span>
+        <span *ngIf="viewModel.creatingTopicLoading()" pButtonLabel>
+          <i class="pi pi-spin pi-cog"></i>
+        </span>
+      </button>
+    </div>
+  </form>
+</div>

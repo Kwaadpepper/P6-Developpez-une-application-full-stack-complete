@@ -15,6 +15,7 @@ import com.openclassrooms.mddapi.presenter.PostPresenter;
 import com.openclassrooms.mddapi.service.FeedService;
 import com.openclassrooms.mddapi.service.auth.AuthenticationService;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
 @RestController
@@ -37,6 +38,7 @@ public class FeedController {
      * This may be used to fetch paginated user post feed
      *
      * @param page      {@link Integer} The page number
+     * @param perPage   {@link Integer} The number of items per page
      * @param ascending {@link Boolean} Whether to sort the feed in ascending
      *                  order using updated at column.
      * @return {@link PaginatedDto} of {@link PostDto}
@@ -44,12 +46,13 @@ public class FeedController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public PaginatedDto<PostDto> getUserFeed(
             @RequestParam(required = false, defaultValue = "1") @Min(value = 1) final Integer page,
+            @RequestParam(required = false, defaultValue = "30", name = "per-page") @Min(value = 1) @Max(value = 30) final Integer perPage,
             @RequestParam(required = false, defaultValue = "false") final Boolean ascending) {
         final var user = authenticationService.getAuthenticatedUser()
                 .orElseThrow(IllegalStateException::new);
         var sortDirection = ascending ? Direction.ASC : Direction.DESC;
         var sort = Sort.by(sortDirection, "updatedAt");
-        var pageRequest = PageRequest.of(page - 1, 30, sort);
+        var pageRequest = PageRequest.of(page - 1, perPage, sort);
 
         final var postList = feedService.getUserFeed(user, pageRequest);
 
