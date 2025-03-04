@@ -1,6 +1,7 @@
 import { Injectable, signal } from '@angular/core'
-import { catchError, finalize, Observable, of, tap } from 'rxjs'
+import { catchError, EMPTY, finalize, Observable, tap, throwError } from 'rxjs'
 
+import { User } from '@core/interfaces'
 import { AuthService, errors, ToastService } from '@core/services'
 
 @Injectable({
@@ -36,7 +37,7 @@ export class RegisterViewModel {
     email: string,
     username: string,
     password: string,
-  ): Observable<boolean> {
+  ): Observable<User> {
     this.loading.set(true)
     this.resetErrors()
     return this.authService.register({ email, username, password })
@@ -50,13 +51,13 @@ export class RegisterViewModel {
           if (error instanceof errors.ValidationError) {
             this.formErrorMessage.set('Des champ n\'ont pas pu être validés')
             this.setErrors(error.getErrors())
-            return of(error)
+            return EMPTY
           }
 
           this.toastService.error('Erreur lors de la création du compte')
 
           console.error('Error:', error)
-          return of(error)
+          return throwError(() => error)
         }),
         finalize(() => {
           this.loading.set(false)

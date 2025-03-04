@@ -1,6 +1,7 @@
 import { Injectable, signal } from '@angular/core'
-import { catchError, finalize, Observable, of, tap } from 'rxjs'
+import { catchError, EMPTY, finalize, Observable, tap, throwError } from 'rxjs'
 
+import { User } from '@core/interfaces'
 import { AuthService, errors, ToastService } from '@core/services'
 
 @Injectable({
@@ -25,7 +26,7 @@ export class LoginViewModel {
    *
    * @return  {Observable<boolean>} Observable that emits true if the user is authenticated
    */
-  public logginAndSetSession(login: string, password: string): Observable<boolean> {
+  public logginAndSetSession(login: string, password: string): Observable<User> {
     this.loading.set(true)
     return this.authService.login({ login, password })
       .pipe(
@@ -37,13 +38,13 @@ export class LoginViewModel {
         catchError((error) => {
           if (error instanceof errors.LoginFailure) {
             this.formErrorMessage.set('Identifiants incorrects')
-            return of(error)
+            return EMPTY
           }
 
           this.toastService.error('Erreur lors de la connexion')
 
           console.error('Error:', error)
-          return of(error)
+          return throwError(() => error)
         }),
         finalize(() => {
           this.loading.set(false)
