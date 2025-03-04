@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { signal } from '@angular/core'
 import { ToastService } from '@core/services'
 import { RegisterComponent } from './register.component'
-import RegisterViewModel from './register.viewmodel'
+import { RegisterViewModel } from './register.viewmodel'
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent

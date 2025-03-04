@@ -2,7 +2,7 @@ import { Injectable, ErrorHandler as NgErrorHanlder } from '@angular/core'
 
 import { Router } from '@angular/router'
 import { NotFoundError } from './errors'
-import SessionExpired from './errors/SessionExpired'
+import { SessionExpired } from './errors/SessionExpired'
 import { ToastService } from './services/toast/toast.service'
 
 @Injectable()

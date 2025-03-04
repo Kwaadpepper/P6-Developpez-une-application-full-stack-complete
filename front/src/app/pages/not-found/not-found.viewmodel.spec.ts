@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing'
 
-import NotFoundViewModel from './not-found.viewmodel'
+import { NotFoundViewModel } from './not-found.viewmodel'
 
 describe('NotFoundViewModel', () => {
   let viewModel: NotFoundViewModel

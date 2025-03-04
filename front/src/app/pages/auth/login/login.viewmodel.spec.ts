@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing'
 
 import { AuthService, ToastService } from '@core/services'
-import LoginViewModel from './login.viewmodel'
+import { LoginViewModel } from './login.viewmodel'
 
 describe('LoginViewModel', () => {
   let viewModel: LoginViewModel

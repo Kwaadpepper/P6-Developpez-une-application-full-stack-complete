@@ -15,7 +15,7 @@ interface TopicListElement {
   providedIn: 'root',
   deps: [TopicService],
 })
-export default class ListViewModel {
+export class ListViewModel {
   private _topicNameFilter: string | undefined = undefined
   private _currentPage = 0
   private topicList = signal<TopicListElement[]>([])

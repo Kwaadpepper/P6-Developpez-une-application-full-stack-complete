@@ -6,7 +6,7 @@ import { map, Observable } from 'rxjs'
   providedIn: 'root',
   deps: [AuthService],
 })
-export default class LogoutButtonViewModel {
+export class LogoutButtonViewModel {
   constructor(
     private readonly authService: AuthService,
   ) {

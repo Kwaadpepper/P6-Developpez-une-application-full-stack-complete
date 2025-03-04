@@ -6,7 +6,7 @@ import { TabsModule } from 'primeng/tabs'
 import { TextareaModule } from 'primeng/textarea'
 import { debounceTime, SubscriptionLike } from 'rxjs'
 
-import MarkdownEditorViewModel from './markdown-editor.viewmodel'
+import { MarkdownEditorViewModel } from './markdown-editor.viewmodel'
 
 @Component({
   selector: 'app-markdown-editor',

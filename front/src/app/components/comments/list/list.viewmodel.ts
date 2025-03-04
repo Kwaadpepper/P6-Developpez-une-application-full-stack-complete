@@ -13,7 +13,7 @@ interface Comment {
   providedIn: 'root',
   deps: [CommentService],
 })
-export default class ListViewModel {
+export class ListViewModel {
   private readonly _perPages = [5, 10, 20, 30]
   private _comments = signal<Comment[]>([])
   private _perPage = signal(10)

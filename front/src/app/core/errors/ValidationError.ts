@@ -1,4 +1,4 @@
-export default class ValidationError extends Error {
+export class ValidationError extends Error {
   private readonly errors: Map<string, string>
 
   public constructor(errors: Record<string, string>) {

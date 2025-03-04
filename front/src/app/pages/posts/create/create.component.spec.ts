@@ -7,7 +7,7 @@ import { ToastService } from '@core/services'
 import { MarkdownEditorComponent } from '@shared/index'
 import { of } from 'rxjs'
 import { CreateComponent } from './create.component'
-import CreateViewModel from './create.viewmodel'
+import { CreateViewModel } from './create.viewmodel'
 
 describe('CreatePostComponent', () => {
   let component: CreateComponent

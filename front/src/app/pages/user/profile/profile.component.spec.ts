@@ -4,7 +4,7 @@ import { Component, input } from '@angular/core'
 import { LogoutButtonComponent, UserInformationsComponent, UserTopicsComponent } from '@components/index'
 import { BackButtonComponent } from '@shared/index'
 import { ProfileComponent } from './profile.component'
-import ProfileViewModel from './profile.viewmodel'
+import { ProfileViewModel } from './profile.viewmodel'
 
 @Component({
   selector: 'app-logout-button',

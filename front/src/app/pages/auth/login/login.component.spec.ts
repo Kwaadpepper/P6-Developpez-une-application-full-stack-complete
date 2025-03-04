@@ -4,7 +4,7 @@ import { signal } from '@angular/core'
 import { provideRouter } from '@angular/router'
 import { ToastService } from '@core/services'
 import { LoginComponent } from './login.component'
-import LoginViewModel from './login.viewmodel'
+import { LoginViewModel } from './login.viewmodel'
 
 describe('LoginComponent', () => {
   let component: LoginComponent

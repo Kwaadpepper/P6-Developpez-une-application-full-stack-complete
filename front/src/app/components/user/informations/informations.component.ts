@@ -10,7 +10,7 @@ import { Subject, takeUntil } from 'rxjs'
 
 import { ToastService } from '@core/services'
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon'
-import InformationsViewModel from './informations.viewmodel'
+import { InformationsViewModel } from './informations.viewmodel'
 
 @Component({
   selector: 'app-informations',

@@ -10,7 +10,7 @@ import { debounceTime, distinctUntilChanged, Subject, switchMap, takeUntil, tap 
 
 import { FormControl, ReactiveFormsModule } from '@angular/forms'
 import { BackButtonComponent, ProgressSpinnerComponent, TopicCardComponent } from '@shared/index'
-import ListViewModel from './list.viewmodel'
+import { ListViewModel } from './list.viewmodel'
 
 @Component({
   selector: 'app-list-topics',

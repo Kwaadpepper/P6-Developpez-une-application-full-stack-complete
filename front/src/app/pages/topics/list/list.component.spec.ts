@@ -4,7 +4,7 @@ import { of } from 'rxjs'
 import { signal } from '@angular/core'
 import { Topic } from '@core/interfaces'
 import { ListComponent } from './list.component'
-import ListViewModel from './list.viewmodel'
+import { ListViewModel } from './list.viewmodel'
 
 describe('ListTopicsComponent', () => {
   let component: ListComponent

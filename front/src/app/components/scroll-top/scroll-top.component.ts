@@ -1,6 +1,6 @@
 import { Component, HostListener, signal } from '@angular/core'
 import { ButtonModule } from 'primeng/button'
-import ScrollTopViewModel from './scroll-top.viewmodel'
+import { ScrollTopViewModel } from './scroll-top.viewmodel'
 
 @Component({
   selector: 'app-scroll-top',

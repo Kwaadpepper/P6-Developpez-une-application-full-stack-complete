@@ -4,7 +4,7 @@ import { ButtonModule } from 'primeng/button'
 import { Subject, takeUntil } from 'rxjs'
 
 import { ToastService } from '@core/services'
-import TopicCardViewModel, { TopicCard } from './topic-card.viewmodel'
+import { TopicCard, TopicCardViewModel } from './topic-card.viewmodel'
 
 @Component({
   selector: 'app-topic-card',

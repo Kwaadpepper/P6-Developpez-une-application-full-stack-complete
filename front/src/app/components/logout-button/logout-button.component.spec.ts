@@ -4,7 +4,7 @@ import { of } from 'rxjs'
 
 import { ToastService } from '@core/services'
 import { LogoutButtonComponent } from './logout-button.component'
-import LogoutButtonViewModel from './logout-button.viewmodel'
+import { LogoutButtonViewModel } from './logout-button.viewmodel'
 
 describe('LogoutButtonComponent', () => {
   let component: LogoutButtonComponent

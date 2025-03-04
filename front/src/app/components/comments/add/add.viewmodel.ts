@@ -8,7 +8,7 @@ import { UUID } from '@core/types'
   providedIn: 'root',
   deps: [CommentService],
 })
-export default class AddViewModel {
+export class AddViewModel {
   private postUuid = signal<UUID>('')
 
   public readonly formErrorMessage = signal('')

@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing'
 
 import { MarkdownService } from 'ngx-markdown'
-import PostCardViewModel from './post-card.viewmodel'
+import { PostCardViewModel } from './post-card.viewmodel'
 
 describe('PostCardViewModel', () => {
   let viewModel: PostCardViewModel

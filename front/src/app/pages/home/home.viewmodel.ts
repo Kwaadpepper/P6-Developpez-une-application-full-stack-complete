@@ -5,6 +5,6 @@ import { environment } from '@env/environment'
 @Injectable({
   providedIn: 'root',
 })
-export default class HomeViewModel {
+export class HomeViewModel {
   public readonly appName = signal(environment.appName)
 }

@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing'
 import { Router } from '@angular/router'
 import { SessionService } from '@core/services'
 import { of } from 'rxjs'
-import HeaderViewModel from './header.viewmodel'
+import { HeaderViewModel } from './header.viewmodel'
 
 describe('HeaderModel', () => {
   let viewModel: HeaderViewModel

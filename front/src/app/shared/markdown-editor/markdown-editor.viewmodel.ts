@@ -3,7 +3,7 @@ import { computed, Injectable, signal } from '@angular/core'
 @Injectable({
   providedIn: 'root',
 })
-export default class MarkdownEditorViewModel {
+export class MarkdownEditorViewModel {
   public readonly errorMessage = signal<string>('')
   public readonly _value = signal<string>('')
   public readonly value = computed<string>(() => this._value().length > 0 ? this._value() : 'Aucun contenu saisi')

@@ -5,7 +5,7 @@ import { Comment } from '@core/interfaces'
 import { MarkdownEditorComponent } from '@shared/index'
 import { of } from 'rxjs'
 import { ListComponent } from './list.component'
-import ListViewModel from './list.viewmodel'
+import { ListViewModel } from './list.viewmodel'
 
 describe('ListCommentsComponent', () => {
   let component: ListComponent

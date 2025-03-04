@@ -4,7 +4,7 @@ import { signal } from '@angular/core'
 import { ToastService } from '@core/services'
 import { of } from 'rxjs'
 import { InformationsComponent } from './informations.component'
-import InformationsViewModel from './informations.viewmodel'
+import { InformationsViewModel } from './informations.viewmodel'
 
 describe('UserInformationsComponent', () => {
   let component: InformationsComponent

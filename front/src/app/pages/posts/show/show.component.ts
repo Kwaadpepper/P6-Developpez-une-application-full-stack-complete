@@ -6,7 +6,7 @@ import { CommentAddComponent, CommentsListComponent } from '@components/index'
 import { UUID } from '@core/types'
 import { NiceDate } from '@pipes/NiceDate'
 import { BackButtonComponent } from '@shared/index'
-import ShowViewModel from './show.viewmodel'
+import { ShowViewModel } from './show.viewmodel'
 
 @Component({
   selector: 'app-show-post',

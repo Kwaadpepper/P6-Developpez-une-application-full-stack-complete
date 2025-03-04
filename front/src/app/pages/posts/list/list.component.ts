@@ -7,7 +7,7 @@ import { ButtonModule } from 'primeng/button'
 import { filter, Subject, switchMap, takeUntil } from 'rxjs'
 
 import { PostCardComponent, ProgressSpinnerComponent } from '@shared/index'
-import ListViewModel from './list.viewmodel'
+import { ListViewModel } from './list.viewmodel'
 
 @Component({
   selector: 'app-list-posts',

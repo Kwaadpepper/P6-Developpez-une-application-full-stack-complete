@@ -3,7 +3,7 @@ import { ToastService } from '@core/services'
 
 import { MarkdownEditorComponent } from '@shared/index'
 import { AddComponent } from './add.component'
-import AddViewModel from './add.viewmodel'
+import { AddViewModel } from './add.viewmodel'
 
 describe('AddCommentComponent', () => {
   let component: AddComponent

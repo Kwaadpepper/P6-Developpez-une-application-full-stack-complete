@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 
-import NotFoundViewModel from './not-found.viewmodel'
+import { NotFoundViewModel } from './not-found.viewmodel'
 
 @Component({
   selector: 'app-not-found',

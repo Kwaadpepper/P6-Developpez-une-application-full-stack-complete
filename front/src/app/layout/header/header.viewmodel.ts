@@ -9,7 +9,7 @@ import { redirectUrls } from '@routes'
   providedIn: 'root',
   deps: [Router, SessionService],
 })
-export default class HeaderViewModel {
+export class HeaderViewModel {
   public readonly appName = signal(environment.appName)
 
   public readonly loggedIn = computed(() => this.sessionService.isLoggedIn())

@@ -1,7 +1,7 @@
 import { catchError, map, Observable, pipe, throwError, UnaryFunction } from 'rxjs'
 import { z, ZodError } from 'zod'
 
-import BadResponseFromServerError from '@core/errors/BadResponseFromServerError'
+import { BadResponseFromServerError } from '@core/errors/BadResponseFromServerError'
 
 /**
  * Verify the response type.

@@ -3,7 +3,7 @@ import { Component, input, output } from '@angular/core'
 import { RouterModule } from '@angular/router'
 import { ButtonModule } from 'primeng/button'
 
-import NavMenuViewModel from './nav-menu.viewmodel'
+import { NavMenuViewModel } from './nav-menu.viewmodel'
 
 @Component({
   selector: 'app-nav-menu',

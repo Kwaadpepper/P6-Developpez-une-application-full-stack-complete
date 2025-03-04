@@ -6,7 +6,7 @@ import { SessionService } from '@core/services'
   providedIn: 'root',
   deps: [SessionService],
 })
-export default class NavMenuViewModel {
+export class NavMenuViewModel {
   public readonly loggedIn = computed(() => this.sessionService.isLoggedIn())
 
   constructor(

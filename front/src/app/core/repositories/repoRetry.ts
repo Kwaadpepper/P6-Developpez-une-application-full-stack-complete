@@ -1,5 +1,5 @@
 import { ValidationError } from '@core/errors'
-import SessionExpired from '@core/errors/SessionExpired'
+import { SessionExpired } from '@core/errors/SessionExpired'
 import { EMPTY, MonoTypeOperatorFunction, ObservableInput, retry, RetryConfig, throwError, timer } from 'rxjs'
 
 const retryConfig: RetryConfig = {

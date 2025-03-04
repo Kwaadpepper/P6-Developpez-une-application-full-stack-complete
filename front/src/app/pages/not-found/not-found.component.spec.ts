@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing'
 
 import { signal } from '@angular/core'
 import { NotFoundComponent } from './not-found.component'
-import NotFoundViewModel from './not-found.viewmodel'
+import { NotFoundViewModel } from './not-found.viewmodel'
 
 describe('NotFoundComponent', () => {
   let component: NotFoundComponent

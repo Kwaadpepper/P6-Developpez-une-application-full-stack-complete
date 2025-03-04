@@ -6,7 +6,7 @@ import { DrawerModule } from 'primeng/drawer'
 import { filter, Subject, takeUntil } from 'rxjs'
 
 import { NavMenuComponent } from '@shared/index'
-import HeaderViewModel from './header.viewmodel'
+import { HeaderViewModel } from './header.viewmodel'
 
 @Component({
   selector: 'app-header',

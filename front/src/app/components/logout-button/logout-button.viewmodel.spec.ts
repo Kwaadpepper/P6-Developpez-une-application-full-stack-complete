@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing'
 
 import { AuthService } from '@core/services'
-import LogoutButtonViewModel from './logout-button.viewmodel'
+import { LogoutButtonViewModel } from './logout-button.viewmodel'
 
 describe('LogoutButtonViewModel', () => {
   let viewModel: LogoutButtonViewModel

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing'
 
-import MarkdownEditorViewModel from './markdown-editor.viewmodel'
+import { MarkdownEditorViewModel } from './markdown-editor.viewmodel'
 
 describe('MarkdownEditorViewModel', () => {
   let viewModel: MarkdownEditorViewModel

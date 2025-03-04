@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing'
 
 import { signal } from '@angular/core'
 import { NavMenuComponent } from './nav-menu.component'
-import NavMenuViewModel from './nav-menu.viewmodel'
+import { NavMenuViewModel } from './nav-menu.viewmodel'
 
 describe('NavMenuComponent', () => {
   let component: NavMenuComponent

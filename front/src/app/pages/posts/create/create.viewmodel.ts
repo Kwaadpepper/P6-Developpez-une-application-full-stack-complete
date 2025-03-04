@@ -9,7 +9,7 @@ import { UUID } from '@core/types'
   providedIn: 'root',
   deps: [PostService, TopicService],
 })
-export default class CreateViewModel {
+export class CreateViewModel {
   public readonly formErrorMessage = signal('')
   public readonly errors = {
     title: signal(''),

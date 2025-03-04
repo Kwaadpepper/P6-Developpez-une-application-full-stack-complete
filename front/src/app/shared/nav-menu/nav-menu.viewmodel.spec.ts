@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing'
 
 import { SessionService } from '@core/services'
-import NavMenuViewModel from './nav-menu.viewmodel'
+import { NavMenuViewModel } from './nav-menu.viewmodel'
 
 describe('NavMenuViewModel', () => {
   let viewModel: NavMenuViewModel

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { User } from '@core/interfaces'
-import UserRepository from '@core/repositories/UserRepository.repository'
+import { UserRepository } from '@core/repositories/UserRepository.repository'
 import { map, Observable } from 'rxjs'
 
 @Injectable({

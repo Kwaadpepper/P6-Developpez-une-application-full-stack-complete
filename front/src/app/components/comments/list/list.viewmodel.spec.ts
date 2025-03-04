@@ -3,7 +3,7 @@ import { TestBed } from '@angular/core/testing'
 import { signal } from '@angular/core'
 import { Comment } from '@core/interfaces'
 import { CommentService } from '@core/services'
-import ListViewModel from './list.viewmodel'
+import { ListViewModel } from './list.viewmodel'
 
 describe('ListCommentsViewModel', () => {
   let viewModel: ListViewModel

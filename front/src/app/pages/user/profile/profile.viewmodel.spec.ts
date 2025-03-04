@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing'
 
-import ProfileViewModel from './profile.viewmodel'
+import { ProfileViewModel } from './profile.viewmodel'
 
 describe('ProfileViewModel', () => {
   let viewModel: ProfileViewModel

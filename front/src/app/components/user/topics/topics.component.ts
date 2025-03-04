@@ -4,7 +4,7 @@ import { InfiniteScrollDirective } from 'ngx-infinite-scroll'
 import { Subject, takeUntil } from 'rxjs'
 
 import { ProgressSpinnerComponent, TopicCardComponent } from '@shared/index'
-import TopicsViewModel from './topics.viewmodel'
+import { TopicsViewModel } from './topics.viewmodel'
 
 @Component({
   selector: 'app-topics',

@@ -8,7 +8,7 @@ import { FeedService } from '@core/services'
   providedIn: 'root',
   deps: [FeedService],
 })
-export default class ListViewModel {
+export class ListViewModel {
   private _currentPage = 0
   private _postList = signal<Post[]>([])
 

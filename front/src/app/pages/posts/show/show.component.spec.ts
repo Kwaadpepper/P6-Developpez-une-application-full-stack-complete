@@ -7,7 +7,7 @@ import { CommentAddComponent, CommentsListComponent } from '@components/index'
 import { Post } from '@core/interfaces'
 import { MarkdownComponent } from 'ngx-markdown'
 import { ShowComponent } from './show.component'
-import ShowViewModel from './show.viewmodel'
+import { ShowViewModel } from './show.viewmodel'
 
 @Component({
   selector: 'app-list-comments',

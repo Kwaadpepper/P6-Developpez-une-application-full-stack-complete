@@ -8,7 +8,7 @@ import { Subject, takeUntil } from 'rxjs'
 import { ToastService } from '@core/services'
 import { UUID } from '@core/types'
 import { MarkdownEditorComponent } from '@shared/index'
-import AddViewModel from './add.viewmodel'
+import { AddViewModel } from './add.viewmodel'
 
 @Component({
   selector: 'app-add-comment',

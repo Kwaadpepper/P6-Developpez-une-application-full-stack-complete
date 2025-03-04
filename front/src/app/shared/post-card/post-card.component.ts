@@ -5,7 +5,7 @@ import { ButtonModule } from 'primeng/button'
 
 import { Post } from '@core/interfaces'
 import { NiceDate } from '@pipes/NiceDate'
-import PostCardViewModel from './post-card.viewmodel'
+import { PostCardViewModel } from './post-card.viewmodel'
 
 @Component({
   selector: 'app-post-card',

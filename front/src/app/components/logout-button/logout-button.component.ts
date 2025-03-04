@@ -4,7 +4,7 @@ import { Button, ButtonModule } from 'primeng/button'
 import { SubscriptionLike } from 'rxjs'
 
 import { ToastService } from '@core/services'
-import LogoutButtonViewModel from './logout-button.viewmodel'
+import { LogoutButtonViewModel } from './logout-button.viewmodel'
 
 @Component({
   selector: 'app-logout-button',

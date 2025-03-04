@@ -20,7 +20,7 @@ export interface TopicCard {
     MarkdownService,
   ],
 })
-export default class TopicCardViewModel {
+export class TopicCardViewModel {
   public _topic = signal<TopicCard>({
     uuid: '',
     name: '',

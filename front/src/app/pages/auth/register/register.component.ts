@@ -10,7 +10,7 @@ import { SubscriptionLike } from 'rxjs'
 import { ToastService } from '@core/services'
 import { redirectUrls } from '@routes'
 import { BackButtonComponent } from '@shared/index'
-import RegisterViewModel from './register.viewmodel'
+import { RegisterViewModel } from './register.viewmodel'
 
 @Component({
   selector: 'app-register',

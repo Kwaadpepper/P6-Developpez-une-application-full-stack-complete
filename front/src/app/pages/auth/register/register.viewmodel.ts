@@ -7,7 +7,7 @@ import { AuthService, errors, ToastService } from '@core/services'
   providedIn: 'root',
   deps: [AuthService, ToastService],
 })
-export default class RegisterViewModel {
+export class RegisterViewModel {
   public readonly formErrorMessage = signal('')
   public readonly errors = {
     email: signal(''),

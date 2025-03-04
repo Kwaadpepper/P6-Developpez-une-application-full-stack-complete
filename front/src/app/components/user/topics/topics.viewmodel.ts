@@ -12,7 +12,7 @@ type TopicElement = Topic & {
   providedIn: 'root',
   deps: [TopicService, ToastService],
 })
-export default class TopicsViewModel {
+export class TopicsViewModel {
   public readonly loading = signal(false)
   public readonly userTopics = signal<TopicElement[]>([])
 

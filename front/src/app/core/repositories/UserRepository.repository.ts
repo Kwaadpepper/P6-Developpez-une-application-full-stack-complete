@@ -14,7 +14,7 @@ import retryMultipleTimes from './repoRetry'
   providedIn: 'root',
   deps: [HttpClient],
 })
-export default class UserRepository {
+export class UserRepository {
   private readonly mddEndpointUrl = environment.mddEndpointUrl
   private readonly profileUrl = `${this.mddEndpointUrl}/api/profile`
 

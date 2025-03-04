@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing'
 
-import HomeViewModel from './home.viewmodel'
+import { HomeViewModel } from './home.viewmodel'
 
 describe('HomeViewModel', () => {
   let viewModel: HomeViewModel

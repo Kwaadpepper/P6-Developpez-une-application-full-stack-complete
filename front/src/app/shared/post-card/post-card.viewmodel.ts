@@ -8,7 +8,7 @@ import { MarkdownService } from 'ngx-markdown'
   providedIn: 'root',
   deps: [MarkdownService],
 })
-export default class PostCardViewModel {
+export class PostCardViewModel {
   private _post = signal({
     slug: '',
     title: '',

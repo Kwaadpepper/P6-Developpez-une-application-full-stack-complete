@@ -4,7 +4,7 @@ import { Component, input, signal } from '@angular/core'
 import { FormControl } from '@angular/forms'
 import { MarkdownComponent } from 'ngx-markdown'
 import { MarkdownEditorComponent } from './markdown-editor.component'
-import MarkdownEditorViewModel from './markdown-editor.viewmodel'
+import { MarkdownEditorViewModel } from './markdown-editor.viewmodel'
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector

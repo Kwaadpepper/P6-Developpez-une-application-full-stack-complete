@@ -7,7 +7,7 @@ import { Post } from '@core/interfaces'
   providedIn: 'root',
   deps: [ActivatedRoute],
 })
-export default class ShowViewModel {
+export class ShowViewModel {
   private readonly _post: WritableSignal<Post>
 
   public readonly post = computed(() => this._post())

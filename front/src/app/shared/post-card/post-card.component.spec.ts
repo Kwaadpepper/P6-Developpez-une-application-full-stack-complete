@@ -5,7 +5,7 @@ import { DatePipe, registerLocaleData } from '@angular/common'
 import { provideRouter } from '@angular/router'
 import { Post } from '@core/interfaces'
 import { PostCardComponent } from './post-card.component'
-import PostCardViewModel from './post-card.viewmodel'
+import { PostCardViewModel } from './post-card.viewmodel'
 
 describe('PostCardComponent', () => {
   let component: PostCardComponent

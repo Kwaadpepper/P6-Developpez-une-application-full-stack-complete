@@ -6,7 +6,7 @@ import { of } from 'rxjs'
 import { Post } from '@core/interfaces'
 import { PostCardComponent } from '@shared/index'
 import { ListComponent } from './list.component'
-import ListViewModel from './list.viewmodel'
+import { ListViewModel } from './list.viewmodel'
 
 describe('ListPostsComponent', () => {
   let component: ListComponent

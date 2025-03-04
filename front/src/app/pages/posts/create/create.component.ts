@@ -13,7 +13,7 @@ import { debounceTime, distinctUntilChanged, Subject, switchMap, takeUntil } fro
 import { ToastService } from '@core/services'
 import { UUID } from '@core/types'
 import { BackButtonComponent, MarkdownEditorComponent } from '@shared/index'
-import CreateViewModel from './create.viewmodel'
+import { CreateViewModel } from './create.viewmodel'
 
 interface selectOptions {
   label: string

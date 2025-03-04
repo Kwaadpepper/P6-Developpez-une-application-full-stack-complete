@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing'
 
 import { TopicService } from '@core/services'
-import ListViewModel from './list.viewmodel'
+import { ListViewModel } from './list.viewmodel'
 
 describe('ListTopicsViewModel', () => {
   let viewModel: ListViewModel

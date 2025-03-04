@@ -10,7 +10,7 @@ import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
 import { catchError, debounceTime, Observable, Subject, switchMap, takeWhile, throwError } from 'rxjs'
 
-import SessionExpired from '@core/errors/SessionExpired'
+import { SessionExpired } from '@core/errors/SessionExpired'
 import { AuthService, SessionService, ToastService } from '@core/services'
 import { redirectUrls } from '@routes'
 

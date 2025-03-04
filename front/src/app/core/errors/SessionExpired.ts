@@ -1,4 +1,4 @@
-export default class SessionExpired extends Error {
+export class SessionExpired extends Error {
   public constructor() {
     super('Session expired')
   }

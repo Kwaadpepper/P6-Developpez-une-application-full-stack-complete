@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing'
 
 import { FeedService } from '@core/services'
-import ListViewModel from './list.viewmodel'
+import { ListViewModel } from './list.viewmodel'
 
 describe('ListPostsViewModel', () => {
   let viewModel: ListViewModel

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing'
 
-import ScrollTopViewModel from './scroll-top.viewmodel'
+import { ScrollTopViewModel } from './scroll-top.viewmodel'
 
 describe('ScrollTopViewModel', () => {
   let viewModel: ScrollTopViewModel

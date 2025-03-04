@@ -3,7 +3,7 @@ import { Component, computed } from '@angular/core'
 import { LogoutButtonComponent, UserInformationsComponent, UserTopicsComponent } from '@components/index'
 import { redirectUrls } from '@routes'
 import { BackButtonComponent } from '@shared/index'
-import ProfileViewModel from './profile.viewmodel'
+import { ProfileViewModel } from './profile.viewmodel'
 
 @Component({
   selector: 'app-profile',

@@ -10,7 +10,7 @@ import { Subject, takeUntil } from 'rxjs'
 import { ToastService } from '@core/services'
 import { redirectUrls } from '@routes'
 import { BackButtonComponent } from '@shared/index'
-import LoginViewModel from './login.viewmodel'
+import { LoginViewModel } from './login.viewmodel'
 
 @Component({
   selector: 'app-login',

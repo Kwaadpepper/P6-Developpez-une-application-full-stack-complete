@@ -13,7 +13,7 @@ import retryMultipleTimes from './repoRetry'
   providedIn: 'root',
   deps: [HttpClient],
 })
-export default class TopicRepository {
+export class TopicRepository {
   private readonly mddEndpointUrl = environment.mddEndpointUrl
   private readonly topicUrl = `${this.mddEndpointUrl}/api/topics`
   private readonly topicSubscriptionUrl = `${this.topicUrl}/subscription`

@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing'
 
 import { ToastService } from '@core/services'
 import { ProfileService } from '@core/services/profile/profile.service'
-import InformationsViewModel from './informations.viewmodel'
+import { InformationsViewModel } from './informations.viewmodel'
 
 describe('UserInformationsViewModel', () => {
   let viewModel: InformationsViewModel

@@ -14,7 +14,7 @@ import retryMultipleTimes from './repoRetry'
   providedIn: 'root',
   deps: [HttpClient],
 })
-export default class CommentsRepository {
+export class CommentsRepository {
   private readonly mddEndpointUrl = environment.mddEndpointUrl
   private readonly commentsUrl = `${this.mddEndpointUrl}/api/comments`
   private readonly postsUrl = `${this.mddEndpointUrl}/api/posts`
