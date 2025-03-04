@@ -150,12 +150,12 @@ public class AuthenticationService {
 
     if (userRepository.findByEmail(email).isPresent()) {
       logger.debug("The email is already used so we cannot create an account with it.");
-      throw ValidationException.of(ValidationError.of("email", "There is already an account with this email"));
+      throw ValidationException.of(ValidationError.of("email", "Cette adresse e-mail est déjà utilisée"));
     }
 
     if (userRepository.findByName(username).isPresent()) {
       logger.debug("The username is already used so we cannot create an account with it.");
-      throw ValidationException.of(ValidationError.of("username", "There is already an account with this username"));
+      throw ValidationException.of(ValidationError.of("username", "Ce nom d'utilisateur est déjà utilisé"));
     }
 
     user = new User(username, email);
